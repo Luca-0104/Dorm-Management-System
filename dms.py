@@ -5,6 +5,8 @@ import os
 from app import create_app, db
 from flask_migrate import Migrate
 
+from app.models import Role, User
+
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')  # FLASK_CONFIG is a environment variable that should be configured. For details, those can be found in the dictionary config in the file config.py
 migrate = Migrate(app, db)
 
@@ -14,7 +16,7 @@ def make_shell_context():
     """
     When using the flask shell command, there is no needs to import db, User, Role...anymore.
     """
-    return dict(db=db)
+    return dict(db=db, User=User, Role=Role)
 
 
 @app.cli.command()
