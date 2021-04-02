@@ -22,7 +22,16 @@ def login():
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
         if user is not None and user.verify_password(password):
-            return redirect(url_for('main.'))              # 少路由
+            return redirect(url_for('main.'))              # 少路由，指向home界面
         else:
             flash('Invalid id or password.')
     return render_template('user/login.html')
+
+
+# Logout
+@auth.route('/logout')
+@login_required     # Make sure the user want to logout has logged in
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))
