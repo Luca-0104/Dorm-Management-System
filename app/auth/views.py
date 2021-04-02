@@ -13,3 +13,26 @@ from flask_login import logout_user, login_required, login_user, current_user
 def before_request():
     if current_user.is_authenticated:       # 判断当前用户是否已登录
         current_user.ping()
+
+## 注册
+@app.route('/register/', methods=['GET','POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        stu_wor_id = request.form.get('stu_wor_id')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        password2 = request.form.get('password2')
+
+        if not all([username, studentid, password, password2]):
+            flash('elements are incomplete')
+        elif password != password2:
+            flash('')
+        else:
+            new_user = Users(user_name=username, password=password, email=email, stu_wor_id=stu_wor_id)
+            db.session.add(new_user)
+            db.session.commit()
+            return ''
+    return render_template('register.html')
+
+
