@@ -85,6 +85,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
+    stu_wor_id = db.Column(db.String(64), unique=True, index=True)
     user_name = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))  # 在数据库模型中定义关系
     password_hash = db.Column(db.String(128))
@@ -110,15 +111,6 @@ class User(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    # # 定义默认的用户角色
-    # def __init__(self, **kwargs):
-    #     super(User, self).__init__(**kwargs)
-    #     if self.role is None:
-    #         if self.email == current_app.config['FLASKY_ADMIN']:  # 从环境变量中导入的配置信息，用于识别是否是管理员，只要这个邮件出现在注册请求中，就会被赋予正确的角色。
-    #             self.role = Role.query.filter_by(name='System_administrator').first()
-    #         if self.role is None:
-    #             self.role = Role.query.filter_by(default=True).first()
-
     # 添加用于检查用户是否有指定权限的方法
     def can(self, perm):  # 判断用户是否具有某项权限
         return self.role is not None and self.role.has_permission(perm)
@@ -131,17 +123,3 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
-
-
-# # 自定义匿名用户类
-# class AnonymousUser(AnonymousUserMixin):
-#     # 添加用于检查用户是否有指定权限的方法
-#     def can(self, perm):  # 判断用户是否具有某项权限
-#         return False
-#
-#     def is_administrator(self):  # 判断该用户是否是管理员
-#         return False
-#
-#
-# # 告诉Flask-Login我们使用自定义的匿名用户类
-# login_manager.anonymous_user = AnonymousUser
