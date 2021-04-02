@@ -1,0 +1,96 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{
+
+	font-family: "Helvetica";
+	
+}
+.indexTitle{
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+.btnSection{
+	margin-bottom: 0.5rem !important;
+	display: flex;
+	border: none !important;
+}
+
+.btnSection .btn{
+	display: inline-block;
+  font-weight: 400;
+  color: #000;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1;
+  border-radius: 0.1875rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
+
+.btn:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+.btn:focus, .btn.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-phone {
+  background: #3b579d;
+  color: #ffffff!important;
+}
+
+
+.student{
+	background: url(../images/auth/student.png) 0 0 no-repeat  !important;
+	margin-right: 50px !important;
+	background-size:280px 360px !important;
+	background-color:#019ec7 !important;
+	width:300px;
+}
+.student:hover{
+	background-color: #0A6EDF !important;
+}
+
+.DA{
+	background: url(../images/auth/dormitory_management.png) 0 0 no-repeat  !important;
+	background-size:300px 360px !important;
+	background-color:#019ec7 !important;
+	width: 300px;
+	margin-right: 50px !important;
+}
+
+.DA:hover{
+	background-color: #0A6EDF !important;
+}
+
+.mr-7{
+	background:url(../../static/images/auth/system_management.png) !important;
+	background-size: 300px,400px !important;
+	background-color:#019ec7 !important;
+	width: 300px;
+}
+.mr-7:hover{
+	background-color: #0A6EDF !important;
+}
+
+
+
+
+
+
+
