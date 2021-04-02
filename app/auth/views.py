@@ -53,6 +53,7 @@ def register():
             flash('You enter two passwords do not match')
         else:
             new_user = User(user_name=username, role_id=main.role_id,  password=password, email=email, stu_wor_id=stu_wor_id)
+            flash('Registered successfully! You can login now.')
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for("auth.login"))
