@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/dormitory-management-system02.iml" filepath="$PROJECT_DIR$/.idea/dormitory-management-system02.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/dormitory-management-system.iml" filepath="$PROJECT_DIR$/.idea/dormitory-management-system.iml" />
     </modules>
   </component>
 </project>
