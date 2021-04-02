@@ -13,3 +13,16 @@ from flask_login import logout_user, login_required, login_user, current_user
 def before_request():
     if current_user.is_authenticated:       # 判断当前用户是否已登录
         current_user.ping()
+
+
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        new_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        user_list = User.query.filter_by(username = username)
+        for u in user_list:
+            if u.password == new_password:
+                return render_template('user/')
+            else:
+                return render_template('user/login.html',msg='用户名或者密码有误')
