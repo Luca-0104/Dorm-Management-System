@@ -8,21 +8,21 @@ from .forms import LoginForm, RegistrationForm
 from flask_login import logout_user, login_required, login_user, current_user
 
 
-# 更新已登录用户的最后访问时间
+# Updates the last access time of the logged-in user
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated:       # 判断当前用户是否已登录
+    if current_user.is_authenticated:       # Determine whether the current user has logged in
         current_user.ping()
 
 
-@auth.route('login/',methods=['GET', 'POST'])
+@auth.route('login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username') #改成学工号
+        stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
         password = request.form.get('password')
-        user = User.query.filter_by(user_name=username).first()
+        user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
         if user is not None and user.verify_password(password):
-            return redirect(url_for()) #少路由
+            return redirect(url_for('main.'))              # 少路由
         else:
-            flash('学工号或密码错误') #改成英文
+            flash('Invalid id or password.')
     return render_template('user/login.html')
