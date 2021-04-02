@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request
 from . import auth
 from .. import db
+from ..main import main
 from ..models import User
 from .forms import LoginForm, RegistrationForm
 from flask_login import logout_user, login_required, login_user, current_user
@@ -36,7 +37,7 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
 
-## 注册
+## register
 @app.route('/register/', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
@@ -46,15 +47,15 @@ def register():
         password = request.form.get('password')
         password2 = request.form.get('password2')
 
-        if not all([username, studentid, password, password2]):
+        if not all([username, stu_wor_id, email, password, password2]):
             flash('elements are incomplete')
         elif password != password2:
-            flash('')
+            flash('You enter two passwords do not match')
         else:
-            new_user = Users(user_name=username, password=password, email=email, stu_wor_id=stu_wor_id)
+            new_user = User(user_name=username, role_id=main.role_id,  password=password, email=email, stu_wor_id=stu_wor_id)
             db.session.add(new_user)
             db.session.commit()
-            return ''
-    return render_template('register.html')
+            return redirect(url_for("auth.login"))
+    return render_template('auth/register.html')
 
 
