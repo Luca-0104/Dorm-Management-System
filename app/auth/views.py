@@ -9,10 +9,10 @@ from .forms import LoginForm, RegistrationForm
 from flask_login import logout_user, login_required, login_user, current_user
 
 
-# 更新已登录用户的最后访问时间
+# Updates the last access time of the logged-in user
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated:       # 判断当前用户是否已登录
+    if current_user.is_authenticated:       # Determine whether the current user is logged in
         current_user.ping()
 
 
@@ -37,8 +37,9 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
 
-## register
-@app.route('/register/', methods=['GET','POST'])
+
+# register
+@auth.route('/register/', methods=['GET','POST'])
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -50,7 +51,7 @@ def register():
         if not all([username, stu_wor_id, email, password, password2]):
             flash('elements are incomplete')
         elif password != password2:
-            flash('You enter two passwords do not match')
+            flash('Two passwords do not match')
         else:
             new_user = User(user_name=username, role_id=main.role_id,  password=password, email=email, stu_wor_id=stu_wor_id)
             flash('Registered successfully! You can login now.')
