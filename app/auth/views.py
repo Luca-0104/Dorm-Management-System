@@ -15,14 +15,14 @@ def before_request():
         current_user.ping()
 
 
+@auth.route('login/',methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        username = request.form.get('username') #改成学工号
         password = request.form.get('password')
-        new_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-        user_list = User.query.filter_by(username = username)
-        for u in user_list:
-            if u.password == new_password:
-                return render_template('user/')
-            else:
-                return render_template('user/login.html',msg='用户名或者密码有误')
+        user = User.query.filter_by(user_name=username).first()
+        if user is not None and user.verify_password(password):
+            return redirect(url_for()) #少路由
+        else:
+            flash('学工号或密码错误') #改成英文
+    return render_template('user/login.html')
