@@ -10,4 +10,4 @@ def index():
         role_id = request.args.get('identification')
         return redirect(url_for('main.login'))  
 
-    return render_template("index.html")
+    return render_template("samples/myindex.html")

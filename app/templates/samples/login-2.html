@@ -15,7 +15,6 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="../../static/css/myLogin.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../../static/images/favicon.png" />
 </head>
 
 <body >
@@ -66,7 +65,7 @@
                   </button>
                 </div>
                 <div class="textCennter mt4 fontWeightLight">
-                  Don't have an account? <a href="register-2.html" class="textPrimary">Create</a>
+                  Don't have an account? <a href='{{url_for('user.register')}}' class="textPrimary">Create</a>
                 </div>
               </form>
             </div>

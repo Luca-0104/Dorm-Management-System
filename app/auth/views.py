@@ -16,17 +16,17 @@ def before_request():
         current_user.ping()
 
 
-@auth.route('login/', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
         if user is not None and user.verify_password(password):
-            return redirect(url_for('main.'))              # 少路由，指向home界面
+            return "login successfully"            # 少路由，指向home界面
         else:
             flash('Invalid id or password.')
-    return render_template('user/login.html')
+    return render_template('samples/login-2.html')
 
 
 # Logout
@@ -58,6 +58,6 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for("auth.login"))
-    return render_template('auth/register.html')
+    return render_template('samples/register-2.html')
 
 
