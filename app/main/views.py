@@ -5,9 +5,9 @@ from app.main import main
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    global role_id
-    if request.method == 'POST':
-        role_id = request.args.get('identification')
-        return redirect(url_for('main.login'))  
+    # global role_id
+    # if request.method == 'GET':
+    #     role_id = request.args.get('identification')
+    #     return redirect(url_for('main.login'))
 
     return render_template("samples/myindex.html")

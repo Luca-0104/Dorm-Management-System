@@ -85,6 +85,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
+    phone = db.Column(db.String(64), unique=True, index=True)
     stu_wor_id = db.Column(db.String(64), unique=True, index=True)
     user_name = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))  # 在数据库模型中定义关系
