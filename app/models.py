@@ -87,11 +87,10 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     phone = db.Column(db.String(64), unique=True, index=True)
     stu_wor_id = db.Column(db.String(64), unique=True, index=True)
-    user_name = db.Column(db.String(64), unique=True, index=True)
+    user_name = db.Column(db.String(64), unique=False, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))  # 在数据库模型中定义关系
     password_hash = db.Column(db.String(128))
     # 资料页面信息
-    name = db.Column(db.String(64))
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
