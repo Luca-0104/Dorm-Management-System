@@ -9,6 +9,9 @@ from ..main import main
 from ..models import User
 from flask_login import logout_user, login_required, login_user, current_user
 
+get_role_from_button = True
+role_id = None
+
 
 # # Updates the last access time of the logged-in user
 # @auth.before_app_request
@@ -19,8 +22,11 @@ from flask_login import logout_user, login_required, login_user, current_user
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    global get_role_from_button
+    global role_id
 
+    if request.method == 'POST':
+        get_role_from_button = False
         stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
@@ -29,9 +35,10 @@ def login():
         else:
             flash('Invalid id or password.')
 
-    global role_id
-    role_id = int(request.args.get('identification'))
-    print(role_id)
+    # decide if we need to get the role_id again
+    if request.method == 'GET' and get_role_from_button is True:
+        role_id = int(request.args.get('identification'))
+        print(role_id)
 
     return render_template('samples/login-2.html')
 
@@ -48,8 +55,9 @@ def logout():
 # register
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    global get_role_from_button
+
     if request.method == 'POST':
-        print("yes1")
         username = request.form.get('username')
         stu_wor_id = request.form.get('stu_wor_id')
         email = request.form.get('email')
@@ -57,7 +65,7 @@ def register():
         password = request.form.get('password')
         password2 = request.form.get('password2')
 
-        stu_wor_id = '192'           # 即删
+        stu_wor_id = '19206'           # 即删
         if not all([username, stu_wor_id, email, password, password2]):
             flash('elements are incomplete')
             print('elements are incomplete')
@@ -67,21 +75,22 @@ def register():
             print('Two passwords do not match')
 
         else:
-            print("yes2.1")
             print(validate_email(email))
             print(validate_phone(phone))
             print(validate_id(stu_wor_id))
 
-            if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id):
-                print("yes2.1.1")
-                # new_user = User(user_name=username, role_id=main.role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
-                new_user = User(user_name=username, role_id=role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
+            # if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id): # 正式则启用
+            if validate_email(email) and validate_phone(phone):
+
+                # 正式则启用
+                # new_user = User(user_name=username, role_id=role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
+                new_user = User(user_name=username, role_id=role_id,  password=password, email=email, phone=phone)
                 flash('Registered successfully! You can login now.')
                 db.session.add(new_user)
                 db.session.commit()
+                get_role_from_button = False    # we will go back to the login page and in this case we do not need to get the role_id again
                 return redirect(url_for("auth.login"))
             else:
-                print("yes2.1.2")
                 flash('Email, phone number or id already exists.')
     return render_template('samples/register-2.html')
 
@@ -115,4 +124,19 @@ def validate_id(sw):
         return False
     return True
 
+
+def get_role_false():
+    """
+    for other modules to alter the global variable get_role_from_button
+    """
+    global get_role_from_button
+    get_role_from_button = False
+
+
+def get_role_true():
+    """
+    for other modules to alter the global variable get_role_from_button
+    """
+    global get_role_from_button
+    get_role_from_button = True
 
