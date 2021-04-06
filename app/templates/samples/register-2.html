@@ -101,7 +101,8 @@
                   <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="SIGN UP">
                 </div>
                 <div class="textCenter mt4 fontWeightLight">
-                  Already have an account? <a href="login.html" class="textPrimary">Login</a>
+                  Already have an account? <a href="{{ url_for('auth.login') }}?identification={{ role_id }}" class="textPrimary">Login</a>
+
                 </div>
               </form>
             </div>
