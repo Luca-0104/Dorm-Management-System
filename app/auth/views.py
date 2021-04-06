@@ -27,12 +27,12 @@ def login():
 
     if request.method == 'POST':
         get_role_from_button = False
-        stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
+        stu_wor_id = request.form.get('stu_wor_id')  # 向前端索要学工号
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
         if user is not None and user.verify_password(password):
             login_user(user)
-            return redirect(url_for('auth.home'))            # 少路由，指向home界面
+            return redirect(url_for('auth.home'))  # 少路由，指向home界面
         else:
             flash('Invalid id or password.')
 
@@ -53,7 +53,7 @@ def login():
 
 # Logout
 @auth.route('/logout')
-@login_required     # Make sure the user want to logout has logged in
+@login_required  # Make sure the user want to logout has logged in
 def logout():
     logout_user()
     flash('You have been logged out.')
@@ -83,7 +83,6 @@ def register():
         password = request.form.get('password')
         password2 = request.form.get('password2')
 
-        # stu_wor_id = '19206'           # 即删
         if not all([username, stu_wor_id, email, phone, password, password2]):
             flash('elements are incomplete')
             print('elements are incomplete')
@@ -97,52 +96,47 @@ def register():
             print(validate_phone(phone))
             print(validate_id(stu_wor_id))
 
-            if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id): # 正式则启用
-            # if validate_email(email) and validate_phone(phone):
-
-                # 正式则启用
-                # new_user = User(user_name=username, role_id=role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
-                new_user = User(user_name=username, stu_wor_id=stu_wor_id, role_id=role_id, password=password, email=email, phone=phone)
+            if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id):
+                new_user = User(user_name=username, stu_wor_id=stu_wor_id, role_id=role_id, password=password,
+                                email=email, phone=phone)
                 flash('Registered successfully! You can login now.')
                 db.session.add(new_user)
                 db.session.commit()
-                get_role_from_button = False    # we will go back to the login page and in this case we do not need to get the role_id again
+                get_role_from_button = False  # we will go back to the login page and in this case we do not need to get the role_id again
                 return redirect(url_for("auth.login"))
             else:
                 flash('Email, phone number or id already exists.')
     return render_template('samples/register-2.html', role_id=role_id)
 
 
-@auth.route('checkID',methods=['GET','POST'])
+@auth.route('checkID', methods=['GET', 'POST'])
 def check_id():
     id = request.args.get('id')
     user = User.query.filter(User.stu_wor_id == id).all()
-    if len(user)>0:
-        return jsonify(code=400,msg="The ID has already existed")
+    if len(user) > 0:
+        return jsonify(code=400, msg="The ID has already existed")
     else:
-        return jsonify(code=200,msg="this id number is avaliba")
+        return jsonify(code=200, msg="this id number is available")
 
 
-@auth.route('checkEmail',methods=['GET','POST'])
+@auth.route('checkEmail', methods=['GET', 'POST'])
 def check_email():
     email = request.args.get('email')
     user = User.query.filter(User.email == email).all()
-    if len(user)>0:
-        return jsonify(code=400,msg="The email has already existed")
+    if len(user) > 0:
+        return jsonify(code=400, msg="The email has already existed")
     else:
-        return jsonify(code=200,msg="this phone number is avaliba")
+        return jsonify(code=200, msg="this phone number is available")
 
 
-@auth.route('checkPhone',methods=['GET','POST'])
+@auth.route('checkPhone', methods=['GET', 'POST'])
 def check_phone():
     phone = request.args.get('phone')
     user = User.query.filter(User.email == phone).all()
-    if len(user)>0:
-        return jsonify(code=400,msg="The phone number has already existed")
+    if len(user) > 0:
+        return jsonify(code=400, msg="The phone number has already existed")
     else:
-        return jsonify(code=200,msg="this phone number is avaliba")
-
-
+        return jsonify(code=200, msg="this phone number is available")
 
 
 def validate_email(e):
@@ -189,4 +183,3 @@ def get_role_true():
     """
     global get_role_from_button
     get_role_from_button = True
-
