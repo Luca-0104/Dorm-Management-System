@@ -27,14 +27,23 @@ def login():
 
     if request.method == 'POST':
         get_role_from_button = False
-        stu_wor_id = request.form.get('stu_wor_id')  # 向前端索要学工号
+        stu_wor_id = request.form.get('stu_wor_id')
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
-        if user is not None and user.verify_password(password):
-            login_user(user)
-            return redirect(url_for('auth.home'))  # 少路由，指向home界面
+        print(role_id)
+        print(user.role_id)
+        # Only when trying to login with the corresponding role can be allowed
+        # Otherwise, you will be sent back to the index page
+        # role_id means the role has been chosen in the index page
+        # while user.role_id means the role of the user who is trying to login
+        if role_id == user.role_id:
+            if user is not None and user.verify_password(password):
+                login_user(user)
+                return redirect(url_for('auth.home'))
+            else:
+                flash('Invalid id or password.')
         else:
-            flash('Invalid id or password.')
+            return redirect(url_for('main.index'))
 
     # decide if we need to get the role_id again
     if request.method == 'GET' and get_role_from_button is True:

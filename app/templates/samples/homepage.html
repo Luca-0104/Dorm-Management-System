@@ -14,8 +14,11 @@ Hello,
 {% else %}
     seems like you are not logged in so far.
 {% endif %}
-! ({{ current_user.role }})
+!
 </h1>
+<p>
+    ({{ current_user.role }})
+</p>
 <input type="button" id="backMain" value="Log out" placeholder="Log out" onclick="location.href='{{ url_for('main.index') }}'">
 
 </body>
