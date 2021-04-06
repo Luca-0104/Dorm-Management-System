@@ -31,7 +31,8 @@ def login():
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
         if user is not None and user.verify_password(password):
-            return "login successfully"            # 少路由，指向home界面
+            login_user(user)
+            return redirect(url_for('auth.home'))            # 少路由，指向home界面
         else:
             flash('Invalid id or password.')
 
@@ -40,7 +41,14 @@ def login():
         role_id = int(request.args.get('identification'))
         print(role_id)
 
-    return render_template('samples/login-2.html')
+    getf = request.args.get('f')
+    if getf is not None:
+        getf = int(getf)
+    if getf == 1:
+        return render_template('samples/phoneLogin.html', role_id=role_id)
+    if getf == 2:
+        return render_template('samples/emailLogin.html', role_id=role_id)
+    return render_template('samples/login-2.html', role_id=role_id)
 
 
 # Logout
@@ -50,6 +58,16 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/sendMsg')
+def send_message():
+    pass
+
+
+@auth.route('/home')
+def home():
+    return render_template('samples/homepage.html')
 
 
 # register
@@ -65,8 +83,8 @@ def register():
         password = request.form.get('password')
         password2 = request.form.get('password2')
 
-        stu_wor_id = '19206'           # 即删
-        if not all([username, stu_wor_id, email, password, password2]):
+        # stu_wor_id = '19206'           # 即删
+        if not all([username, stu_wor_id, email, phone, password, password2]):
             flash('elements are incomplete')
             print('elements are incomplete')
 
@@ -79,12 +97,12 @@ def register():
             print(validate_phone(phone))
             print(validate_id(stu_wor_id))
 
-            # if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id): # 正式则启用
-            if validate_email(email) and validate_phone(phone):
+            if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id): # 正式则启用
+            # if validate_email(email) and validate_phone(phone):
 
                 # 正式则启用
                 # new_user = User(user_name=username, role_id=role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
-                new_user = User(user_name=username, role_id=role_id,  password=password, email=email, phone=phone)
+                new_user = User(user_name=username, stu_wor_id=stu_wor_id, role_id=role_id, password=password, email=email, phone=phone)
                 flash('Registered successfully! You can login now.')
                 db.session.add(new_user)
                 db.session.commit()
@@ -92,7 +110,7 @@ def register():
                 return redirect(url_for("auth.login"))
             else:
                 flash('Email, phone number or id already exists.')
-    return render_template('samples/register-2.html')
+    return render_template('samples/register-2.html', role_id=role_id)
 
 
 def validate_email(e):

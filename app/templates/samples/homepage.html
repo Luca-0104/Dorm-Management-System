@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body background="../../static/images/auth/background.jpg">
+        <h1>
+        Hello,
+        {% if current_user.is_authenticated %}
+              {{ current_user.user_name }}
+        {% else %}
+            seems like you are not logged in so far.
+        {% endif %}
+        !
+        </h1>
+</body>
+</html>

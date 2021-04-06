@@ -31,6 +31,17 @@
               <h4>New to BJUT Management System?</h4>
               <h6 class="fontWeightLight">Join us today! It takes only few steps</h6>
               <form action='{{ url_for('auth.register') }}' method="post">
+                  <div class="formGroup">
+                  <label>UserID</label>
+                  <div class="inputGroup">
+                    <div class="inputGroupPrepend bgTransparent">
+                      <span class="inputGroupText bgTransparent borderRight0">
+                        <i class="mdi mdi-account-outline textPrimary"></i>
+                      </span>
+                    </div>
+				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="UserID" name="stu_wor_id">
+					</div>
+                </div>
                 <div class="formGroup">
                   <label>Username</label>
                   <div class="inputGroup">
@@ -90,7 +101,8 @@
                   <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="SIGN UP">
                 </div>
                 <div class="textCenter mt4 fontWeightLight">
-                  Already have an account? <a href="login.html" class="textPrimary">Login</a>
+                  Already have an account? <a href="{{ url_for('auth.login') }}?identification={{ role_id }}" class="textPrimary">Login</a>
+
                 </div>
               </form>
             </div>
