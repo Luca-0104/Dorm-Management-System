@@ -11,6 +11,7 @@ $('#systemAdmin').click(function () {
 	location.href = 'auth/login?identification=3'
 });
 
+
 // $('#EmailLogin').click(function () {
 // // 	alert("hello")
 // // 	location.href = 'auth/login?f=3'
