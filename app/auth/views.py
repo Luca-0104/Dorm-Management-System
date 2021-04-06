@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from wtforms import ValidationError
 
+from app.auth.smsend import SmsSendAPIDemo
 from . import auth
 from .. import db
 from ..main import main
@@ -19,17 +20,15 @@ from flask_login import logout_user, login_required, login_user, current_user
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    print(request.method)
     if request.method == 'POST':
-        print("hello")
-        stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
-        password = request.form.get('password')
-        user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
-        # return redirect(url_for('auth.home'))
-        if user is not None and user.verify_password(password):
-            redirect(url_for('auth.home'))           # 少路由，指向home界面
-        else:
-            flash('Invalid id or password.')
+            stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
+            password = request.form.get('password')
+            user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
+            # return redirect(url_for('auth.home'))
+            if user is not None and user.verify_password(password):
+                redirect(url_for('auth.home'))           # 少路由，指向home界面
+            else:
+                flash('Invalid id or password.')
     # elif f==2:#手机验证登录
 
     global role_id
@@ -55,7 +54,33 @@ def logout():
 
 @auth.route('/sendMsg')
 def send_message():
-    pass
+    phone = request.args.get('phone')
+    SECRET_ID = "274e7c35c2db7a0e8ac5448dbf98a62b"  # 产品密钥ID，产品标识
+    SECRET_KEY = "95fa465892538ed30133f262ca0bd4b6"  # 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露
+    BUSINESS_ID = "71d6d283d3834c2eac2b3d0bde34e430"  # 业务ID，易盾根据产品业务特点分配
+    api = SmsSendAPIDemo(SECRET_ID,SECRET_KEY,BUSINESS_ID)
+    params = {
+        "mobile": phone,
+        "templateId": "10084",
+        "paramType": "json",
+        "params": "json格式字符串"
+    }
+    ret = api.send(params)
+    if ret is not None:
+        if ret["code"] == 200:
+            taskId = ret["data"]["taskId"]
+            print("taskId = %s" % taskId)
+        else:
+            print("ERROR: ret.code=%s,msg=%s" % (ret['code'], ret['msg']))
+
+@auth.route('checkphone',methods=['GET','POST'])
+def check_phone():
+    phone = request.args.get('phone')
+    user = User.query.filter(User.phone == phone).all()
+    if len(user)>0:
+        return jsonify(code=400,msg="此号码已注册")
+    else:
+        return jsonify(code=200,msg="此号码可用")
 
 @auth.route('/home')
 def home():
