@@ -1,15 +1,12 @@
 // JavaScript Document
 $('#student').click(function () {
-	// alert('/login');
-	location.href = '/login?identification=student'
+	location.href = 'auth/login?identification=1'
 });
 
 $('#dormintoryAdmin').click(function () {
-	// alert('/login');
-	location.href = '/login?identification=dormitoryAdmin'
+	location.href = 'auth/login?identification=2'
 });
 
 $('#systemAdmin').click(function () {
-	// alert('/login');
-	location.href = '/login?identification=systemAdmin'
+	location.href = 'auth/login?identification=3'
 });

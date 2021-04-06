@@ -30,7 +30,7 @@
               </div>
               <h4>New to BJUT Management System?</h4>
               <h6 class="fontWeightLight">Join us today! It takes only few steps</h6>
-              <form>
+              <form action='{{ url_for('auth.register') }}' method="post">
                 <div class="formGroup">
                   <label>Username</label>
                   <div class="inputGroup">
@@ -39,7 +39,7 @@
                         <i class="mdi mdi-account-outline textPrimary"></i>
                       </span>
                     </div>
-				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="Username">
+				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="Username" name="username">
 					</div>
                 </div>
                 <div class="formGroup">
@@ -50,7 +50,7 @@
                         <i class="mdi mdi-email-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="email" class="formControl formControlLg borderLeft0" placeholder="Email">
+                    <input type="email" class="formControl formControlLg borderLeft0" placeholder="Email" name="email">
                   </div>
                 </div>
                <div class="formGroup">
@@ -61,7 +61,7 @@
                         <i class="mdi mdi-phone textPrimary"></i>
                       </span>
                     </div>
-                    <input type="text" class="formControl formControlLg borderLeft0" placeholder="Phone">
+                    <input type="text" class="formControl formControlLg borderLeft0" placeholder="Phone" name="phone">
                   </div>
                 </div>
                 <div class="formGroup">
@@ -72,7 +72,7 @@
                         <i class="mdi mdi-lock-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputPassword" placeholder="Password">                        
+                    <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputPassword" placeholder="Password" name="password">
                   </div>
                 </div>
 				  <div class="formGroup">
@@ -83,11 +83,11 @@
                         <i class="mdi mdi-lock-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputConfirmPassword" placeholder="Confirm Password">                        
+                    <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputConfirmPassword" placeholder="Confirm Password" name="password2">
                   </div>
                 </div>
                 <div class="mt-3">
-                  <a class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" href="../../index.html">SIGN UP</a>
+                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="SIGN UP">
                 </div>
                 <div class="textCenter mt4 fontWeightLight">
                   Already have an account? <a href="login.html" class="textPrimary">Login</a>
@@ -107,10 +107,7 @@
   <script src="../../static/vendors/base/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- inject:js -->
-  <script src="../../static/js/off-canvas.js"></script>
-  <script src="../../static/js/hoverable-collapse.js"></script>
-  <script src="../../static/js/template.js"></script>
-  <!-- endinject -->
+
 </body>
 
 </html>

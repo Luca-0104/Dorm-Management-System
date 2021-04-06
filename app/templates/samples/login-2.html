@@ -29,7 +29,7 @@
               </div>
               <h4>Welcome to BJUT Dormitory Management System!</h4>
               <h6 class="fontWeightLight">Happy to see you again!</h6>
-              <form action='{{ url_for('user.login') }}' method="post">
+              <form action='{{ url_for('auth.login') }}' method="post">
                 <div class="formGroup">
                   <label for="exampleInputEmail">Username</label>
                   <div class="inputGroup ">
@@ -38,7 +38,7 @@
                         <i class="mdi mdi-account-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="text" class="formControl formControlLg borderLeft0" id="exampleInputEmail" name="username" placeholder="Username">
+                    <input type="text" class="formControl formControlLg borderLeft0" id="exampleInputEmail" name="stu_wor_id" placeholder="UserID">
                   </div>
                 </div>
                 <div class="formGroup">
@@ -65,7 +65,7 @@
                   </button>
                 </div>
                 <div class="textCennter mt4 fontWeightLight">
-                  Don't have an account? <a href='{{url_for('user.register')}}' class="textPrimary">Create</a>
+                  Don't have an account? <a href='{{url_for('auth.register')}}' class="textPrimary">Create</a>
                 </div>
               </form>
             </div>
