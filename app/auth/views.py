@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from wtforms import ValidationError
 
 from . import auth
@@ -111,6 +111,38 @@ def register():
             else:
                 flash('Email, phone number or id already exists.')
     return render_template('samples/register-2.html', role_id=role_id)
+
+
+@auth.route('checkID',methods=['GET','POST'])
+def check_id():
+    id = request.args.get('id')
+    user = User.query.filter(User.stu_wor_id == id).all()
+    if len(user)>0:
+        return jsonify(code=400,msg="The ID has already existed")
+    else:
+        return jsonify(code=200,msg="this id number is avaliba")
+
+
+@auth.route('checkEmail',methods=['GET','POST'])
+def check_email():
+    email = request.args.get('email')
+    user = User.query.filter(User.email == email).all()
+    if len(user)>0:
+        return jsonify(code=400,msg="The email has already existed")
+    else:
+        return jsonify(code=200,msg="this phone number is avaliba")
+
+
+@auth.route('checkPhone',methods=['GET','POST'])
+def check_phone():
+    phone = request.args.get('phone')
+    user = User.query.filter(User.email == phone).all()
+    if len(user)>0:
+        return jsonify(code=400,msg="The phone number has already existed")
+    else:
+        return jsonify(code=200,msg="this phone number is avaliba")
+
+
 
 
 def validate_email(e):

@@ -15,7 +15,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="../../static/css/register.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../../static/images/favicon.png" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
                         <i class="mdi mdi-account-outline textPrimary"></i>
                       </span>
                     </div>
-				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="UserID" name="stu_wor_id">
+				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="UserID" name="stu_wor_id" id="registerID"><span ></span>
 					</div>
                 </div>
                 <div class="formGroup">
@@ -50,7 +50,7 @@
                         <i class="mdi mdi-account-outline textPrimary"></i>
                       </span>
                     </div>
-				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="Username" name="username">
+				 <input type="text" class="formControl formControlLg borderLeft0" placeholder="Username" name="username" id="registerUser"><span></span>
 					</div>
                 </div>
                 <div class="formGroup">
@@ -61,7 +61,7 @@
                         <i class="mdi mdi-email-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="email" class="formControl formControlLg borderLeft0" placeholder="Email" name="email">
+                    <input type="email" class="formControl formControlLg borderLeft0" placeholder="Email" name="email" id="registerEmail"><span></span>
                   </div>
                 </div>
                <div class="formGroup">
@@ -72,7 +72,7 @@
                         <i class="mdi mdi-phone textPrimary"></i>
                       </span>
                     </div>
-                    <input type="text" class="formControl formControlLg borderLeft0" placeholder="Phone" name="phone">
+                    <input type="text" class="formControl formControlLg borderLeft0" placeholder="Phone" name="phone" id="registerPhone"><span></span>
                   </div>
                 </div>
                 <div class="formGroup">
@@ -83,7 +83,7 @@
                         <i class="mdi mdi-lock-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputPassword" placeholder="Password" name="password">
+                    <input type="password" class="formControl formControlLg borderLeft0" placeholder="Password" name="password" id="registerPassword"><span></span>
                   </div>
                 </div>
 				  <div class="formGroup">
@@ -94,11 +94,11 @@
                         <i class="mdi mdi-lock-outline textPrimary"></i>
                       </span>
                     </div>
-                    <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputConfirmPassword" placeholder="Confirm Password" name="password2">
+                    <input type="password" class="formControl formControlLg borderLeft0" placeholder="Confirm Password" name="password2" id="registerCPassword"><span></span>
                   </div>
                 </div>
                 <div class="mt-3">
-                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="SIGN UP">
+                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="SIGN UP" id="signUp">
                 </div>
                 <div class="textCenter mt4 fontWeightLight">
                   Already have an account? <a href="{{ url_for('auth.login') }}?identification={{ role_id }}" class="textPrimary">Login</a>
@@ -116,7 +116,7 @@
   </div>
   <!-- container-scroller -->
   <!-- plugins:js -->
-  <script src="../../static/vendors/base/vendor.bundle.base.js"></script>
+  <script src="../../static/js/examine.js"></script>
   <!-- endinject -->
   <!-- inject:js -->
 
