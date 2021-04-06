@@ -57,7 +57,6 @@ def register():
         password = request.form.get('password')
         password2 = request.form.get('password2')
 
-        stu_wor_id = '192'           # 即删
         if not all([username, stu_wor_id, email, password, password2]):
             flash('elements are incomplete')
             print('elements are incomplete')
