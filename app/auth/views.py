@@ -19,21 +19,30 @@ from flask_login import logout_user, login_required, login_user, current_user
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    print(request.method)
     if request.method == 'POST':
-
+        print("hello")
         stu_wor_id = request.form.get('stu_wor_id')     # 向前端索要学工号
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
+        # return redirect(url_for('auth.home'))
         if user is not None and user.verify_password(password):
-            return "login successfully"            # 少路由，指向home界面
+            redirect(url_for('auth.home'))           # 少路由，指向home界面
         else:
             flash('Invalid id or password.')
+    # elif f==2:#手机验证登录
 
     global role_id
     role_id = int(request.args.get('identification'))
     print(role_id)
-
-    return render_template('samples/login-2.html')
+    getf = request.args.get('f')
+    if getf != None:
+        getf = int(getf)
+    if getf == 1:
+        return render_template('samples/phoneLogin.html',role_id=role_id)
+    if getf == 2:
+        return render_template('samples/emailLogin.html' ,role_id = role_id)
+    return render_template('samples/login-2.html',role_id=role_id)
 
 
 # Logout
@@ -43,6 +52,14 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
+
+@auth.route('/sendMsg')
+def send_message():
+    pass
+
+@auth.route('/home')
+def home():
+    return  render_template('samples/homepage.html')
 
 
 # register
@@ -74,7 +91,7 @@ def register():
             if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id):
                 print("yes2.1.1")
                 # new_user = User(user_name=username, role_id=main.role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
-                new_user = User(user_name=username, role_id=role_id,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
+                new_user = User(user_name=username,  password=password, email=email, stu_wor_id=stu_wor_id, phone=phone)
                 flash('Registered successfully! You can login now.')
                 db.session.add(new_user)
                 db.session.commit()
@@ -82,7 +99,8 @@ def register():
             else:
                 print("yes2.1.2")
                 flash('Email, phone number or id already exists.')
-    return render_template('samples/register-2.html')
+    role_id = request.args.get('identification')
+    return render_template('samples/register-2.html',role_id=role_id)
 
 
 def validate_email(e):

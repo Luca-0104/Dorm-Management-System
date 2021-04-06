@@ -14,6 +14,7 @@
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="../../static/css/myLogin.css">
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <!-- endinject -->
 </head>
 
@@ -29,7 +30,7 @@
               </div>
               <h4>Welcome to BJUT Dormitory Management System!</h4>
               <h6 class="fontWeightLight">Happy to see you again!</h6>
-              <form action='{{ url_for('auth.login') }}' method="post">
+              <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post">
                 <div class="formGroup">
                   <label for="exampleInputEmail">Username</label>
                   <div class="inputGroup ">
@@ -57,15 +58,15 @@
                 </div>
                 <div class="mb-2 d-flex">
 					
-                  <button type="button" class="btn btnPhone authFormBtn flexGrow mr1">
+                  <button type="button" class="btn btnPhone authFormBtn flexGrow mr1" id = "PhoneLogin" onclick="skipPhone({{ role_id }})">
                     <i class="mdi mdi-phone"></i>Phone
                   </button>
-                  <button type="button" class="btn btnEmail authFormBtn flexGrow ml1">
+                  <button type="button" class="btn btnEmail authFormBtn flexGrow ml1" id ="EmailLogin" onclick="skipEmail({{ role_id }})">
                     <i class="mdi mdi-email"></i>Email
                   </button>
                 </div>
                 <div class="textCennter mt4 fontWeightLight">
-                  Don't have an account? <a href='{{url_for('auth.register')}}' class="textPrimary">Create</a>
+                  Don't have an account? <a href='{{url_for('auth.register')}}?identification={{ role_id }}' class="textPrimary">Create</a>
                 </div>
               </form>
             </div>
@@ -79,6 +80,8 @@
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
+	 <script src="../../static/js/skip.js"></script>
+
 </body>
 
 </html>
