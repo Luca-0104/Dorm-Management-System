@@ -51,18 +51,23 @@ $('#registerCPassword').blur(function () {
     let pass = $('#registerPassword').val();
     let cpass = $(this).val()
     let span_ele = $(this).next('span');
-    if(pass !== cpass) {
-        span_ele.css({"color":"#ff0011","font-size":"12px"});
-        span_ele.text('The password are not matched!');
-    }
+    $.get('checkPassword', {password: pass, cpassword:cpass}, function (data) {
+            console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"})
+                span_ele.text(data.msg);
+            }
+        })
 });
 
-$('#signUp').click(function () {
-    let pass = $('#registerPassword').val();
-    let cpass = $('#registerCPassword').val()
-    if(pass !== cpass) {
-        alert('The password are not matched!')
-    }else {
-        alert("register successfully")
-    }
-})
+
+// flash message
+// $('#signUp').click(function () {
+//     let pass = $('#registerPassword').val();
+//     let cpass = $('#registerCPassword').val()
+//     if(pass !== cpass) {
+//         alert('The password are not matched!')
+//     }else {
+//         alert("register successfully")
+//     }
+// })

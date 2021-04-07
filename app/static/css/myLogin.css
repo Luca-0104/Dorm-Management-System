@@ -8,7 +8,9 @@
 .containerScoller{
 	overflow: hidden;
 }
-
+.textColor{
+    color:#c0c0c0 !important;
+}
 .containerFlucid{
   width: 100%;
   padding-right: 10px;

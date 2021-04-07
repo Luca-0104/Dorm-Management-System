@@ -141,9 +141,18 @@ def check_email():
 @auth.route('checkPhone', methods=['GET', 'POST'])
 def check_phone():
     phone = request.args.get('phone')
-    user = User.query.filter(User.email == phone).all()
+    user = User.query.filter(User.phone == phone).all()
     if len(user) > 0:
         return jsonify(code=400, msg="The phone number has already existed")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+
+@auth.route('checkPassword', methods=['GET', 'POST'])
+def check_password():
+    password = request.args.get('password')
+    cpassword = request.args.get('cpassword')
+    if password != cpassword:
+        return jsonify(code=400, msg="The password is not match")
     else:
         return jsonify(code=200, msg="this phone number is available")
 

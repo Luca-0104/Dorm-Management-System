@@ -32,11 +32,11 @@
               <h6 class="fontWeightLight">Happy to see you again!</h6>
               <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post">
                 <div class="formGroup">
-                  <label for="exampleInputEmail">Username</label>
+                  <label for="exampleInputEmail">UserID</label>
                   <div class="inputGroup ">
                     <div class="inputGroupPrepend bgTransparent">
                       <span class="inputGroupText bgTransparent borderRight0">
-                        <i class="mdi mdi-account-outline textPrimary"></i>
+                        <i class="mdi mdi-account-outline textPrimary textColor"></i>
                       </span>
                     </div>
                     <input type="text" class="formControl formControlLg borderLeft0" id="exampleInputEmail" name="stu_wor_id" placeholder="UserID">
@@ -45,7 +45,7 @@
                 <div class="formGroup">
                   <label for="exampleInputPassword">Password</label>
                   <div class="inputGroup">
-                    <div class="inputGroupPrepend bgTransparent"><span class="inputGroupText bgTransparent borderRight0 borderColor"> <em class="mdi mdi-lock-outline textPrimary"></em> </span></div>
+                    <div class="inputGroupPrepend bgTransparent"><span class="inputGroupText bgTransparent borderRight0 borderColor"> <em class="mdi mdi-lock-outline textPrimary textColor"></em> </span></div>
                     <input type="password" class="formControl formControlLg borderLeft0" id="exampleInputPassword" name="password" placeholder="Password">
                   </div>
                 </div>

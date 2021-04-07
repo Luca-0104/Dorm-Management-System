@@ -364,6 +364,10 @@ input[type="button"].btnBlock {
   font-size: 20px;
 }
 
+.textColor{
+    color:#c0c0c0 !important;
+}
+
 a.textPrimary:hover, a.textPrimary:focus {
   color: #014eff !important;
 }
