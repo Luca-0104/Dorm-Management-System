@@ -28,19 +28,66 @@ class Permission:
     ADMIN = 16
 
 
-# 定义Role模型
+# The table of dormitory buildings
+class DormBuilding(db.Model):
+    __tablename__ = 'dorm_buildings'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    students = db.relationship('Student', backref='building')
+
+    # 添加静态方法，用于自动在数据库中创建并添加宿舍楼(请在shell中使用此函数！！！)
+    @staticmethod
+    def insert_dorm_buildings():
+        buildings = [
+            'DormBuilding_1',
+            'DormBuilding_2',
+            'DormBuilding_3',
+            'DormBuilding_4',
+            'DormBuilding_5',
+            'DormBuilding_6',
+            'DormBuilding_7',
+            'DormBuilding_8',
+            'DormBuilding_9',
+            'DormBuilding_10',
+            'DormBuilding_11',
+            'DormBuilding_12',
+            'DormBuilding_13',
+        ]
+        for b in buildings:  # 遍历整个字典
+            building = DormBuilding.query.filter_by(name=b).first()
+            if building is None:  # 如果还没有这个楼就创建一个
+                building = DormBuilding(name=b)
+            db.session.add(building)
+        db.session.commit()
+
+
+# The table of dormitory information
+class Student(db.Model):
+    __tablename__ = 'students'
+    id = db.Column(db.Integer, primary_key=True)
+    stu_number = db.Column(db.String(64), unique=True, nullable=False)
+    name = db.Column(db.String(64), unique=False, nullable=False)
+    college = db.Column(db.String(64), unique=False, nullable=False)
+    building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
+    room_number = db.Column(db.Integer, unique=False, nullable=False)
+    enroll_date = db.Column(db.DateTime(), default=datetime.utcnow)
+    is_deleted = db.Column(db.Boolean, default=False)
+    is_registered = db.Column(db.Boolean, default=False)
+
+
+# The table of different roles (3 roles) of users
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    users = db.relationship('User', backref='role')             # 在数据库模型中定义关系
+    users = db.relationship('User', backref='role')  # 在数据库模型中定义关系
     # default = db.Column(db.Boolean, default=False, index=True)  # 是否为默认角色（只能有一种是默认角色）
-    permissions = db.Column(db.Integer)                         # 权限码的和
+    permissions = db.Column(db.Integer)  # 权限码的和
 
     def __init__(self, **kwargs):
         super(Role, self).__init__(**kwargs)
         if self.permissions is None:
-            self.permissions = 0              # permissions字段默认被sqlalchemy设置成None，我们需要初始化其为0
+            self.permissions = 0  # permissions字段默认被sqlalchemy设置成None，我们需要初始化其为0
 
     def __repr__(self):
         return '<Role %r>' % self.name
@@ -66,21 +113,22 @@ class Role(db.Model):
         roles = {  # 创建一个角色字典，每个value都是对应角色的所有权限列表
             'Student': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE],
             'Dormitory_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE],
-            'System_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE, Permission.ADMIN]
+            'System_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE,
+                                     Permission.ADMIN]
         }
-        default_role = 'Student'                                       # 设置默认用户为普通User
-        for r in roles:                                                # 遍历整个字典
+        default_role = 'Student'  # 设置默认用户为普通User
+        for r in roles:  # 遍历整个字典
             role = Role.query.filter_by(name=r).first()
-            if role is None:                                        # 如果还没有这个角色就创建一个
+            if role is None:  # 如果还没有这个角色就创建一个
                 role = Role(name=r)
-            for perm in roles[r]:                                   # 遍历对应角色的权限列表
-                role.add_permission(perm)                           # 给角色添加对应范围内的权限
-            role.default = (role.name == default_role)              # 如果是默认角色，则将default设置为True
+            for perm in roles[r]:  # 遍历对应角色的权限列表
+                role.add_permission(perm)  # 给角色添加对应范围内的权限
+            role.default = (role.name == default_role)  # 如果是默认角色，则将default设置为True
             db.session.add(role)
         db.session.commit()
 
 
-# 定义User模型
+# The table of users
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -94,7 +142,6 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-
 
     def __repr__(self):
         return '<User %r>' % self.user_name
