@@ -32,8 +32,11 @@ class Permission:
 class DormBuilding(db.Model):
     __tablename__ = 'dorm_buildings'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    building_name = db.Column(db.String(64), unique=True)
     students = db.relationship('Student', backref='building')
+
+    def __repr__(self):
+        return '<DormBuilding %r>' % self.building_name
 
     # 添加静态方法，用于自动在数据库中创建并添加宿舍楼(请在shell中使用此函数！！！)
     @staticmethod
@@ -65,14 +68,30 @@ class DormBuilding(db.Model):
 class Student(db.Model):
     __tablename__ = 'students'
     id = db.Column(db.Integer, primary_key=True)
+    stu_name = db.Column(db.String(64), unique=False, nullable=False)
     stu_number = db.Column(db.String(64), unique=True, nullable=False)
-    name = db.Column(db.String(64), unique=False, nullable=False)
     college = db.Column(db.String(64), unique=False, nullable=False)
     building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
     room_number = db.Column(db.Integer, unique=False, nullable=False)
     enroll_date = db.Column(db.DateTime(), default=datetime.utcnow)
     is_deleted = db.Column(db.Boolean, default=False)
     is_registered = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<Student %r>' % self.stu_name
+
+    # The function for delete student logically
+    def delete_stu(self):
+        self.is_deleted = True
+        db.session.add(self)
+        db.session.commit()
+
+    # The function for register student logically
+    # (Use this function if the student register as an user)
+    def register_stu(self):
+        self.is_registered = True
+        db.session.add(self)
+        db.session.commit()
 
 
 # The table of different roles (3 roles) of users
