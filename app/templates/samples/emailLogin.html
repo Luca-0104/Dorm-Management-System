@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Majestic Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../static/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../static/vendors/base/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../static/css/loginPhone.css">
+  <!-- endinject -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+</head>
+
+<body >
+  <div class="containerScoller">
+    <div class="containerFlucid pageBodWrapper fullPageWrapper">
+      <div class="contentWrapper d-flex alignItemsStretch auth authImgBg">
+        <div class="row flexGrow">
+          <div class="colLg6 d-flex alignItemCenter justifyContentCenter">
+            <div class="authFormTransparent textLeft p3">
+              <div class="brandLogo">
+                <img src="../../static/images/auth/index.png" alt="logo">
+              </div>
+              <h4>Welcome to BJUT Dormitory Management System!</h4>
+              <h6 class="fontWeightLight">Happy to see you again!</h6>
+              <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post">
+                <div class="formGroup">
+                  <label for="exampleInputEmail">Email</label>
+                  <div class="inputGroup ">
+                    <div class="inputGroupPrepend bgTransparent">
+                      <span class="inputGroupText bgTransparent borderRight0">
+                        <i class="mdi mdi-phone textPrimary textColor"></i>
+                      </span>
+                    </div>
+                    <input type="text" class="formControl formControlLg borderLeft0"  id="exampleInputEmail" placeholder="Email">
+                  </div>
+                </div>
+                <div class="formGroup">
+                  <label for="exampleInputPassword">Vertification Code</label>
+                  <div class="inputGroup">
+                    <div class="inputGroupPrepend bgTransparent"><span class="inputGroupText bgTransparent borderRight0 borderColor"> <em class="mdi mdi-lock-outline textPrimary textColor"></em> </span></div>
+                    <input type="password" class="formControl formControlLg borderLeft0 code" id="exampleInputPassword" placeholder="Vertification Code">
+					  <div>
+						  <input type="button" class="btn btnSend btnLg fontWeightMedium authFormBtn" value="SEND CODE" id="btnCheck">
+					  </div>
+                  </div>
+                </div>
+                <div class="my2 d-flex justifyContentBetween alignItemCenter">
+
+                  <a href="#" class="authLink textBlack">Forgot password?</a>
+                </div>
+                <div class="my3">
+                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="Login">
+                </div>
+                <div class="mb-2 d-flex">
+
+                  <button type="button" class="btn btnPhone authFormBtn flexGrow mr1" id="UserLogin" onclick="skipUser({{ role_id }})">
+                    <i class="mdi mdi-account"></i>User
+                  </button>
+                  <button type="button" class="btn btnEmail authFormBtn flexGrow ml1" id="EmailLogin" onclick="skipPhone({{ role_id }})">
+                    <i class="mdi mdi-phone"></i>Phone
+                  </button>
+                </div>
+                <div class="textCennter mt4 fontWeightLight">
+                  Don't have an account? <a href="{{url_for('auth.register')}}?identification={{ role_id }}" class="textPrimary">Create</a>
+
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="colLg6 loginHalfBg d-flex flexGrow">
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../../static/vendors/base/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- inject:js -->
+	 <script src="../../static/js/skip.js"></script>
+     <script src="../../static/js/send.js"></script>
+
+</body>
+
+</html>

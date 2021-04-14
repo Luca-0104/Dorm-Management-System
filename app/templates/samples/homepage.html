@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+ <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body background="../../static/images/auth/background.jpg">
+<h1>
+Hello,
+{% if current_user.is_authenticated %}
+      {{ current_user.user_name }}
+{% else %}
+    seems like you are not logged in so far.
+{% endif %}
+!
+</h1>
+<p>
+    ({{ current_user.role }})
+</p>
+<input type="button" id="backMain" value="Log out" placeholder="Log out" onclick="location.href='{{ url_for('main.index') }}'">
+
+</body>
+<script src="../../static/js/skip.js"></script>
+</html>
