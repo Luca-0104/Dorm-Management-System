@@ -57,9 +57,9 @@ class DormBuilding(db.Model):
             'DormBuilding_13',
         ]
         for b in buildings:  # 遍历整个字典
-            building = DormBuilding.query.filter_by(name=b).first()
+            building = DormBuilding.query.filter_by(building_name=b).first()
             if building is None:  # 如果还没有这个楼就创建一个
-                building = DormBuilding(name=b)
+                building = DormBuilding(building_name=b)
             db.session.add(building)
         db.session.commit()
 
@@ -113,7 +113,6 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     users = db.relationship('User', backref='role')  # 在数据库模型中定义关系
-    # default = db.Column(db.Boolean, default=False, index=True)  # 是否为默认角色（只能有一种是默认角色）
     permissions = db.Column(db.Integer)  # 权限码的和
 
     def __init__(self, **kwargs):
@@ -194,7 +193,7 @@ class User(UserMixin, db.Model):
         return self.role is not None and self.role.has_permission(perm)
 
     def is_system_administrator(self):  # 判断该用户是否是管理员
-        return self.can(Permission.ADMIN)
+        return self.can(Permission.SYS_ADMIN)
 
     # 刷新用户的最后访问时间
     def ping(self):
