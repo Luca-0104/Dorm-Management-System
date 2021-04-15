@@ -151,6 +151,7 @@ def check_phone():
     else:
         return jsonify(code=200, msg="this phone number is available")
 
+
 @auth.route('checkPassword', methods=['GET', 'POST'])
 def check_password():
     password = request.args.get('password')
