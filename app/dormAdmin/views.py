@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from sqlalchemy import or_, and_
 from wtforms import ValidationError
+from .. import db
 
 from . import dormAdmin
 from ..models import Student
@@ -57,12 +58,12 @@ from flask import render_template, redirect, request
 
 
 
-@dormAdmin.route ('/student/list')
+@dormAdmin.route('/student/list')
 def student_list():
     items = db.session.query(Student).limit(20)
     return render_template('dormAdmin.home', items=items)
 
-@dormAdmin.route ('/add', methods=['GET', 'POST'])
+@dormAdmin.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
 
