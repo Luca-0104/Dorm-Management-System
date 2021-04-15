@@ -44,3 +44,12 @@ def search():
         stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), not Student.is_deleted)).all()
 
     return render_template('.html', stu_list=stu_list)  # 待完善核对
+
+
+@dormAdmin.route('/delete', endpoint='delete')
+def delete():
+    id = request.args.get('id')
+    student = Student.query.get(id)
+    student.is_deleted = True
+    db.session.commit()
+    return redirect(url_for('dormAdmin.home'))  # 待完善核对
