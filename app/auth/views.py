@@ -6,7 +6,7 @@ from wtforms import ValidationError
 from . import auth
 from .. import db
 from ..main import main
-from ..models import User
+from ..models import User, Student
 from flask_login import logout_user, login_required, login_user, current_user
 
 get_role_from_button = True
@@ -115,6 +115,12 @@ def register():
                 flash('Registered successfully! You can login now.')
                 db.session.add(new_user)
                 db.session.commit()
+
+                # Change the according student status to is_registered
+                stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+                if stu is not None:
+                    stu.register_stu()
+
                 get_role_from_button = False  # we will go back to the login page and in this case we do not need to get the role_id again
                 return redirect(url_for("auth.login"))
             else:
