@@ -2,9 +2,8 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from sqlalchemy import or_, and_
 from wtforms import ValidationError
 
-from .. import db, dormAdmin
-from ..main import main
-from ..models import User, Student
+from . import dormAdmin
+from ..models import Student
 from flask_login import logout_user, login_required, login_user, current_user
 
 
