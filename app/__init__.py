@@ -35,6 +35,10 @@ def create_app(config_name):
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
+    # dormAdmin blueprint registration
+    from .dormAdmin import dormAdmin as dormAdmin_blueprint
+    app.register_blueprint(dormAdmin_blueprint, url_prefix='/dormAdmin')
+
     return app
 
 

@@ -21,19 +21,22 @@ def load_user(user_id):
 
 # 权限常量（2^n, 所以组合求和不会冲突）
 class Permission:
-    FOLLOW = 1
-    COMMENT = 2
-    WRITE = 4
-    MODERATE = 8
-    ADMIN = 16
+    ACCUSE = 1
+    PAYMENT = 2
+    LOST_ANNOUNCE = 4
+    DORM_ADMIN = 8
+    SYS_ADMIN = 16
 
 
 # The table of dormitory buildings
 class DormBuilding(db.Model):
     __tablename__ = 'dorm_buildings'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
+    building_name = db.Column(db.String(64), unique=True)
     students = db.relationship('Student', backref='building')
+
+    def __repr__(self):
+        return '<DormBuilding %r>' % self.building_name
 
     # 添加静态方法，用于自动在数据库中创建并添加宿舍楼(请在shell中使用此函数！！！)
     @staticmethod
@@ -54,9 +57,9 @@ class DormBuilding(db.Model):
             'DormBuilding_13',
         ]
         for b in buildings:  # 遍历整个字典
-            building = DormBuilding.query.filter_by(name=b).first()
+            building = DormBuilding.query.filter_by(building_name=b).first()
             if building is None:  # 如果还没有这个楼就创建一个
-                building = DormBuilding(name=b)
+                building = DormBuilding(building_name=b)
             db.session.add(building)
         db.session.commit()
 
@@ -65,14 +68,43 @@ class DormBuilding(db.Model):
 class Student(db.Model):
     __tablename__ = 'students'
     id = db.Column(db.Integer, primary_key=True)
+    stu_name = db.Column(db.String(64), unique=False, nullable=False)
     stu_number = db.Column(db.String(64), unique=True, nullable=False)
-    name = db.Column(db.String(64), unique=False, nullable=False)
+    phone = db.Column(db.String(64), unique=True, nullable=False)
     college = db.Column(db.String(64), unique=False, nullable=False)
     building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
     room_number = db.Column(db.Integer, unique=False, nullable=False)
     enroll_date = db.Column(db.DateTime(), default=datetime.utcnow)
     is_deleted = db.Column(db.Boolean, default=False)
     is_registered = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<Student %r>' % self.stu_name
+
+    def delete_stu(self):
+        """
+        The function for delete student logically
+        """
+        self.is_deleted = True
+        db.session.add(self)
+        db.session.commit()
+
+    def register_stu(self):
+        """
+        The function for register student logically
+        (Use this function if the student registers as an user)
+        """
+        self.is_registered = True
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def insert_students():
+        """
+        This is a method for inserting the dorm information, which means fulling the Student table.
+        This should be used in the console only a single time.
+        """
+        pass
 
 
 # The table of different roles (3 roles) of users
@@ -81,7 +113,6 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     users = db.relationship('User', backref='role')  # 在数据库模型中定义关系
-    # default = db.Column(db.Boolean, default=False, index=True)  # 是否为默认角色（只能有一种是默认角色）
     permissions = db.Column(db.Integer)  # 权限码的和
 
     def __init__(self, **kwargs):
@@ -111,10 +142,9 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {  # 创建一个角色字典，每个value都是对应角色的所有权限列表
-            'Student': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE],
-            'Dormitory_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE],
-            'System_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE,
-                                     Permission.ADMIN]
+            'Student': [Permission.ACCUSE, Permission.PAYMENT, Permission.LOST_ANNOUNCE],
+            'Dormitory_administrator': [Permission.DORM_ADMIN, Permission.LOST_ANNOUNCE],
+            'System_administrator': [Permission.SYS_ADMIN, Permission.DORM_ADMIN]
         }
         default_role = 'Student'  # 设置默认用户为普通User
         for r in roles:  # 遍历整个字典
@@ -163,7 +193,7 @@ class User(UserMixin, db.Model):
         return self.role is not None and self.role.has_permission(perm)
 
     def is_system_administrator(self):  # 判断该用户是否是管理员
-        return self.can(Permission.ADMIN)
+        return self.can(Permission.SYS_ADMIN)
 
     # 刷新用户的最后访问时间
     def ping(self):

@@ -23,4 +23,4 @@ def admin_required(f):
     """
     a self-defined decorator for limiting the permission of the system administrator
     """
-    return permission_required(Permission.ADMIN)(f)
+    return permission_required(Permission.SYS_ADMIN)(f)
