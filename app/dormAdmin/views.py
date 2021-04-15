@@ -19,8 +19,8 @@ def search():
     if tag == 'all':
         stu_list = Student.query.filter(and_(or_(Student.stu_name.contains(key_word),
                                                  Student.stu_number == key_word,
+                                                 Student.phone.contains(key_word),
                                                  Student.college.contains(key_word),
-                                                 Student.building_id == key_word,
                                                  Student.room_number == key_word,
                                                  Student.enroll_date.contains(key_word)
                                                  )), not Student.is_deleted).all()
@@ -31,11 +31,11 @@ def search():
     elif tag == 'stu_number':
         stu_list = Student.query.filter(and_(Student.stu_number.contains(key_word), not Student.is_deleted)).all()
 
+    elif tag == 'phone':
+        stu_list = Student.query.filter(and_(Student.phone.contains(key_word), not Student.is_deleted)).all()
+
     elif tag == 'college':
         stu_list = Student.query.filter(and_(Student.college.contains(key_word), not Student.is_deleted)).all()
-
-    elif tag == 'building_id':
-        stu_list = Student.query.filter(and_(Student.building_id.contains(key_word), not Student.is_deleted)).all()
 
     elif tag == 'room_number':
         stu_list = Student.query.filter(and_(Student.room_number.contains(key_word), not Student.is_deleted)).all()

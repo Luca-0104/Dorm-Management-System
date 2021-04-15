@@ -21,11 +21,11 @@ def load_user(user_id):
 
 # 权限常量（2^n, 所以组合求和不会冲突）
 class Permission:
-    FOLLOW = 1
-    COMMENT = 2
-    WRITE = 4
-    MODERATE = 8
-    ADMIN = 16
+    ACCUSE = 1
+    PAYMENT = 2
+    LOST_ANNOUNCE = 4
+    DORM_ADMIN = 8
+    SYS_ADMIN = 16
 
 
 # The table of dormitory buildings
@@ -70,6 +70,7 @@ class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stu_name = db.Column(db.String(64), unique=False, nullable=False)
     stu_number = db.Column(db.String(64), unique=True, nullable=False)
+    phone = db.Column(db.String(64), unique=True, nullable=False)
     college = db.Column(db.String(64), unique=False, nullable=False)
     building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
     room_number = db.Column(db.Integer, unique=False, nullable=False)
@@ -80,18 +81,30 @@ class Student(db.Model):
     def __repr__(self):
         return '<Student %r>' % self.stu_name
 
-    # The function for delete student logically
     def delete_stu(self):
+        """
+        The function for delete student logically
+        """
         self.is_deleted = True
         db.session.add(self)
         db.session.commit()
 
-    # The function for register student logically
-    # (Use this function if the student register as an user)
     def register_stu(self):
+        """
+        The function for register student logically
+        (Use this function if the student registers as an user)
+        """
         self.is_registered = True
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def insert_students():
+        """
+        This is a method for inserting the dorm information, which means fulling the Student table.
+        This should be used in the console only a single time.
+        """
+        pass
 
 
 # The table of different roles (3 roles) of users
@@ -130,10 +143,9 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {  # 创建一个角色字典，每个value都是对应角色的所有权限列表
-            'Student': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE],
-            'Dormitory_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE],
-            'System_administrator': [Permission.FOLLOW, Permission.COMMENT, Permission.WRITE, Permission.MODERATE,
-                                     Permission.ADMIN]
+            'Student': [Permission.ACCUSE, Permission.PAYMENT, Permission.LOST_ANNOUNCE],
+            'Dormitory_administrator': [Permission.DORM_ADMIN, Permission.LOST_ANNOUNCE],
+            'System_administrator': [Permission.SYS_ADMIN, Permission.DORM_ADMIN]
         }
         default_role = 'Student'  # 设置默认用户为普通User
         for r in roles:  # 遍历整个字典
