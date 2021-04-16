@@ -16,6 +16,7 @@ def search_stu():
     fuzzy querying was used
     :return: stu_list ab list of Student objects that meet the filter requirement
     """
+    return "yes"
     key_word = request.args.get('search')  # 待完善核对
     tag = request.form.get('tag')  # 待完善核对
 
