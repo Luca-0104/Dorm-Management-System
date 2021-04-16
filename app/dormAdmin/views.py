@@ -81,6 +81,28 @@ def add_stu():
 
 
 # guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+@dormAdmin.rpute('/update_stu', endpoint='update', method=['GET','POST'])#路由名待完善核对
+def update_stu():
+    if request.method == 'POST':
+        id = request.form.get('id')
+        stu_ID = request.form.get('stu_ID')
+        phone = request.form.get('phone')
+        name = request.form.get('name')
+        room = request.form.get('room')
+        email = request.form.get('email')
+        user = Student.query.get(id)
+        user.stu_ID = stu_ID
+        user.phone = phone
+        user.name = name
+        user.room = room
+        user.email = email
+        db.session.commit()
+        return redirect(url_for('main.home_dorm_admin'))#路由名待完善核对
+
+    else:
+        id = request.args.get('id')
+        user = User.query.get(id)
+        return render_template('user/update.html', user=user)#路由名待完善核对
 
 
 @dormAdmin.route('/search_gue', methods=['GET', 'POST'])  # 路由名待完善核对
