@@ -80,7 +80,7 @@ def send_message():
 
 @auth.route('/home')
 def home():
-    return render_template('samples/homepage.html')
+    return render_template('samples/testindex.html')
 
 
 # register
