@@ -19,8 +19,8 @@ def search_stu():
     key_word = request.args.get('content')
     tag = request.args.get('tag')
 
-    print('tag: ' + tag)
-    print('key_word:' + key_word)
+    # print('tag: ' + tag)
+    # print('key_word:' + key_word)
 
     stu_list = []
     if tag == 'all':
@@ -50,7 +50,7 @@ def search_stu():
     elif tag == 'enroll_date':
         stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).all()
 
-    print(stu_list)
+    # print(stu_list)
     return render_template('samples/testindex.html', students=stu_list)  # 待完善核对
 
 
@@ -59,6 +59,7 @@ def delete_stu():
     id = request.args.get('id')
     student = Student.query.get(id)
     student.is_deleted = True
+    db.session.add(student)
     db.session.commit()
     return redirect(url_for('main.home_dorm_admin'))  # 待完善核对
 
@@ -80,29 +81,96 @@ def add_stu():
     return render_template('main.home_dorm_admin')  # 待完善核对
 
 
-# guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@dormAdmin.rpute('/update_stu', endpoint='update', method=['GET','POST'])#路由名待完善核对
-def update_stu():
-    if request.method == 'POST':
-        id = request.form.get('id')
-        stu_ID = request.form.get('stu_ID')
-        phone = request.form.get('phone')
-        name = request.form.get('name')
-        room = request.form.get('room')
-        email = request.form.get('email')
-        user = Student.query.get(id)
-        user.stu_ID = stu_ID
-        user.phone = phone
-        user.name = name
-        user.room = room
-        user.email = email
-        db.session.commit()
-        return redirect(url_for('main.home_dorm_admin'))#路由名待完善核对
+# @dormAdmin.route('/update_stu', endpoint='update', method=['GET', 'POST'])  # 路由名待完善核对
+# def update_stu():
+#     if request.method == 'POST':
+#         id = request.form.get('id')
+#         stu_ID = request.form.get('stu_ID')
+#         phone = request.form.get('phone')
+#         name = request.form.get('name')
+#         room = request.form.get('room')
+#         email = request.form.get('email')
+#         user = Student.query.get(id)
+#         user.stu_ID = stu_ID
+#         user.phone = phone
+#         user.name = name
+#         user.room = room
+#         user.email = email
+#         db.session.commit()
+#         return redirect(url_for('main.home_dorm_admin'))  # 路由名待完善核对
+#
+#     else:
+#         id = request.args.get('id')
+#         user = User.query.get(id)
+#         return render_template('user/update.html', user=user)  # 路由名待完善核对
 
-    else:
-        id = request.args.get('id')
-        user = User.query.get(id)
-        return render_template('user/update.html', user=user)#路由名待完善核对
+
+@dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])  # 路由名待完善核对
+def update_stu():
+    id = request.args.get('id')
+    student = Student.query.get(id)
+
+    if request.method == 'POST':
+        stu_name = request.form.get('name')
+        stu_number = request.form.get('stu_ID')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        room_number = int(request.form.get('room'))
+
+        if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
+            student.stu_name = stu_name
+            student.stu_number = stu_number
+            student.phone = phone
+            student.email = email
+            student.room_number = room_number
+            db.session.add(student)
+            db.session.commit()
+
+        return redirect(url_for('main.home_dorm_admin'))  # 路由名待完善核对
+
+    return render_template('samples/testindex.html')  # 路由名待完善核对
+
+
+def validate_stu_number(n):
+    """
+    Verify if the student number has not been used.
+    :param n:   student number
+    """
+    stu = Student.query.filter_by(stu_number=n).first()
+    if stu:
+        if not stu.is_deleted:
+            return False
+        return True
+    return True
+
+
+def validate_phone(p):
+    """
+    Verify if the phone number has not been used.
+    :param p:   phone number
+    """
+    stu = Student.query.filter_by(phone=p).first()
+    if stu:
+        if not stu.is_deleted:
+            return False
+        return True
+    return True
+
+
+def validate_email(e):
+    """
+    Verify if the email has not been used.
+    :param e:   email
+    """
+    stu = Student.query.filter_by(email=e).first()
+    if stu:
+        if not stu.is_deleted:
+            return False
+        return True
+    return True
+
+
+# guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 @dormAdmin.route('/search_gue', methods=['GET', 'POST'])  # 路由名待完善核对
