@@ -111,4 +111,11 @@
 	
 }
 
+.btn-margin{
+  margin-right: 20px !important;
+}
+.non-list{
+  list-style: none;
+}
+
 

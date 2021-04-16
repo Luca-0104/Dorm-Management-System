@@ -6,7 +6,4 @@ $('#search1').click(function(){
 	console.log(content,tag);
 });
 
-$('#delete').click(function(){
-	location.href="/dormAdmin/search_stu";
-});
 
