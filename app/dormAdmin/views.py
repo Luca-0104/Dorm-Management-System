@@ -55,7 +55,7 @@ def delete_stu():
     student = Student.query.get(id)
     student.is_deleted = True
     db.session.commit()
-    return redirect(url_for('dormAdmin.home'))  # 待完善核对
+    return redirect(url_for('auth.home'))  # 待完善核对
 
 
 @dormAdmin.route('/add_stu', methods=['GET', 'POST'])
@@ -72,7 +72,7 @@ def add_stu():
         db.session.add(new_student)
         db.session.commit()
 
-    return render_template('dormAdmin.home')  # 待完善核对
+    return render_template('auth.home')  # 待完善核对
 
 
 # guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------

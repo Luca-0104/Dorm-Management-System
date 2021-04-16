@@ -22,7 +22,8 @@ def home_stu():
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():
-    return render_template(".html")  # 待核对完善
+    stu_list = Student.query.filter_by(is_deleted=False).all()
+    return render_template('samples/testindex.html',students=stu_list)
 
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
