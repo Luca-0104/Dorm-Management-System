@@ -80,7 +80,8 @@ def send_message():
 
 @auth.route('/home')
 def home():
-    return render_template('samples/testindex.html')
+    stu_list = Student.query.filter_by(is_deleted=False).all()
+    return render_template('samples/testindex.html',students=stu_list)
 
 
 # register

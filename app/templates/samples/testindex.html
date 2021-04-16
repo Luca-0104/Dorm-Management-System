@@ -135,35 +135,50 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-		<td>ucd@</td>
-      <td><div class="btn-group" role="group" aria-label="Basic example">
+  {% for student in students %}
+        <tr>
+            <th scope="row">{{ student.stu_number }}</th>
+            <td>{{ student.stu_name }}</td>
+            <td>{{ student.college}}</td>
+            <td>{{ student.room_number }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.phone }}</td>
+                  <td><div class="btn-group" role="group" aria-label="Basic example">
   <button type="button" class="btn btn-secondary" id="delete"><em class="bi bi-x-square icon-margin"></em>delete</button>
   <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
-</div></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-		<td>UCD@</td>
-        <td><div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
-</div></td>
-	  </tr>
-		<tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-       <td><div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
-</div></td>
-    </tr>
+        </div></td>
+        </tr>
+  {% endfor %}
+
+{#    <tr>#}
+{#      <th scope="row">1</th>#}
+{#      <td>Mark</td>#}
+{#      <td>Otto</td>#}
+{#		<td>ucd@</td>#}
+{#      <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary" id="delete"><em class="bi bi-x-square icon-margin"></em>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <th scope="row">2</th>#}
+{#      <td>Jacob</td>#}
+{#      <td>Thornton</td>#}
+{#		<td>UCD@</td>#}
+{#        <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#	  </tr>#}
+{#		<tr>#}
+{#      <th scope="row">3</th>#}
+{#      <td>Larry</td>#}
+{#      <td>the Bird</td>#}
+{#       <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#    </tr>#}
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

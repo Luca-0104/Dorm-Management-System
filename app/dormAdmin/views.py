@@ -46,7 +46,7 @@ def search_stu():
     elif tag == 'enroll_date':
         stu_list = Student.query.filter(and_(str(Student.enroll_date).contains(key_word), not Student.is_deleted)).all()
 
-    return render_template('.html', stu_list=stu_list)  # 待完善核对
+    return render_template('../templates/samples/testindex.html', stu_list=stu_list)  # 待完善核对
 
 
 @dormAdmin.route('/delete_stu', endpoint='delete')
