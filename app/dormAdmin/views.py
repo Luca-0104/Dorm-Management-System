@@ -72,39 +72,31 @@ def add_stu():
         stu_name = request.form.get('stu_name')
         stu_number = request.form.get('stu_number')
         phone = request.form.get('phone')
+        email = request.form.get('email')
         college = request.form.get('college')
-        building_id = int(request.form.get('building_id'))
-        room_number = int(request.form.get('room_number'))
-        new_student = Student(stu_name=stu_name, stu_number=stu_number, phone=phone, college=college,
-                              building_id=building_id, room_number=room_number)
-        db.session.add(new_student)
-        db.session.commit()
+        building_id_str = request.form.get('building_id')
+        room_number_str = request.form.get('room')
+        building_id = None
+        room_number = None
+
+        if building_id_str != '':
+            building_id = int(building_id_str)
+
+        if room_number_str != '':
+            room_number = int(room_number_str)
+
+        if stu_name != '' and stu_number != '' and phone != '' and email != '' and college != '' and building_id is not None and room_number is not None:
+            new_student = Student(stu_name=stu_name,
+                                  stu_number=stu_number,
+                                  phone=phone,
+                                  email=email,
+                                  college=college,
+                                  building_id=building_id,
+                                  room_number=room_number)
+            db.session.add(new_student)
+            db.session.commit()
 
     return render_template('main.home_dorm_admin')  # 待完善核对
-
-
-# @dormAdmin.route('/update_stu', endpoint='update', method=['GET', 'POST'])  # 路由名待完善核对
-# def update_stu():
-#     if request.method == 'POST':
-#         id = request.form.get('id')
-#         stu_ID = request.form.get('stu_ID')
-#         phone = request.form.get('phone')
-#         name = request.form.get('name')
-#         room = request.form.get('room')
-#         email = request.form.get('email')
-#         user = Student.query.get(id)
-#         user.stu_ID = stu_ID
-#         user.phone = phone
-#         user.name = name
-#         user.room = room
-#         user.email = email
-#         db.session.commit()
-#         return redirect(url_for('main.home_dorm_admin'))  # 路由名待完善核对
-#
-#     else:
-#         id = request.args.get('id')
-#         user = User.query.get(id)
-#         return render_template('user/update.html', user=user)  # 路由名待完善核对
 
 
 @dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])  # 路由名待完善核对
