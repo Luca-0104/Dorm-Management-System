@@ -109,7 +109,6 @@ def add_stu():
 
 @dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])  # 路由名待完善核对
 def update_stu():
-    return "yes"
     id = request.args.get('id')
     student = Student.query.get(id)
 
@@ -118,19 +117,23 @@ def update_stu():
         stu_number = request.form.get('stu_ID')
         phone = request.form.get('phone')
         email = request.form.get('email')
-        room_number = int(request.form.get('room'))
+        room_number_str = request.form.get('room')
+        room_number = None
+
+        if room_number_str != '':
+            room_number = int(room_number_str)
 
         if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
-            if stu_name is not None:
+            if stu_name != '':
                 student.stu_name = stu_name
 
-            if stu_number is not  None:
+            if stu_number != '':
                 student.stu_number = stu_number
 
-            if phone is not None:
+            if phone != '':
                 student.phone = phone
 
-            if email is not None:
+            if email != '':
                 student.email = email
 
             if room_number is not None:

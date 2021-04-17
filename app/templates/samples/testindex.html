@@ -95,7 +95,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="myForm" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
+        <form id="myFormAdd" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Student ID:</label>
             <input type="text" class="form-control" name="stu_ID">
@@ -199,13 +199,13 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="myForm" action="{{ url_for('dormAdmin.update') }}" method="post">
+        <form id="myFormModify" action="{{ url_for('dormAdmin.update') }}?id={{ student.id }}" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Student ID:</label>
             <input type="text" class="form-control" name="stu_ID" placeholder="{{ student.stu_number }}" >
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label">Name:</label>
+             <label for="message-text" class="col-form-label">Name:</label>
              <input type="text" class="form-control" name="name" placeholder="{{ student.stu_name }}">
           </div>
 			<div class="form-group">
@@ -224,7 +224,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>
+        <button type="button" class="btn btn-primary" id="sendMessagemodify">Confirm</button>
       </div>
     </div>
   </div>
@@ -341,7 +341,11 @@
 	<script src="../../static/js/search.js"></script>
 <script>
     $('#sendMessage').click(function(){
-	document.getElementById("myForm").submit();
+	document.getElementById("myFormAdd").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+    $('#sendMessagemodify').click(function(){
+	document.getElementById("myFormModify").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
 });
 </script>
