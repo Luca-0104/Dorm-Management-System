@@ -228,3 +228,24 @@ def search_gue():
         gue_list = Guest.query.filter(and_(Guest.leave_time.contains(key_word), Guest.is_deleted == False)).all()
 
     return render_template('.html', gue_list=gue_list)  # 待完善核对
+
+
+
+@dormAdmin.route('/add_gue', methods=['GET', 'POST'])
+def add_gue():
+    if request.method == 'POST':
+        gue_name = request.form.get('gue_name')
+        gue_stu_number = request.form.get('gue_stu_number')
+        gue_phone = request.form.get('gue_phone')
+        gue_college = request.form.get('gue_college')
+        gue_building_id = int(request.form.get('gue_building_id'))
+        gue_room_number = int(request.form.get('gue_room_number'))
+        arrive_time = request.form.get('arrive_time')
+        leave_time = request.form.get('leave_time')
+
+        new_guest = Guest(gue_name=gue_name, gue_stu_number=gue_stu_number, gue_phone=gue_phone, gue_college=gue_college,
+                          gue_building_id=gue_building_id, gue_room_number=gue_room_number, arrive_time=arrive_time, leave_time=leave_time)
+        db.session.add(new_guest)
+        db.session.commit()
+
+    return render_template('main.home_dorm_admin')  # 待完善核对

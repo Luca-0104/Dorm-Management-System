@@ -84,14 +84,11 @@ def send_message():
     pass
 
 
-"""
-已弃用，暂时不删
-
 @auth.route('/home')
 def home():
-    stu_list = Student.query.filter_by(is_deleted=False).all()
-    return render_template('samples/testindex.html',students=stu_list)
-"""
+    pagenum = int(request.args.get('page', 1))
+    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template('samples/testindex.html', pagination=pagination)
 
 
 # register
