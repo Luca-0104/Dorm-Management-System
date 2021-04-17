@@ -21,7 +21,7 @@ def search_stu():
     pagenum = int(request.args.get('page', 1))
     enter_type = 'search'
 
-    # print('tag: ' + tag)
+    print('tag: ' + tag)
     # print('key_word:' + key_word)
 
     stu_list = []
@@ -103,6 +103,10 @@ def add_stu():
 def update_stu():
     id = request.args.get('id')
     student = Student.query.get(id)
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
 
     if request.method == 'POST':
         stu_name = request.form.get('name')
@@ -133,9 +137,10 @@ def update_stu():
 
             db.session.add(student)
             db.session.commit()
-
-        return redirect(url_for('main.home_dorm_admin'))  # 路由名待完善核对
-
+        if enter_type=="home":
+            return redirect(url_for('main.home_dorm_admin'))  # 路由名待完善核对
+        elif enter_type == "search":
+            return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag,page=page))
     return render_template('samples/testindex.html')  # 路由名待完善核对
 
 

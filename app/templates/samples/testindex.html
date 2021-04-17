@@ -199,7 +199,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="myFormModify{{ student.id }}" action="{{ url_for('dormAdmin.update') }}?id={{ student.id }}&enterType={{ enterType }}&content{{ content }}&tag={{ tag }}" method="post">
+        <form id="myFormModify{{ student.id }}" action="{{ url_for('dormAdmin.update') }}?id={{ student.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Student ID:</label>
             <input type="text" class="form-control" name="stu_ID" placeholder="{{ student.stu_number }}" >
@@ -312,7 +312,7 @@
         {% if enterType=="home" %}
        <a class="page-link" href="{{url_for('main.home_dorm_admin')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('dormAdmin.search_stu')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
+       <a class="page-link" href="{{url_for('dormAdmin.search_stu')}}?page={{ pagination.prev_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
         {% endif %}
 
     </li>
@@ -334,7 +334,7 @@
         {% if enterType=="home" %}
        <a class="page-link" href="{{url_for('main.home_dorm_admin')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('dormAdmin.search_stu')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
+       <a class="page-link" href="{{url_for('dormAdmin.search_stu')}}?page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>
         {% endif %}
 
     </li>
