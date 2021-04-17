@@ -1,5 +1,12 @@
 from flask import Flask, render_template, request, redirect
+import fileutils
 
+
+@app.route('/list/')
+def student_list():
+    student_list = fileutils.file_read().items()
+    print('student_list:%s' % student_list)
+    return render_template('list.html', student_list=student_list)
 
 @app.route('/login/', methods=["POST", "GET"])
 def login():
