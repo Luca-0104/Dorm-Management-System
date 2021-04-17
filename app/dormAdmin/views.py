@@ -18,6 +18,8 @@ def search_stu():
     """
     key_word = request.args.get('content')
     tag = request.args.get('tag')
+    pagenum = int(request.args.get('page', 1))
+    enter_type = 'search'
 
     # print('tag: ' + tag)
     # print('key_word:' + key_word)
@@ -29,29 +31,29 @@ def search_stu():
                                                  Student.phone.contains(key_word),
                                                  Student.college.contains(key_word),
                                                  Student.room_number.contains(key_word),
-                                                 Student.enroll_date.contains(key_word)
-                                                 )), Student.is_deleted == False).all()
+                                                 # Student.enroll_date.contains(key_word)
+                                                 )), Student.is_deleted == False).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_name':
-        stu_list = Student.query.filter(and_(Student.stu_name.contains(key_word), Student.is_deleted == False)).all()
+        stu_list = Student.query.filter(and_(Student.stu_name.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
-        stu_list = Student.query.filter(and_(Student.stu_number.contains(key_word), Student.is_deleted == False)).all()
+        stu_list = Student.query.filter(and_(Student.stu_number.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'phone':
-        stu_list = Student.query.filter(and_(Student.phone.contains(key_word), Student.is_deleted == False)).all()
+        stu_list = Student.query.filter(and_(Student.phone.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'college':
-        stu_list = Student.query.filter(and_(Student.college.contains(key_word), Student.is_deleted == False)).all()
+        stu_list = Student.query.filter(and_(Student.college.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'room_number':
-        stu_list = Student.query.filter(and_(Student.room_number.contains(key_word), Student.is_deleted == False)).all()
+        stu_list = Student.query.filter(and_(Student.room_number.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    elif tag == 'enroll_date':
-        stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).all()
+    # elif tag == 'enroll_date':
+    #     stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     # print(stu_list)
-    return render_template('samples/testindex.html', students=stu_list)  # 待完善核对
+    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word, tag=tag)  # 待完善核对
 
 
 @dormAdmin.route('/delete_stu', endpoint='delete')
@@ -107,6 +109,7 @@ def add_stu():
 
 @dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])  # 路由名待完善核对
 def update_stu():
+    return "yes"
     id = request.args.get('id')
     student = Student.query.get(id)
 
@@ -118,11 +121,21 @@ def update_stu():
         room_number = int(request.form.get('room'))
 
         if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
-            student.stu_name = stu_name
-            student.stu_number = stu_number
-            student.phone = phone
-            student.email = email
-            student.room_number = room_number
+            if stu_name is not None:
+                student.stu_name = stu_name
+
+            if stu_number is not  None:
+                student.stu_number = stu_number
+
+            if phone is not None:
+                student.phone = phone
+
+            if email is not None:
+                student.email = email
+
+            if room_number is not None:
+                student.room_number = room_number
+
             db.session.add(student)
             db.session.commit()
 

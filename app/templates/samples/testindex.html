@@ -188,7 +188,47 @@
             <td>{{ student.phone }}</td>
                   <td><div class="btn-group" role="group" aria-label="Basic example">
   <button type="button" class="btn btn-secondary" onclick="location.href='{{ url_for('dormAdmin.delete') }}?id={{ student.id }}'"><em class="bi bi-x-square icon-margin"></em>delete</button>
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
+  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal{{ student.id }}" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
+    <div class="modal fade" id="exampleModal{{ student.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modified Information {{ student.stu_number }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="myForm" action="{{ url_for('dormAdmin.update') }}" method="post">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Student ID:</label>
+            <input type="text" class="form-control" name="stu_ID" placeholder="{{ student.stu_number }}" >
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Name:</label>
+             <input type="text" class="form-control" name="name" placeholder="{{ student.stu_name }}">
+          </div>
+			<div class="form-group">
+            <label for="message-text" class="col-form-label">Room:</label>
+             <input type="text" class="form-control" name="room" placeholder="{{ student.room_number }}">
+          </div>
+			<div class="form-group">
+            <label for="message-text" class="col-form-label">Phone:</label>
+             <input type="text" class="form-control" name="phone" placeholder="{{ student.phone }}">
+          </div>
+			<div class="form-group">
+            <label for="message-text" class="col-form-label">Email:</label>
+             <input type="text" class="form-control" name="email" placeholder="{{ student.email }}">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
         </div></td>
         </tr>
   {% endfor %}
@@ -222,46 +262,46 @@
 {#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
 {#</div></td>#}
 {#    </tr>#}
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modified Information</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="myForm" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Student ID:</label>
-            <input type="text" class="form-control" name="stu_ID">
-          </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Name:</label>
-             <input type="text" class="form-control" name="name">
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Room:</label>
-             <input type="text" class="form-control" name="room">
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Phone:</label>
-             <input type="text" class="form-control" name="phone">
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Email:</label>
-             <input type="text" class="form-control" name="email">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>
-      </div>
-    </div>
-  </div>
-</div>   
+{#<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#  <div class="modal-dialog">#}
+{#    <div class="modal-content">#}
+{#      <div class="modal-header">#}
+{#        <h5 class="modal-title" id="exampleModalLabel">Modified Information</h5>#}
+{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#          <span aria-hidden="true">&times;</span>#}
+{#        </button>#}
+{#      </div>#}
+{#      <div class="modal-body">#}
+{#        <form id="myForm" action="{{ url_for('dormAdmin.add_stu') }}" method="post">#}
+{#          <div class="form-group">#}
+{#            <label for="recipient-name" class="col-form-label">Student ID:</label>#}
+{#            <input type="text" class="form-control" name="stu_ID">#}
+{#          </div>#}
+{#          <div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Name:</label>#}
+{#             <input type="text" class="form-control" name="name">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Room:</label>#}
+{#             <input type="text" class="form-control" name="room">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Phone:</label>#}
+{#             <input type="text" class="form-control" name="phone">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Email:</label>#}
+{#             <input type="text" class="form-control" name="email">#}
+{#          </div>#}
+{#        </form>#}
+{#      </div>#}
+{#      <div class="modal-footer">#}
+{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>   #}
   </tbody>
 </table>
     <nav aria-label="Page navigation ">
@@ -272,8 +312,12 @@
       {% for pagenum in range(1,pagination.pages + 1) %}
     <li {% if pagination.page==pagenum %} class="active
  page-item" {% endif %} aria-current="page">
-      <a class="page-link" href="{{url_for('auth.home')}}?page={{ pagenum }}">{{pagenum}}</a>
-    </li>
+    </li>      <a class="page-link" {% if enterType == "home" %}
+         href="{{url_for('main.home_dorm_admin')}}?page={{ pagenum }}"
+    {% elif enterType == "search" %}
+           href="{{url_for('dormAdmin.search_stu')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"
+    {% endif %} >{{pagenum}}</a>
+
     {% endfor %}
 
 
