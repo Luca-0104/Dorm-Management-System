@@ -91,8 +91,8 @@ def delete_stu():
 @dormAdmin.route('/add_stu', methods=['GET', 'POST'])
 def add_stu():
     if request.method == 'POST':
-        stu_name = request.form.get('stu_name')
-        stu_number = request.form.get('stu_number')
+        stu_name = request.form.get('name')
+        stu_number = request.form.get('stu_ID')
         phone = request.form.get('phone')
         email = request.form.get('email')
         college = request.form.get('college')
@@ -120,10 +120,12 @@ def add_stu():
                 db.session.add(new_student)
                 db.session.commit()
                 return redirect(url_for('main.home_dorm_admin', isSuccessful=True))
+            else:
+                return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
         else:
             return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
 
-    return render_template('main.home_dorm_admin')
+    return render_template('samples/testindex.html')
 
 
 @dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])
