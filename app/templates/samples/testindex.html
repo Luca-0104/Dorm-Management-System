@@ -16,9 +16,11 @@
 
 
   </head>
-  <body>translate	  
+  <body>
+
+  <input hidden id="pagination" value= "{{ pagination.items }}">
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-background">
-  <a class="navbar-brand brand-logo" href="#"><img src="../../static/images/auth/index.png" alt="Logo"/></a>
+  <a class="navbar-brand brand-logo" href="#" id="brand"><img src="../../static/images/auth/index.png" alt="Logo"/></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -98,29 +100,51 @@
         <form id="myFormAdd" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Student ID:</label>
-            <input type="text" class="form-control" name="stu_ID">
+            <input type="text" class="form-control" name="stu_ID" id="stu_id"><span></span>
           </div>
           <div class="form-group">
             <label for="message-text" class="col-form-label">Name:</label>
-             <input type="text" class="form-control" name="name">
+             <input type="text" class="form-control" name="name" id="name"><span></span>
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Room:</label>
-             <input type="text" class="form-control" name="room">
+             <input type="text" class="form-control" name="room" id="room"><span></span>
+          </div>
+            <div class="form-group">
+            <label for="recipient-name" class="col-form-label">College:</label>
+                <div>
+             <select class="form-control" name="college">
+            <option selected value="all">All</option>
+            <option value="stu_name">Name</option>
+            <option value="stu_number">Student ID</option>
+            <option value="college">College</option>
+            <option value="building">Building</option>
+            <option value="room_number">Room Number</option>
+            <option value="enroll_date">Enroll Date</option>
+                <option value="phone">Phone</option>
+
+          </select>
+
+                </div>
+
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Phone:</label>
-             <input type="text" class="form-control" name="phone">
+             <input type="text" class="form-control" name="phone" id="phone"><span></span>
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Email:</label>
-             <input type="text" class="form-control" name="email">
+             <input type="text" class="form-control" name="email" id="email"><span></span>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>
+        <button type="button" class="btn btn-primary"   id="sendMessage"
+{#                {% if isSuccessful==True %}#}
+{#         data-toggle="modal" data-target="#alert"#}
+{#        {% endif %}#}
+        >Confirm</button>
       </div>
     </div>
   </div>
@@ -187,7 +211,7 @@
             <td>{{ student.email }}</td>
             <td>{{ student.phone }}</td>
                   <td><div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-secondary" onclick="location.href='{{ url_for('dormAdmin.delete') }}?id={{ student.id }}'"><em class="bi bi-x-square icon-margin"></em>delete</button>
+  <button type="button" class="btn btn-secondary" onclick="location.href='{{ url_for('dormAdmin.delete') }}?id={{ student.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}'"><em class="bi bi-x-square icon-margin"></em>delete</button>
   <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal{{ student.id }}" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
     <div class="modal fade" id="exampleModal{{ student.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -202,23 +226,23 @@
         <form id="myFormModify{{ student.id }}" action="{{ url_for('dormAdmin.update') }}?id={{ student.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Student ID:</label>
-            <input type="text" class="form-control" name="stu_ID" placeholder="{{ student.stu_number }}" >
+            <input type="text" class="form-control" name="stu_ID" placeholder="{{ student.stu_number }}" id="stu_id{{ student.id }}"><span></span>
           </div>
           <div class="form-group">
              <label for="message-text" class="col-form-label">Name:</label>
-             <input type="text" class="form-control" name="name" placeholder="{{ student.stu_name }}">
+             <input type="text" class="form-control" name="name" placeholder="{{ student.stu_name }}" id="name">
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Room:</label>
-             <input type="text" class="form-control" name="room" placeholder="{{ student.room_number }}">
+             <input type="text" class="form-control" name="room" placeholder="{{ student.room_number }}" id="room">
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Phone:</label>
-             <input type="text" class="form-control" name="phone" placeholder="{{ student.phone }}">
+             <input type="text" class="form-control" name="phone" placeholder="{{ student.phone }}" id="phone{{ student.id }}"><span></span>
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Email:</label>
-             <input type="text" class="form-control" name="email" placeholder="{{ student.email }}">
+             <input type="text" class="form-control" name="email" placeholder="{{ student.email }}" id="email{{ student.id }}"><span></span>
           </div>
         </form>
       </div>
@@ -232,7 +256,25 @@
         </div></td>
         </tr>
   {% endfor %}
-
+<div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {#    <tr>#}
 {#      <th scope="row">1</th>#}
 {#      <td>Mark</td>#}
@@ -353,8 +395,12 @@
     <script src="../../static/js/popper.min.js"></script>
     <script src="../../static/js/bootstrap-4.0.0.js"></script>
 	<script src="../../static/js/search.js"></script>
+    <script src="../../static/js/dormExamine.js"></script>
 <script>
     $('#sendMessage').click(function(){
+        {% if isSuccessful %}
+        alert("failed to add");
+        {% endif %}
 	document.getElementById("myFormAdd").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
 });
@@ -363,7 +409,63 @@
 	document.getElementById("myFormModify{{ student.id }}").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
 });
+
     {% endfor %}
+    {% for student in pagination.items %}
+    $('#brand').click(function () {
+	console.log("email{{ student.id }}");
+    });
+    $('#stu_id{{ student.id }}').blur(function () {
+    let id = $(this).val();
+    let span_ele = $(this).next('span');
+    console.log(id);
+    if(id.length===8) {
+        span_ele.text('');
+        $.get('dormAdmin/dormCheckID', {id: id}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+    }else {
+        span_ele.css({"color":"#ff0011","font-size":"12px"});
+        span_ele.text('The unacceptable ID format');
+    }
+});
+
+$('#email{{ student.id }}').blur(function () {
+    let email = $(this).val();
+    let span_ele = $(this).next('span');
+        span_ele.text('');
+        $.get('dormAdmin/dormCheckEmail', {email: email}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+});
+
+$('#phone{{ student.id }}').blur(function () {
+    let phone = $(this).val();
+    let span_ele = $(this).next('span');
+    if(phone.length===11) {
+        span_ele.text('');
+        $.get('dormAdmin/dormCheckPhone', {phone: phone}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+    }else {
+        span_ele.css({"color":"#ff0011","font-size":"12px"});
+        span_ele.text('The unacceptable ID format');
+    }
+});
+    {% endfor %}
+
 </script>
   </body>
 </html>
