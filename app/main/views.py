@@ -22,7 +22,9 @@ def home_stu():
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():
-    return render_template(".html")  # 待核对完善
+    pagenum = int(request.args.get('page', 1))
+    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template('samples/testindex.html', pagination=pagination, enterType='home')
 
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])

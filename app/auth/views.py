@@ -43,7 +43,13 @@ def login():
             if role_id == user.role_id:
                 if user is not None and user.verify_password(password):
                     login_user(user)
-                    return redirect(url_for('auth.home'))
+                    if role_id == 1:
+                        url = 'main.home_stu'
+                    elif role_id == 2:
+                        url = 'main.home_dorm_admin'
+                    elif role_id == 3:
+                        url = 'main.home_sys_admin'
+                    return redirect(url_for(url))
                 else:
                     flash('Invalid id or password.')
             else:
@@ -80,7 +86,9 @@ def send_message():
 
 @auth.route('/home')
 def home():
-    return render_template('samples/homepage.html')
+    pagenum = int(request.args.get('page', 1))
+    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template('samples/testindex.html', pagination=pagination)
 
 
 # register

@@ -6,6 +6,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import login_manager
+from .tableInfo import stu_list
 
 
 @login_manager.user_loader
@@ -29,11 +30,31 @@ class Permission:
 
 
 # The table of dormitory buildings
+class Guest(db.Model):
+    __tablename__ = 'guests'
+    id = db.Column(db.Integer, primary_key=True)
+    gue_name = db.Column(db.String(64), unique=False, nullable=False)
+    phone = db.Column(db.String(64), unique=True, nullable=False)
+    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'))  # define the relation with Student
+    relation = db.Column(db.String(64), unique=False, nullable=False)
+    building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'))  # define the relation with DormBuilding
+    room_number = db.Column(db.Integer, unique=False, nullable=False)
+    arrive_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    leave_time = db.Column(db.DateTime(), unique=False)
+    is_deleted = db.Column(db.Boolean, default=False)
+    has_left = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<Guest %r>' % self.gue_name
+
+
+# The table of dormitory buildings
 class DormBuilding(db.Model):
     __tablename__ = 'dorm_buildings'
     id = db.Column(db.Integer, primary_key=True)
     building_name = db.Column(db.String(64), unique=True)
     students = db.relationship('Student', backref='building')
+    guests = db.relationship('Guest', backref='building')
 
     def __repr__(self):
         return '<DormBuilding %r>' % self.building_name
@@ -71,12 +92,14 @@ class Student(db.Model):
     stu_name = db.Column(db.String(64), unique=False, nullable=False)
     stu_number = db.Column(db.String(64), unique=True, nullable=False)
     phone = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(64), unique=True)
     college = db.Column(db.String(64), unique=False, nullable=False)
     building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
     room_number = db.Column(db.Integer, unique=False, nullable=False)
     enroll_date = db.Column(db.DateTime(), default=datetime.utcnow)
     is_deleted = db.Column(db.Boolean, default=False)
     is_registered = db.Column(db.Boolean, default=False)
+    guests = db.relationship('Guest', backref='student')  # define the relation with the Guest table
 
     def __repr__(self):
         return '<Student %r>' % self.stu_name
@@ -104,7 +127,19 @@ class Student(db.Model):
         This is a method for inserting the dorm information, which means fulling the Student table.
         This should be used in the console only a single time.
         """
-        pass
+        for stu_info in stu_list:
+
+            stu_name = stu_info[0]
+            stu_number = stu_info[1]
+            phone = stu_info[2]
+            email = stu_info[3]
+            college = stu_info[4]
+            building_id = stu_info[5]
+            room_number = stu_info[6]
+
+            new_stu = Student(stu_name=stu_name, stu_number=stu_number, phone=phone, email=email, college=college, building_id=building_id, room_number=room_number)
+            db.session.add(new_stu)
+            db.session.commit()
 
 
 # The table of different roles (3 roles) of users
