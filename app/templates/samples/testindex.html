@@ -398,7 +398,7 @@
     <script src="../../static/js/dormExamine.js"></script>
 <script>
     $('#sendMessage').click(function(){
-        {% if isSuccessful %}
+        {% if  isSuccessful == False %}
         alert("failed to add");
         {% endif %}
 	document.getElementById("myFormAdd").submit();
@@ -406,6 +406,11 @@
 });
     {% for student in pagination.items %}
     $('#sendMessagemodify{{ student.id }}').click(function(){
+        console.log({{ student.id }})
+        console.log({{ isSuccessful }})
+        {% if  isSuccessful == False %}
+        alert("failed to modify");
+        {% endif %}
 	document.getElementById("myFormModify{{ student.id }}").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
 });

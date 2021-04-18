@@ -20,7 +20,7 @@ def search_stu():
     tag = request.args.get('tag')
     pagenum = int(request.args.get('page', 1))
     enter_type = 'search'
-    is_successful = request.args.get('isSuccessful', False)  # The default value is False
+    is_successful = request.args.get('isSuccessful', True)  # The default value is True
 
     # print('tag: ' + tag)
     # print('key_word:' + key_word)
@@ -235,6 +235,36 @@ def validate_email(e):
             return True
         return True
     return False
+
+
+@dormAdmin.route('/dormCheckID', methods=['GET', 'POST'])
+def check_ID():
+    stu_id = request.args.get('id')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if len(user) > 0:
+        return jsonify(code=400, msg="The id has already existed")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+
+
+@dormAdmin.route('/dormCheckEmail', methods=['GET', 'POST'])
+def check_email():
+    email = request.args.get('email')
+    user = Student.query.filter(Student.email == email).all()
+    if len(user) > 0:
+        return jsonify(code=400, msg="The email has already existed")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+
+
+@dormAdmin.route('/dormCheckPhone', methods=['GET', 'POST'])
+def check_phone():
+    phone = request.args.get('phone')
+    user = Student.query.filter(Student.phone == phone).all()
+    if len(user) > 0:
+        return jsonify(code=400, msg="The Phone number has already existed")
+    else:
+        return jsonify(code=200, msg="this Phone number is available")
 
 
 # guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
