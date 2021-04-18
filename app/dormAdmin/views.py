@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import logout_user, login_required, login_user, current_user
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import dormAdmin
 from .. import db
@@ -20,8 +20,9 @@ def search_stu():
     tag = request.args.get('tag')
     pagenum = int(request.args.get('page', 1))
     enter_type = 'search'
+    is_successful = request.args.get('isSuccessful', False)  # The default value is False
 
-    print('tag: ' + tag)
+    # print('tag: ' + tag)
     # print('key_word:' + key_word)
 
     stu_list = []
@@ -32,38 +33,59 @@ def search_stu():
                                                  Student.college.contains(key_word),
                                                  Student.room_number.contains(key_word),
                                                  # Student.enroll_date.contains(key_word)
-                                                 )), Student.is_deleted == False).paginate(page=pagenum, per_page=5)
+                                                 )), Student.is_deleted == False).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_name':
-        stu_list = Student.query.filter(and_(Student.stu_name.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        stu_list = Student.query.filter(
+            and_(Student.stu_name.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
-        stu_list = Student.query.filter(and_(Student.stu_number.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        stu_list = Student.query.filter(
+            and_(Student.stu_number.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
 
     elif tag == 'phone':
-        stu_list = Student.query.filter(and_(Student.phone.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        stu_list = Student.query.filter(and_(Student.phone.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
 
     elif tag == 'college':
-        stu_list = Student.query.filter(and_(Student.college.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        stu_list = Student.query.filter(and_(Student.college.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
 
     elif tag == 'room_number':
-        stu_list = Student.query.filter(and_(Student.room_number.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        stu_list = Student.query.filter(
+            and_(Student.room_number.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
 
     # elif tag == 'enroll_date':
-    #     stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).paginate(page=pagenum, per_page=5)
+    #     stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).order_by(Student.room_number).paginate(page=pagenum, per_page=5)
 
     # print(stu_list)
-    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word, tag=tag)  # 待完善核对
+    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
+                           tag=tag, isSuccessful=is_successful)
 
 
 @dormAdmin.route('/delete_stu', endpoint='delete')
 def delete_stu():
     id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
     student = Student.query.get(id)
     student.is_deleted = True
     db.session.add(student)
     db.session.commit()
-    return redirect(url_for('main.home_dorm_admin'))  # 待完善核对
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_dorm_admin'))
+    elif enter_type == "search":
+        return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_dorm_admin'))
 
 
 @dormAdmin.route('/add_stu', methods=['GET', 'POST'])
@@ -74,32 +96,37 @@ def add_stu():
         phone = request.form.get('phone')
         email = request.form.get('email')
         college = request.form.get('college')
-        building_id_str = request.form.get('building_id')
+        # building_id_str = request.form.get('building_id')
         room_number_str = request.form.get('room')
-        building_id = None
+        # building_id = None
+        building_id = 1  # 暂时默认都给1，sprint3会将其改为宿管对应的楼号
         room_number = None
 
-        if building_id_str != '':
-            building_id = int(building_id_str)
+        # if building_id_str != '':
+        #     building_id = int(building_id_str)
 
         if room_number_str != '':
             room_number = int(room_number_str)
 
         if stu_name != '' and stu_number != '' and phone != '' and email != '' and college != '' and building_id is not None and room_number is not None:
-            new_student = Student(stu_name=stu_name,
-                                  stu_number=stu_number,
-                                  phone=phone,
-                                  email=email,
-                                  college=college,
-                                  building_id=building_id,
-                                  room_number=room_number)
-            db.session.add(new_student)
-            db.session.commit()
+            if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
+                new_student = Student(stu_name=stu_name,
+                                      stu_number=stu_number,
+                                      phone=phone,
+                                      email=email,
+                                      college=college,
+                                      building_id=building_id,
+                                      room_number=room_number)
+                db.session.add(new_student)
+                db.session.commit()
+                return redirect(url_for('main.home_dorm_admin', isSuccessful=True))
+        else:
+            return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
 
-    return render_template('main.home_dorm_admin')  # 待完善核对
+    return render_template('main.home_dorm_admin')
 
 
-@dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])  # 路由名待完善核对
+@dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])
 def update_stu():
     id = request.args.get('id')
     student = Student.query.get(id)
@@ -107,10 +134,12 @@ def update_stu():
     tag = request.args.get('tag')
     enter_type = request.args.get('enterType')
     page = request.args.get('page')
+    is_changed = False
 
     if request.method == 'POST':
         stu_name = request.form.get('name')
         stu_number = request.form.get('stu_ID')
+        print("stu_number length: " + str(len(stu_number)))
         phone = request.form.get('phone')
         email = request.form.get('email')
         room_number_str = request.form.get('room')
@@ -119,29 +148,45 @@ def update_stu():
         if room_number_str != '':
             room_number = int(room_number_str)
 
-        if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
-            if stu_name != '':
-                student.stu_name = stu_name
+        if stu_name != '':
+            student.stu_name = stu_name
+            is_changed = True
 
-            if stu_number != '':
+        if stu_number != '':
+            if validate_stu_number(stu_number):
                 student.stu_number = stu_number
+                is_changed = True
 
-            if phone != '':
+        if phone != '':
+            if validate_phone(phone):
                 student.phone = phone
+                is_changed = True
 
-            if email != '':
+        if email != '':
+            if validate_email(email):
                 student.email = email
+                is_changed = True
 
-            if room_number is not None:
-                student.room_number = room_number
+        if room_number is not None:
+            student.room_number = room_number
+            is_changed = True
 
+        # 检查信息是否修改成功
+        if is_changed:
             db.session.add(student)
             db.session.commit()
-        if enter_type=="home":
-            return redirect(url_for('main.home_dorm_admin'))  # 路由名待完善核对
-        elif enter_type == "search":
-            return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag,page=page))
-    return render_template('samples/testindex.html')  # 路由名待完善核对
+
+            if enter_type == "home":
+                return redirect(url_for('main.home_dorm_admin', isSuccessful=True))
+            elif enter_type == "search":
+                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful=True))
+        else:
+            if enter_type == "home":
+                return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
+            elif enter_type == "search":
+                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful=False))
+
+    return render_template('samples/testindex.html')
 
 
 def validate_stu_number(n):
@@ -149,12 +194,15 @@ def validate_stu_number(n):
     Verify if the student number has not been used.
     :param n:   student number
     """
-    stu = Student.query.filter_by(stu_number=n).first()
-    if stu:
-        if not stu.is_deleted:
-            return False
+    if len(n) == 8:
+        print('stu_number ok')
+        stu = Student.query.filter_by(stu_number=n).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
         return True
-    return True
+    return False
 
 
 def validate_phone(p):
@@ -162,12 +210,15 @@ def validate_phone(p):
     Verify if the phone number has not been used.
     :param p:   phone number
     """
-    stu = Student.query.filter_by(phone=p).first()
-    if stu:
-        if not stu.is_deleted:
-            return False
+    if len(p) == 11:
+        print('phone ok')
+        stu = Student.query.filter_by(phone=p).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
         return True
-    return True
+    return False
 
 
 def validate_email(e):
@@ -175,12 +226,15 @@ def validate_email(e):
     Verify if the email has not been used.
     :param e:   email
     """
-    stu = Student.query.filter_by(email=e).first()
-    if stu:
-        if not stu.is_deleted:
-            return False
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        stu = Student.query.filter_by(email=e).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
         return True
-    return True
+    return False
 
 
 # guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -188,8 +242,10 @@ def validate_email(e):
 
 @dormAdmin.route('/search_gue', methods=['GET', 'POST'])  # 路由名待完善核对
 def search_gue():
-    key_word = request.args.get('key_word')  # 待完善核对
-    tag = request.args.get('tag')  # 待完善核对
+    key_word = request.args.get('content')
+    tag = request.args.get('tag')
+    pagenum = int(request.args.get('page', 1))
+    enter_type = 'search'
 
     if tag == 'all':
         stu = Student.query.filter_by(stu_number=key_word).first()
@@ -201,7 +257,7 @@ def search_gue():
                                                    Guest.building_id == key_word,
                                                    Guest.arrive_time.contains(key_word),
                                                    Guest.leave_time.contains(key_word),
-                                                   )), Guest.is_deleted == False).all()
+                                                   )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
         else:
             gue_list = Guest.query.filter(and_(or_(Guest.gue_name.contains(key_word),
                                                    Guest.phone.contains(key_word),
@@ -209,10 +265,11 @@ def search_gue():
                                                    Guest.building_id == key_word,
                                                    Guest.arrive_time.contains(key_word),
                                                    Guest.leave_time.contains(key_word),
-                                                   )), Guest.is_deleted == False).all()
+                                                   )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
-        gue_list = Guest.query.filter(and_(Guest.stu_name.contains(key_word), Guest.is_deleted == False)).all()
+        gue_list = Guest.query.filter(and_(Guest.stu_name.contains(key_word), Guest.is_deleted == False)).paginate(
+            page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
         ref_stu_list = Student.query.filter(Student.stu_number.contains(key_word)).all()
@@ -243,7 +300,6 @@ def search_gue():
     return render_template('.html', gue_list=gue_list)  # 待完善核对
 
 
-
 @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
 def add_gue():
     if request.method == 'POST':
@@ -256,8 +312,10 @@ def add_gue():
         arrive_time = request.form.get('arrive_time')
         leave_time = request.form.get('leave_time')
 
-        new_guest = Guest(gue_name=gue_name, gue_stu_number=gue_stu_number, gue_phone=gue_phone, gue_college=gue_college,
-                          gue_building_id=gue_building_id, gue_room_number=gue_room_number, arrive_time=arrive_time, leave_time=leave_time)
+        new_guest = Guest(gue_name=gue_name, gue_stu_number=gue_stu_number, gue_phone=gue_phone,
+                          gue_college=gue_college,
+                          gue_building_id=gue_building_id, gue_room_number=gue_room_number, arrive_time=arrive_time,
+                          leave_time=leave_time)
         db.session.add(new_guest)
         db.session.commit()
 
