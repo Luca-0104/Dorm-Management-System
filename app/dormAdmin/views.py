@@ -262,3 +262,11 @@ def add_gue():
         db.session.commit()
 
     return render_template('main.home_dorm_admin')  # 待完善核对
+
+@dormAdmin.route('/delete_gue', endpoint='delete_gue')
+def delete():
+    id = request.args.get('id')
+    guest = Guest.query.get(id)
+    guest.is_deleted = True
+    db.session.commit()
+    return redirect(url_for('main.home_dorm_admin'))  # 待完善核对
