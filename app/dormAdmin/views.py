@@ -53,3 +53,11 @@ def delete():
     student.is_deleted = True
     db.session.commit()
     return redirect(url_for('dormAdmin.home'))  # 待完善核对
+
+@dormAdmin.route('/delete_visitor', endpoint='delete_visitor')
+def delete():
+    id = request.args.get('id')
+    visitor = Visitor.query.get(id)
+    visitor.is_deleted = True
+    db.session.commit()
+    return redirect(url_for('dormAdmin.home'))  # 待完善核对
