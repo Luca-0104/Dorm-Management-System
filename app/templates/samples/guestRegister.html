@@ -103,7 +103,7 @@
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Student Number:</label>
-             <input type="text" class="form-control" name="stu_num"><span></span>
+             <input type="text" class="form-control" name="stu_num" id="gue_stu_id"><span></span>
           </div>
             <div class="form-group">
             <label for="message-text" class="col-form-label">Note:</label>
@@ -223,7 +223,7 @@
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Student Number:</label>
-             <input type="text" class="form-control" name="room" placeholder="{{ guest.student.stu_num }}" id="stu_id{{ guest.id }}">
+             <input type="text" class="form-control" name="room" placeholder="{{ guest.student.stu_num }}" id="gue_stu_id{{ guest.id }}">
           </div>
         </form>
       </div>
@@ -450,7 +450,7 @@ let id = $('#stu_id').val();
 {#        })#}
 {# });#}
 
-$('#phone{{ guest.id }}').blur(function () {
+$('#gue_stu_id{{ guest.id }}').blur(function () {
     let stu_id = $(this).val();
     let span_ele = $(this).next('span');
         span_ele.text('');
