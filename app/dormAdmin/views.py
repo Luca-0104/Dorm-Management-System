@@ -240,6 +240,7 @@ def validate_email(e):
         return True
     return False
 
+
 @dormAdmin.route('/dormAdd', methods=['GET', 'POST'])
 def check_add():
     stu_id = request.args.get('id')
@@ -255,6 +256,7 @@ def check_add():
         return jsonify(code=400, msg="Some Information is invalid")
     else:
         return jsonify(code=200, msg="this Phone number is available")
+
 
 @dormAdmin.route('/dormModify', methods=['GET', 'POST'])
 def check_modify():
