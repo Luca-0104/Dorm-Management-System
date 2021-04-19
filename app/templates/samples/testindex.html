@@ -237,6 +237,26 @@
             <label for="message-text" class="col-form-label">Room:</label>
              <input type="text" class="form-control" name="room" placeholder="{{ student.room_number }}" id="room">
           </div>
+            <div class="form-group">
+            <label for="recipient-name" class="col-form-label">College:</label>
+                <div>
+             <select class="form-control" name="college">
+            <option selected value="Beijing Dublin International College">Beijing Dublin International College</option>
+            <option value="Faculty of Humanities and Social Sciences">Faculty of Humanities and Social Sciences</option>
+            <option value="Faculty of Information Technology">Faculty of Information Technology</option>
+            <option value="Faculty of Materials and Manufacturing">Faculty of Materials and Manufacturing</option>
+            <option value="Faculty of Urban Construction">Faculty of Urban Construction</option>
+            <option value="Faculty of Science">Faculty of Science</option>
+            <option value="Faculty of Environment and Life Sciences">Faculty of Environment and Life Sciences</option>
+                <option value="College of Economic and Management">College of Economic and Management</option>
+                 <option value="College of Art and Design">College of Art and Design</option>
+                 <option value="FanGongXiu Honors College">FanGongXiu Honors College</option>
+
+          </select>
+
+                </div>
+
+          </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Phone:</label>
              <input type="text" class="form-control" name="phone" placeholder="{{ student.phone }}" id="phone{{ student.id }}"><span></span>
