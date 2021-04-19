@@ -23,7 +23,7 @@ $('#gue_stu_id').blur(function () {
     console.log(id);
     if(id.length===8) {
         span_ele.text('');
-        $.get('dormAdmin/dormCheckID', {id: id}, function (data) {
+        $.get('dormAdmin/dormCheckGueStuid', {id: id}, function (data) {
             // console.log(data)
             if(data.code !== 200){
                 span_ele.css({"color": "#ff0011","font-size":"12px"});

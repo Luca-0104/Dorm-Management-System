@@ -306,14 +306,6 @@ def check_phone():
         return jsonify(code=200, msg="this Phone number is available")
 
 
-@dormAdmin.route('/dormCheckGueStuid', methods=['GET', 'POST'])
-def check_Gue_Stu_ID():
-    stu_id = request.args.get('stu_id')
-    user = Student.query.filter(Student.stu_number == stu_id).all()
-    if len(user) == 0:
-        return jsonify(code=400, msg="This ID doesn't Exist")
-    else:
-        return jsonify(code=200, msg="this phone number is available")
 # guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -406,7 +398,7 @@ def leave_gue():
 
     guest = Guest.query.get(id)
     guest.has_left = True
-    guest.leave_time = datetime.utcnow
+    guest.leave_time = datetime.now()
     db.session.add(guest)
     db.session.commit()
 
@@ -422,12 +414,12 @@ def leave_gue():
 def add_gue():
     if request.method == 'POST':
         gue_name = request.form.get('gue_name')
-        stu_number = request.form.get('stu_num')
+        stu_number = request.form.get('stu_number')
         phone = request.form.get('phone')
         note = request.form.get('note')
 
         if gue_name != '' and phone != '' and stu_number != '':
-            student = Student.query.filter_by(stu_number=stu_number).frist()
+            student = Student.query.filter_by(stu_number=stu_number).first()
             if student:
                 if note != '':
                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
@@ -458,8 +450,8 @@ def update_gue():
 
     if request.method == 'POST':
         gue_name = request.form.get('gue_name')
-        gue_stu_number = request.form.get('gue_stu_number')  # 待核对
-        gue_phone = request.form.get('gue_phone')
+        gue_stu_number = request.form.get('stu_number')  # 待核对
+        gue_phone = request.form.get('phone')
 
         if gue_name != '':
             guest.gue_name = gue_name
@@ -513,3 +505,14 @@ def validate_gue_phone(p):
             return True
         return False
     return False
+
+
+@dormAdmin.route('/dormCheckGueStuid', methods=['GET', 'POST'])
+def check_Gue_Stu_ID():
+    stu_id = request.args.get('id')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if len(user) == 0:
+        return jsonify(code=400, msg="This ID doesn't Exist")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+

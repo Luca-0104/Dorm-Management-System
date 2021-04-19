@@ -5,7 +5,7 @@ from app.main import main
 from app.auth.views import get_role_true
 
 # The index page ----------------------------------------------------------------------------------------------
-from app.models import User, Student
+from app.models import User, Student, Guest
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -32,7 +32,7 @@ def home_dorm_admin():
 def home_dorm_admin_gue():
     isSuccessful = request.args.get('isSuccessful', "True")
     pagenum = int(request.args.get('page', 1))
-    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template('samples/guestRegister.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function="guests")
 
 

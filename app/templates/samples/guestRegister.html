@@ -103,7 +103,7 @@
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Student Number:</label>
-             <input type="text" class="form-control" name="stu_num" id="gue_stu_id"><span></span>
+             <input type="text" class="form-control" name="stu_number" id="gue_stu_id"><span></span>
           </div>
             <div class="form-group">
             <label for="message-text" class="col-form-label">Note:</label>
@@ -200,7 +200,7 @@
   class="btn btn-secondary disabled"
   {% else %}
   class="btn btn-secondary"
-  {% endif %} onclick="{{ url_for('dormAdmin.leave_gue') }}"><i class="bi bi-x-square icon-margin"></i>Leave</button>
+  {% endif %} onclick="location.href='{{ url_for('dormAdmin.leave_gue') }}?id={{ guest.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}'"><i class="bi bi-x-square icon-margin"></i>Leave</button>
   <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal{{ guest.id }}" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
     <div class="modal fade" id="exampleModal{{ guest.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -215,15 +215,15 @@
         <form id="myFormModify{{ guest.id }}" action="{{ url_for('dormAdmin.update_gue') }}?id={{ guest.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Guest Name:</label>
-            <input type="text" class="form-control" name="stu_ID" placeholder="{{ guest.gue_name }}" ><span></span>
+            <input type="text" class="form-control" name="gue_name" placeholder="{{ guest.gue_name }}" ><span></span>
           </div>
           <div class="form-group">
              <label for="message-text" class="col-form-label">Guest Phone:</label>
-             <input type="text" class="form-control" name="name" placeholder="{{ guest.phone }}" id="name">
+             <input type="text" class="form-control" name="phone" placeholder="{{ guest.phone }}" id="name">
           </div>
 			<div class="form-group">
             <label for="message-text" class="col-form-label">Student Number:</label>
-             <input type="text" class="form-control" name="room" placeholder="{{ guest.student.stu_num }}" id="gue_stu_id{{ guest.id }}">
+             <input type="text" class="form-control" name="stu_number" placeholder="{{ guest.student.stu_number }}" id="gue_stu_id{{ guest.id }}">
           </div>
         </form>
       </div>
@@ -388,7 +388,7 @@ let id = $('#stu_id').val();
         let stu_id = $(this).val();
     let span_ele = $(this).next('span');
         span_ele.text('');
-        $.get('dormAdmin/dormCheckGueStuid', {stu_id: stu_id}, function (data) {
+        $.get('dormAdmin/dormCheckGueStuid', {id: stu_id}, function (data) {
             // console.log(data)
             if(data.code !== 200){
                 alert("Failed to Add\n"+data.msg)
@@ -396,14 +396,13 @@ let id = $('#stu_id').val();
         });
 
 	document.getElementById("myFormAdd").submit();
-    $.post('{{ url_for('dormAdmin.add_gue') }}',{id:ID});
 });
     {% for guest in pagination.items %}
     $('#sendMessagemodify{{ guest.id }}').click(function(){
         let stu_id = $(this).val();
     let span_ele = $(this).next('span');
         span_ele.text('');
-        $.get('dormAdmin/dormCheckGueStuid', {stu_id: stu_id}, function (data) {
+        $.get('dormAdmin/dormCheckGueStuid', {id: stu_id}, function (data) {
             // console.log(data)
             if(data.code !== 200){
                 alert("Failed to Modified\n"+data.msg)
@@ -454,7 +453,7 @@ $('#gue_stu_id{{ guest.id }}').blur(function () {
     let stu_id = $(this).val();
     let span_ele = $(this).next('span');
         span_ele.text('');
-        $.get('dormAdmin/dormCheckGueStuid', {stu_id: stu_id}, function (data) {
+        $.get('dormAdmin/dormCheckGueStuid', {id: stu_id}, function (data) {
             // console.log(data)
             if(data.code !== 200){
                 span_ele.css({"color": "#ff0011","font-size":"12px"});
