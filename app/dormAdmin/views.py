@@ -243,19 +243,21 @@ def validate_email(e):
 
 @dormAdmin.route('/dormAdd', methods=['GET', 'POST'])
 def check_add():
-    stu_id = request.args.get('id')
-    id = Student.query.filter(Student.stu_number == stu_id).all()
+    stu_number = request.args.get('id')
+    id = Student.query.filter(Student.stu_number == stu_number).all()
     email = request.args.get('email')
     emails = Student.query.filter(Student.email == email).all()
     phone = request.args.get('phone')
     phones = Student.query.filter(Student.phone == phone).all()
-    print(id,phone,email)
-    if stu_id =="" or email =="" or phone =="":
+    print(id, phone, email)
+    if stu_number == "" or email == "" or phone == "":
         return jsonify(code=400, msg="You have to fill all the Information")
     if len(id) > 0 or len(emails) > 0 or len(phones) > 0:
         return jsonify(code=400, msg="Some Information is invalid")
+    if not validate_email(email) or not validate_phone(phone) or not validate_stu_number(stu_number):
+        return jsonify(code=400, msg="Some Information is invalid")
     else:
-        return jsonify(code=200, msg="this Phone number is available")
+        return jsonify(code=200, msg="This Phone number is available")
 
 
 @dormAdmin.route('/dormModify', methods=['GET', 'POST'])
@@ -388,6 +390,7 @@ def add_gue():
 
     return render_template('main.home_dorm_admin')  # 待完善核对
 
+
 @dormAdmin.route('/update_gue', methods=['GET', 'POST'])
 def update_gue():
     id = request.args.get('id')
@@ -400,7 +403,7 @@ def update_gue():
 
     if request.method == 'POST':
         gue_name = request.form.get('gue_name')
-        gue_stu_number = request.form.get('gue_stu_number')#待核对
+        gue_stu_number = request.form.get('gue_stu_number')  # 待核对
         gue_phone = request.form.get('gue_phone')
 
         if gue_name != '':
