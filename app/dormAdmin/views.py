@@ -20,7 +20,7 @@ def search_stu():
     tag = request.args.get('tag')
     pagenum = int(request.args.get('page', 1))
     enter_type = 'search'
-    is_successful = request.args.get('isSuccessful', True)  # The default value is True
+    is_successful = request.args.get('isSuccessful', "True")  # The default value is True
 
     # print('tag: ' + tag)
     # print('key_word:' + key_word)
@@ -179,14 +179,16 @@ def update_stu():
             db.session.commit()
 
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin', isSuccessful=True))
+                return redirect(url_for('main.home_dorm_admin', isSuccessful="True"))
             elif enter_type == "search":
-                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful=True))
+                return redirect(
+                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
+                return redirect(url_for('main.home_dorm_admin', isSuccessful="False"))
             elif enter_type == "search":
-                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful=False))
+                return redirect(
+                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
     return render_template('samples/testindex.html')
 
@@ -237,6 +239,22 @@ def validate_email(e):
             return True
         return True
     return False
+
+
+@dormAdmin.route('/dormModify', methods=['GET', 'POST'])
+def check_modify():
+    print("yes")
+    stu_id = request.args.get('id')
+    id = Student.query.filter(Student.stu_number == stu_id).all()
+    email = request.args.get('email')
+    emails = Student.query.filter(Student.email == email).all()
+    phone = request.args.get('phone')
+    phones = Student.query.filter(Student.phone == phone).all()
+    if len(id) > 0 or len(emails) > 0 or len(phones) > 0:
+        print("this")
+        return jsonify(code=400, msg="The Phone number has already existed")
+    else:
+        return jsonify(code=200, msg="this Phone number is available")
 
 
 @dormAdmin.route('/dormCheckID', methods=['GET', 'POST'])

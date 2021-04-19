@@ -17,8 +17,7 @@
 
   </head>
   <body>
-
-  <input hidden id="pagination" value= "{{ pagination.items }}">
+<input hidden value="{{ isSuccessful }}" id="judge">
 <nav class="navbar navbar-expand-lg navbar-light bg-light nav-background">
   <a class="navbar-brand brand-logo" href="#" id="brand"><img src="../../static/images/auth/index.png" alt="Logo"/></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -398,19 +397,37 @@
     <script src="../../static/js/dormExamine.js"></script>
 <script>
     $('#sendMessage').click(function(){
-        {% if  isSuccessful == False %}
-        alert("failed to add");
-        {% endif %}
+let id = $('#stu_id').val();
+        let phone = $('#phone').val();
+        let email = $('#email').val();
+        console.log(id,phone,email);
+        $.get('dormAdmin/dormAdd', {id: id, phone:phone,email:email}, function (data) {
+            console.log(data);
+            if (data.code !== 200) {
+                alert("Failed to modify");
+            } else {
+                alert("Modify Successfully");
+            }
+        });
+
 	document.getElementById("myFormAdd").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
 });
     {% for student in pagination.items %}
     $('#sendMessagemodify{{ student.id }}').click(function(){
-        console.log({{ student.id }})
-        console.log({{ isSuccessful }})
-        {% if  isSuccessful == False %}
-        alert("failed to modify");
-        {% endif %}
+        let id = $('#stu_id{{ student.id }}').val();
+        let phone = $('#phone{{ student.id }}').val();
+        let email = $('#email{{ student.id }}').val();
+        console.log(id,phone,email);
+        $.get('dormAdmin/dormModify', {id: id, phone:phone,email:email}, function (data) {
+            console.log(data);
+            if (data.code !== 200) {
+                alert("Failed to modify");
+            } else {
+                alert("Modify Successfully");
+            }
+        });
+
 	document.getElementById("myFormModify{{ student.id }}").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
 });

@@ -22,9 +22,10 @@ def home_stu():
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():
+    isSuccessful = request.args.get('isSuccessful',"True")
     pagenum = int(request.args.get('page', 1))
     pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template('samples/testindex.html', pagination=pagination, enterType='home')
+    return render_template('samples/testindex.html', pagination=pagination, enterType='home',isSuccessful=isSuccessful)
 
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
