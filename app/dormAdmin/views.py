@@ -385,3 +385,71 @@ def add_gue():
         db.session.commit()
 
     return render_template('main.home_dorm_admin')  # 待完善核对
+
+@dormAdmin.route('/update_gue', methods=['GET', 'POST'])
+def update_gue():
+    id = request.args.get('id')
+    guest = Guest.query.get(id)
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+    is_changed = False
+
+    if request.method == 'POST':
+        gue_name = request.form.get('gue_name')
+        gue_stu_number = request.form.get('gue_stu_number')#待核对
+        gue_phone = request.form.get('gue_phone')
+
+        if gue_name != '':
+            guest.gue_name = gue_name
+            is_changed = True
+
+        if gue_stu_number != '':
+            if validate_gue_stu_number(gue_stu_number):
+                student = Student.query.filter_by(stu_number=gue_stu_number).first()
+                guest.stu_id = student.id
+                is_changed = True
+
+        if gue_phone != '':
+            if validate_gue_phone(gue_phone):
+                guest.phone = gue_phone
+                is_changed = True
+
+        # 检查信息是否修改成功
+
+        if is_changed:
+            db.session.add(guest)
+            db.session.commit()
+
+            if enter_type == "home":
+                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="True"))
+            elif enter_type == "search":
+                return redirect(
+                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="True"))
+        else:
+            if enter_type == "home":
+                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="False"))
+            elif enter_type == "search":
+                return redirect(
+                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
+
+        return render_template('samples/guestRegister.html')  # 待完善核对
+
+
+def validate_gue_stu_number(n):
+    if len(n) == 8:
+        stu = Student.query.filter_by(stu_number=n).first()
+        if stu:
+            return True
+        return False
+    return False
+
+
+def validate_gue_phone(p):
+    if len(p) == 11:
+        stu = Student.query.filter_by(stu_number=p).first()
+        if stu:
+            return True
+        return False
+    return False
