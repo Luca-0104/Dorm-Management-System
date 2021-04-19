@@ -65,24 +65,20 @@
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <div class="input-group icon-margin">
-  <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" name="search">
+  <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" name="search_gue">
   <div class="input-group-append">
 
-    <select class="custom-select selet-size" id="inputGroupSelect01">
+    <select class="custom-select selet-size" id="inputGroupSelect02">
     <option selected value="all">All</option>
-    <option value="stu_name">Name</option>
-    <option value="stu_number">Student ID</option>
-    <option value="college">College</option>
-	<option value="building">Building</option>
-    <option value="room_number">Room Number</option>
-    <option value="enroll_date">Enroll Date</option>
-        <option value="phone">Phone</option>
-
+    <option value="gue_name">Name</option>
+    <option value="phone">Phone</option>
+    <option value="stu_number">Student Number</option>
+	<option value="has_left">Has Left</option>
+    <option value="has_not_left">Has not Left</option>
   </select>
   </div>
 </div>
-{#      <button class="btn btn-outline-success my-2 my-sm-0 icon-margin" type="submit" id="search1">Search</button>#}
-          <button type="button" class="btn btn-outline-success my-2 my-sm-0 icon-margin" id="search1"><i class="bi bi-search"></i>search</button>
+          <button type="button" class="btn btn-outline-success my-2 my-sm-0 icon-margin" id="search2"><i class="bi bi-search"></i>search</button>
     </form>
       <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
 
@@ -96,46 +92,22 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="myFormAdd" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
+        <form id="myFormAdd" action="{{ url_for('dormAdmin.add_gue') }}" method="post">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Student ID:</label>
-            <input type="text" class="form-control" name="stu_ID" id="stu_id"><span></span>
+            <label for="recipient-name" class="col-form-label">Guest Name:</label>
+            <input type="text" class="form-control" name="gue_name" id="gue_name"><span></span>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label">Name:</label>
-             <input type="text" class="form-control" name="name" id="name"><span></span>
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Room:</label>
-             <input type="text" class="form-control" name="room" id="room"><span></span>
-          </div>
-            <div class="form-group">
-            <label for="recipient-name" class="col-form-label">College:</label>
-                <div>
-             <select class="form-control" name="college">
-            <option selected value="Beijing Dublin International College">Beijing Dublin International College</option>
-            <option value="Faculty of Humanities and Social Sciences">Faculty of Humanities and Social Sciences</option>
-            <option value="Faculty of Information Technology">Faculty of Information Technology</option>
-            <option value="Faculty of Materials and Manufacturing">Faculty of Materials and Manufacturing</option>
-            <option value="Faculty of Urban Construction">Faculty of Urban Construction</option>
-            <option value="Faculty of Science">Faculty of Science</option>
-            <option value="Faculty of Environment and Life Sciences">Faculty of Environment and Life Sciences</option>
-                <option value="College of Economic and Management">College of Economic and Management</option>
-                 <option value="College of Art and Design">College of Art and Design</option>
-                 <option value="FanGongXiu Honors College">FanGongXiu Honors College</option>
-
-          </select>
-
-                </div>
-
-          </div>
-			<div class="form-group">
             <label for="message-text" class="col-form-label">Phone:</label>
              <input type="text" class="form-control" name="phone" id="phone"><span></span>
           </div>
 			<div class="form-group">
-            <label for="message-text" class="col-form-label">Email:</label>
-             <input type="text" class="form-control" name="email" id="email"><span></span>
+            <label for="message-text" class="col-form-label">Student Number:</label>
+             <input type="text" class="form-control" name="stu_num"><span></span>
+          </div>
+            <div class="form-group">
+            <label for="message-text" class="col-form-label">Note:</label>
+             <input type="text" class="form-control" name="note" ><span></span>
           </div>
         </form>
       </div>
@@ -203,212 +175,199 @@
       <th scope="col">Guest Phone</th>
       <th scope="col">Student ID</th>
 	  <th scope="col">Note</th>
-		<th scope="col">Has Left</th>
+		<th scope="col">Left Time</th>
       <th scope="col">Execution</th>
 
     </tr>
   </thead>
   <tbody>
-{#  {% for student in pagination.items %}#}
-{#        <tr>#}
-{#            <th scope="row">{{ student.stu_number }}</th>#}
-{#            <td>{{ student.stu_name }}</td>#}
-{#            <td>{{ student.college}}</td>#}
-{#            <td>{{ student.room_number }}</td>#}
-{#            <td>{{ student.email }}</td>#}
-{#            <td>{{ student.phone }}</td>#}
-{#                  <td><div class="btn-group" role="group" aria-label="Basic example">#}
-{#  <button type="button" class="btn btn-secondary" onclick="location.href='{{ url_for('dormAdmin.delete') }}?id={{ student.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}'"><em class="bi bi-x-square icon-margin"></em>delete</button>#}
-{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal{{ student.id }}" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
-{#    <div class="modal fade" id="exampleModal{{ student.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
-{#  <div class="modal-dialog">#}
-{#    <div class="modal-content">#}
-{#      <div class="modal-header">#}
-{#        <h5 class="modal-title" id="exampleModalLabel">Modified Information {{ student.stu_number }}</h5>#}
-{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-{#          <span aria-hidden="true">&times;</span>#}
-{#        </button>#}
-{#      </div>#}
-{#      <div class="modal-body">#}
-{#        <form id="myFormModify{{ student.id }}" action="{{ url_for('dormAdmin.update') }}?id={{ student.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}" method="post">#}
-{#          <div class="form-group">#}
-{#            <label for="recipient-name" class="col-form-label">Student ID:</label>#}
-{#            <input type="text" class="form-control" name="stu_ID" placeholder="{{ student.stu_number }}" id="stu_id{{ student.id }}"><span></span>#}
-{#          </div>#}
-{#          <div class="form-group">#}
-{#             <label for="message-text" class="col-form-label">Name:</label>#}
-{#             <input type="text" class="form-control" name="name" placeholder="{{ student.stu_name }}" id="name">#}
-{#          </div>#}
-{#			<div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Room:</label>#}
-{#             <input type="text" class="form-control" name="room" placeholder="{{ student.room_number }}" id="room">#}
-{#          </div>#}
-{#            <div class="form-group">#}
-{#            <label for="recipient-name" class="col-form-label">College:</label>#}
-{#                <div>#}
-{#             <select class="form-control" name="college">#}
-{#            <option selected value="Beijing Dublin International College">Beijing Dublin International College</option>#}
-{#            <option value="Faculty of Humanities and Social Sciences">Faculty of Humanities and Social Sciences</option>#}
-{#            <option value="Faculty of Information Technology">Faculty of Information Technology</option>#}
-{#            <option value="Faculty of Materials and Manufacturing">Faculty of Materials and Manufacturing</option>#}
-{#            <option value="Faculty of Urban Construction">Faculty of Urban Construction</option>#}
-{#            <option value="Faculty of Science">Faculty of Science</option>#}
-{#            <option value="Faculty of Environment and Life Sciences">Faculty of Environment and Life Sciences</option>#}
-{#                <option value="College of Economic and Management">College of Economic and Management</option>#}
-{#                 <option value="College of Art and Design">College of Art and Design</option>#}
-{#                 <option value="FanGongXiu Honors College">FanGongXiu Honors College</option>#}
-{##}
-{#          </select>#}
-{##}
-{#                </div>#}
-{##}
-{#          </div>#}
-{#			<div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Phone:</label>#}
-{#             <input type="text" class="form-control" name="phone" placeholder="{{ student.phone }}" id="phone{{ student.id }}"><span></span>#}
-{#          </div>#}
-{#			<div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Email:</label>#}
-{#             <input type="text" class="form-control" name="email" placeholder="{{ student.email }}" id="email{{ student.id }}"><span></span>#}
-{#          </div>#}
-{#        </form>#}
-{#      </div>#}
-{#      <div class="modal-footer">#}
-{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
-{#        <button type="button" class="btn btn-primary" id="sendMessagemodify{{ student.id }}">Confirm</button>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
-{#        </div></td>#}
-{#        </tr>#}
-{#  {% endfor %}#}
-{#<div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
-{#  <div class="modal-dialog">#}
-{#    <div class="modal-content">#}
-{#      <div class="modal-header">#}
-{#        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>#}
-{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-{#          <span aria-hidden="true">&times;</span>#}
-{#        </button>#}
-{#      </div>#}
-{#      <div class="modal-body">#}
-{#        ...#}
-{#      </div>#}
-{#      <div class="modal-footer">#}
-{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
-{#        <button type="button" class="btn btn-primary">Save changes</button>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-		<td>ucd@</td>
-      <td><div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-secondary" id="delete"><em class="bi bi-x-square icon-margin"></em>delete</button>
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
-</div></td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-		<td>UCD@</td>
-        <td><div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
-</div></td>
-	  </tr>
-		<tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-       <td><div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
-</div></td>
-    </tr>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {% for guest in pagination.items %}
+        <tr>
+            <th scope="row">{{ guest.gue_name}}</th>
+            <td>{{ guest.phone }}</td>
+            <td>{{ guest.student.stu_number}}</td>
+            <td>{{ guest.note }}</td>
+            {% if guest.has_left %}
+            <td>{{ guest.leave_time }}</td>
+            {% else %}
+            <td>Has not left</td>
+            {% endif %}
+
+            <td>{{ guest.phone }}</td>
+                  <td><div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" class="btn btn-secondary" onclick="location.href='{{ url_for('dormAdmin.delete_gue') }}?id={{ guest.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}'"><em class="bi bi-x-square icon-margin"></em>delete</button>
+  <button type="button" {% if guest.has_left == true %}
+  class="btn btn-secondary disabled"
+  {% else %}
+  class="btn btn-secondary"
+  {% endif %} onclick="{{ url_for('dormAdmin.leave_gue') }}"><i class="bi bi-x-square icon-margin"></i>Leave</button>
+  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal{{ guest.id }}" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>
+    <div class="modal fade" id="exampleModal{{ guest.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modified Information</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Modified Information {{ guest.gue_name }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form id="myForm" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
+        <form id="myFormModify{{ guest.id }}" action="{{ url_for('dormAdmin.update_gue') }}?id={{ guest.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}" method="post">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Student ID:</label>
-            <input type="text" class="form-control" name="stu_ID">
+            <label for="recipient-name" class="col-form-label">Guest Name:</label>
+            <input type="text" class="form-control" name="stu_ID" placeholder="{{ guest.gue_name }}" ><span></span>
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label">Name:</label>
-             <input type="text" class="form-control" name="name">
+             <label for="message-text" class="col-form-label">Guest Phone:</label>
+             <input type="text" class="form-control" name="name" placeholder="{{ guest.phone }}" id="name">
           </div>
 			<div class="form-group">
-            <label for="message-text" class="col-form-label">Room:</label>
-             <input type="text" class="form-control" name="room">
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Phone:</label>
-             <input type="text" class="form-control" name="phone">
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Email:</label>
-             <input type="text" class="form-control" name="email">
+            <label for="message-text" class="col-form-label">Student Number:</label>
+             <input type="text" class="form-control" name="room" placeholder="{{ guest.student.stu_num }}" id="stu_id{{ guest.id }}">
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>
+        <button type="button" class="btn btn-primary" id="sendMessagemodify{{ guest.id }}">Confirm</button>
       </div>
     </div>
   </div>
 </div>
+        </div></td>
+        </tr>
+  {% endfor %}
+<div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{#    <tr>#}
+{#      <th scope="row">1</th>#}
+{#      <td>Mark</td>#}
+{#      <td>Otto</td>#}
+{#		<td>ucd@</td>#}
+{#        <td><div class="custom-control custom-checkbox">#}
+{#  <input type="checkbox" class="custom-control-input" id="customCheck1">#}
+{#  <label class="custom-control-label" for="customCheck1"></label>#}
+{#</div></td>#}
+{#      <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary" id="delete"><em class="bi bi-x-square icon-margin"></em>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <th scope="row">2</th>#}
+{#      <td>Jacob</td>#}
+{#      <td>Thornton</td>#}
+{#		<td>UCD@</td>#}
+{#        <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>#}
+{#            <button type="button" class="btn btn-secondary disabled" onclick="{{  }}"><i class="bi bi-x-square icon-margin"></i>Leave</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#	  </tr>#}
+{#		<tr>#}
+{#      <th scope="row">3</th>#}
+{#      <td>Larry</td>#}
+{#      <td>the Bird</td>#}
+{#       <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#    </tr>#}
+{#<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#  <div class="modal-dialog">#}
+{#    <div class="modal-content">#}
+{#      <div class="modal-header">#}
+{#        <h5 class="modal-title" id="exampleModalLabel">Modified Information</h5>#}
+{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#          <span aria-hidden="true">&times;</span>#}
+{#        </button>#}
+{#      </div>#}
+{#      <div class="modal-body">#}
+{#        <form id="myForm" action="{{ url_for('dormAdmin.add_stu') }}" method="post">#}
+{#          <div class="form-group">#}
+{#            <label for="recipient-name" class="col-form-label">Student ID:</label>#}
+{#            <input type="text" class="form-control" name="stu_ID">#}
+{#          </div>#}
+{#          <div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Name:</label>#}
+{#             <input type="text" class="form-control" name="name">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Room:</label>#}
+{#             <input type="text" class="form-control" name="room">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Phone:</label>#}
+{#             <input type="text" class="form-control" name="phone">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Email:</label>#}
+{#             <input type="text" class="form-control" name="email">#}
+{#          </div>#}
+{#        </form>#}
+{#      </div>#}
+{#      <div class="modal-footer">#}
+{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
   </tbody>
 </table>
-{#    <nav aria-label="Page navigation ">#}
-{#  <ul class="pagination">#}
-{#    <li {% if not pagination.has_prev %}#}
-{#    class="page-item disabled"#}
-{#    {% endif %}>#}
-{#        {% if enterType=="home" %}#}
-{#       <a class="page-link" href="{{url_for('main.home_dorm_admin')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>#}
-{#        {% elif enterType=="search" %}#}
-{#       <a class="page-link" href="{{url_for('dormAdmin.search_stu')}}?page={{ pagination.prev_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>#}
-{#        {% endif %}#}
-{##}
-{#    </li>#}
-{#      {% for pagenum in range(1,pagination.pages + 1) %}#}
-{#    <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">#}
-{#    <a class="page-link" {% if enterType == "home" %}#}
-{#         href="{{url_for('main.home_dorm_admin')}}?page={{ pagenum }}"#}
-{#    {% elif enterType == "search" %}#}
-{#           href="{{url_for('dormAdmin.search_stu')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"#}
-{#    {% endif %} >{{pagenum}}</a>#}
-{##}
-{#    </li>#}
-{#    {% endfor %}#}
-{##}
-{##}
-{#        <li {% if not pagination.has_next %}#}
-{#    class="page-item disabled"#}
-{#    {% endif %}>#}
-{#        {% if enterType=="home" %}#}
-{#       <a class="page-link" href="{{url_for('main.home_dorm_admin')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>#}
-{#        {% elif enterType=="search" %}#}
-{#       <a class="page-link" href="{{url_for('dormAdmin.search_stu')}}?page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>#}
-{#        {% endif %}#}
-{##}
-{#    </li>#}
-{#  </ul>#}
-{#</nav>#}
+    <nav aria-label="Page navigation ">
+  <ul class="pagination">
+    <li {% if not pagination.has_prev %}
+    class="page-item disabled"
+    {% endif %}>
+        {% if enterType=="home" %}
+       <a class="page-link" href="{{url_for('main.home_dorm_admin_gue')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
+        {% elif enterType=="search" %}
+       <a class="page-link" href="{{url_for('dormAdmin.search_gue')}}?page={{ pagination.prev_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
+        {% endif %}
+
+    </li>
+      {% for pagenum in range(1,pagination.pages + 1) %}
+    <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">
+    <a class="page-link" {% if enterType == "home" %}
+         href="{{url_for('main.home_dorm_admin_gue')}}?page={{ pagenum }}"
+    {% elif enterType == "search" %}
+           href="{{url_for('dormAdmin.search_gue')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"
+    {% endif %} >{{pagenum}}</a>
+
+    </li>
+    {% endfor %}
+
+
+        <li {% if not pagination.has_next %}
+    class="page-item disabled"
+    {% endif %}>
+        {% if enterType=="home" %}
+       <a class="page-link" href="{{url_for('main.home_dorm_admin_gue')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
+        {% elif enterType=="search" %}
+       <a class="page-link" href="{{url_for('dormAdmin.search_gue')}}?page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>
+        {% endif %}
+
+    </li>
+  </ul>
+</nav>
     </div>
   </div>
 </div>
@@ -423,49 +382,43 @@
     <script src="../../static/js/bootstrap-4.0.0.js"></script>
 	<script src="../../static/js/search.js"></script>
     <script src="../../static/js/dormExamine.js"></script>
-{#<script>#}
-{#    $('#sendMessage').click(function(){#}
-{#let id = $('#stu_id').val();#}
-{#        let phone = $('#phone').val();#}
-{#        let email = $('#email').val();#}
-{#        console.log(id,phone,email);#}
-{#        $.get('dormAdmin/dormAdd', {id: id, phone:phone,email:email}, function (data) {#}
-{#            console.log(data);#}
-{#            if (data.code !== 200) {#}
-{#                alert("Failed to Add\n"+data.msg);#}
-{#            } else {#}
-{#                alert("Add Successfully");#}
-{#            }#}
-{#        });#}
-{##}
-{#	document.getElementById("myFormAdd").submit();#}
-    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
-{#});#}
-{#    {% for student in pagination.items %}#}
-{#    $('#sendMessagemodify{{ student.id }}').click(function(){#}
-{#        let id = $('#stu_id{{ student.id }}').val();#}
-{#        let phone = $('#phone{{ student.id }}').val();#}
-{#        let email = $('#email{{ student.id }}').val();#}
-{#        console.log(id,phone,email);#}
-{#        $.get('dormAdmin/dormModify', {id: id, phone:phone,email:email}, function (data) {#}
-{#            console.log(data);#}
-{#            if (data.code !== 200) {#}
-{#                alert("Failed to modify\n"+data.msg);#}
-{#            } else {#}
-{#                alert("Modify Successfully");#}
-{#            }#}
-{#        });#}
-{##}
-{#	document.getElementById("myFormModify{{ student.id }}").submit();#}
-    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
-{#});#}
-{##}
-{#    {% endfor %}#}
-{#    {% for student in pagination.items %}#}
+<script>
+    $('#sendMessage').click(function(){
+let id = $('#stu_id').val();
+        let stu_id = $(this).val();
+    let span_ele = $(this).next('span');
+        span_ele.text('');
+        $.get('dormAdmin/dormCheckGueStuid', {stu_id: stu_id}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                alert("Failed to Add\n"+data.msg)
+            }
+        });
+
+	document.getElementById("myFormAdd").submit();
+    $.post('{{ url_for('dormAdmin.add_gue') }}',{id:ID});
+});
+    {% for guest in pagination.items %}
+    $('#sendMessagemodify{{ guest.id }}').click(function(){
+        let stu_id = $(this).val();
+    let span_ele = $(this).next('span');
+        span_ele.text('');
+        $.get('dormAdmin/dormCheckGueStuid', {stu_id: stu_id}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                alert("Failed to Modified\n"+data.msg)
+            }
+        });
+
+	document.getElementById("myFormModify{{ guest.id }}").submit();
+});
+
+    {% endfor %}
+    {% for guest in pagination.items %}
 {#    $('#brand').click(function () {#}
-{#	console.log("email{{ student.id }}");#}
+{#	console.log("email{{ guest.id }}");#}
 {#    });#}
-{#    $('#stu_id{{ student.id }}').blur(function () {#}
+{#    $('#stu_id{{ guest.id }}').blur(function () {#}
 {#    let id = $(this).val();#}
 {#    let span_ele = $(this).next('span');#}
 {#    console.log(id);#}
@@ -482,9 +435,9 @@
 {#        span_ele.css({"color":"#ff0011","font-size":"12px"});#}
 {#        span_ele.text('The unacceptable ID format');#}
 {#    }#}
-{#});#}
+{# });#}
 {##}
-{#$('#email{{ student.id }}').blur(function () {#}
+{#$('#email{{ guest.id }}').blur(function () {#}
 {#    let email = $(this).val();#}
 {#    let span_ele = $(this).next('span');#}
 {#        span_ele.text('');#}
@@ -495,27 +448,22 @@
 {#                span_ele.text(data.msg);#}
 {#            }#}
 {#        })#}
-{#});#}
-{##}
-{#$('#phone{{ student.id }}').blur(function () {#}
-{#    let phone = $(this).val();#}
-{#    let span_ele = $(this).next('span');#}
-{#    if(phone.length===11) {#}
-{#        span_ele.text('');#}
-{#        $.get('dormAdmin/dormCheckPhone', {phone: phone}, function (data) {#}
-{#            // console.log(data)#}
-{#            if(data.code !== 200){#}
-{#                span_ele.css({"color": "#ff0011","font-size":"12px"});#}
-{#                span_ele.text(data.msg);#}
-{#            }#}
-{#        })#}
-{#    }else {#}
-{#        span_ele.css({"color":"#ff0011","font-size":"12px"});#}
-{#        span_ele.text('The unacceptable ID format');#}
-{#    }#}
-{#});#}
-{#    {% endfor %}#}
-{##}
-{#</script>#}
+{# });#}
+
+$('#phone{{ guest.id }}').blur(function () {
+    let stu_id = $(this).val();
+    let span_ele = $(this).next('span');
+        span_ele.text('');
+        $.get('dormAdmin/dormCheckGueStuid', {stu_id: stu_id}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+});
+    {% endfor %}
+
+</script>
   </body>
 </html>

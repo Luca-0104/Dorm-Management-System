@@ -306,6 +306,14 @@ def check_phone():
         return jsonify(code=200, msg="this Phone number is available")
 
 
+@dormAdmin.route('/dormCheckGueStuid', methods=['GET', 'POST'])
+def check_Gue_Stu_ID():
+    stu_id = request.args.get('stu_id')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if len(user) == 0:
+        return jsonify(code=400, msg="This ID doesn't Exist")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
 # guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
