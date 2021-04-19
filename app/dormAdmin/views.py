@@ -240,6 +240,21 @@ def validate_email(e):
         return True
     return False
 
+@dormAdmin.route('/dormAdd', methods=['GET', 'POST'])
+def check_add():
+    stu_id = request.args.get('id')
+    id = Student.query.filter(Student.stu_number == stu_id).all()
+    email = request.args.get('email')
+    emails = Student.query.filter(Student.email == email).all()
+    phone = request.args.get('phone')
+    phones = Student.query.filter(Student.phone == phone).all()
+    print(id,phone,email)
+    if stu_id =="" or email =="" or phone =="":
+        return jsonify(code=400, msg="You have to fill all the Information")
+    if len(id) > 0 or len(emails) > 0 or len(phones) > 0:
+        return jsonify(code=400, msg="Some Information is invalid")
+    else:
+        return jsonify(code=200, msg="this Phone number is available")
 
 @dormAdmin.route('/dormModify', methods=['GET', 'POST'])
 def check_modify():
@@ -252,7 +267,7 @@ def check_modify():
     phones = Student.query.filter(Student.phone == phone).all()
     if len(id) > 0 or len(emails) > 0 or len(phones) > 0:
         print("this")
-        return jsonify(code=400, msg="The Phone number has already existed")
+        return jsonify(code=400, msg="Some Information is invalid")
     else:
         return jsonify(code=200, msg="this Phone number is available")
 

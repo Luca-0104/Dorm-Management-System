@@ -113,14 +113,16 @@
             <label for="recipient-name" class="col-form-label">College:</label>
                 <div>
              <select class="form-control" name="college">
-            <option selected value="all">All</option>
-            <option value="stu_name">Name</option>
-            <option value="stu_number">Student ID</option>
-            <option value="college">College</option>
-            <option value="building">Building</option>
-            <option value="room_number">Room Number</option>
-            <option value="enroll_date">Enroll Date</option>
-                <option value="phone">Phone</option>
+            <option selected value="Beijing Dublin International College">Beijing Dublin International College</option>
+            <option value="Faculty of Humanities and Social Sciences">Faculty of Humanities and Social Sciences</option>
+            <option value="Faculty of Information Technology">Faculty of Information Technology</option>
+            <option value="Faculty of Materials and Manufacturing">Faculty of Materials and Manufacturing</option>
+            <option value="Faculty of Urban Construction">Faculty of Urban Construction</option>
+            <option value="Faculty of Science">Faculty of Science</option>
+            <option value="Faculty of Environment and Life Sciences">Faculty of Environment and Life Sciences</option>
+                <option value="College of Economic and Management">College of Economic and Management</option>
+                 <option value="College of Art and Design">College of Art and Design</option>
+                 <option value="FanGongXiu Honors College">FanGongXiu Honors College</option>
 
           </select>
 
@@ -404,9 +406,9 @@ let id = $('#stu_id').val();
         $.get('dormAdmin/dormAdd', {id: id, phone:phone,email:email}, function (data) {
             console.log(data);
             if (data.code !== 200) {
-                alert("Failed to modify");
+                alert("Failed to Add\n"+data.msg);
             } else {
-                alert("Modify Successfully");
+                alert("Add Successfully");
             }
         });
 
@@ -422,7 +424,7 @@ let id = $('#stu_id').val();
         $.get('dormAdmin/dormModify', {id: id, phone:phone,email:email}, function (data) {
             console.log(data);
             if (data.code !== 200) {
-                alert("Failed to modify");
+                alert("Failed to modify\n"+data.msg);
             } else {
                 alert("Modify Successfully");
             }
