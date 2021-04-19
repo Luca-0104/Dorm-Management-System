@@ -31,14 +31,25 @@ class Permission:
 
 # The table of dormitory buildings
 class Guest(db.Model):
+    # __tablename__ = 'guests'
+    # id = db.Column(db.Integer, primary_key=True)
+    # gue_name = db.Column(db.String(64), unique=False, nullable=False)
+    # phone = db.Column(db.String(64), unique=True, nullable=False)
+    # stu_id = db.Column(db.Integer, db.ForeignKey('students.id'))  # define the relation with Student
+    # relation = db.Column(db.String(64), unique=False, nullable=False)
+    # building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'))  # define the relation with DormBuilding
+    # room_number = db.Column(db.Integer, unique=False, nullable=False)
+    # arrive_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    # leave_time = db.Column(db.DateTime(), unique=False)
+    # is_deleted = db.Column(db.Boolean, default=False)
+    # has_left = db.Column(db.Boolean, default=False)
+
     __tablename__ = 'guests'
     id = db.Column(db.Integer, primary_key=True)
     gue_name = db.Column(db.String(64), unique=False, nullable=False)
     phone = db.Column(db.String(64), unique=True, nullable=False)
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'))  # define the relation with Student
-    relation = db.Column(db.String(64), unique=False, nullable=False)
-    building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'))  # define the relation with DormBuilding
-    room_number = db.Column(db.Integer, unique=False, nullable=False)
+    note = db.Column(db.String(64), unique=False, nullable=False)
     arrive_time = db.Column(db.DateTime(), default=datetime.utcnow)
     leave_time = db.Column(db.DateTime(), unique=False)
     is_deleted = db.Column(db.Boolean, default=False)
@@ -54,7 +65,6 @@ class DormBuilding(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     building_name = db.Column(db.String(64), unique=True)
     students = db.relationship('Student', backref='building')
-    guests = db.relationship('Guest', backref='building')
 
     def __repr__(self):
         return '<DormBuilding %r>' % self.building_name
