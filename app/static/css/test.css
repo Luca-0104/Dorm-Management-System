@@ -16,6 +16,10 @@
 	
 }
 
+.red{
+  color: red !important ;
+  font-size: 12px;
+}
 
 .subbox table {
   max-width: 800px;

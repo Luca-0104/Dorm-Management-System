@@ -188,12 +188,12 @@ def update_stu():
             db.session.commit()
 
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin', isSuccessful="True"))
+                return redirect(url_for('main.home_dorm_admin', isSuccessful="True",page=page))
             elif enter_type == "search":
                 return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin', isSuccessful="False"))
+                return redirect(url_for('main.home_dorm_admin', isSuccessful="False",page=page))
             elif enter_type == "search":
                 return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
@@ -487,13 +487,13 @@ def update_gue():
             db.session.commit()
 
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="True"))
+                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="True", page=page))
             elif enter_type == "search":
                 return redirect(
-                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="True"))
+                    url_for('dormAdmin.search_gue:', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="False"))
+                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="False",page=page))
             elif enter_type == "search":
                 return redirect(
                     url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
@@ -523,8 +523,26 @@ def validate_gue_phone(p):
 def check_Gue_Stu_ID():
     stu_id = request.args.get('id')
     user = Student.query.filter(Student.stu_number == stu_id).all()
+    if stu_id=="":
+        return jsonify(code=200, msg="this phone number is available")
+    print(len(user))
     if len(user) == 0:
+        print("enter")
         return jsonify(code=400, msg="This ID doesn't Exist")
     else:
         return jsonify(code=200, msg="this phone number is available")
 
+@dormAdmin.route('/dormCheckGueStuidAdd', methods=['GET', 'POST'])
+def check_Gue_Stu_ID_Add():
+    stu_id = request.args.get('id')
+    phone = request.args.get('phone')
+    gue_name = request.args.get('gue_name')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if stu_id=="" or gue_name=="" or phone=="":
+        return jsonify(code=400, msg="Please fill the required information")
+    print(len(user))
+    if len(user) == 0:
+        print("enter")
+        return jsonify(code=400, msg="This ID doesn't Exist")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
