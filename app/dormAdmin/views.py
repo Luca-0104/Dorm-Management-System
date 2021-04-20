@@ -139,7 +139,7 @@ def update_stu():
     enter_type = request.args.get('enterType')
     page = request.args.get('page')
     is_changed = False
-    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
+    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改.
 
     if request.method == 'POST':
         stu_name = request.form.get('name')
