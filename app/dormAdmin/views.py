@@ -147,6 +147,7 @@ def update_stu():
         print("stu_number length: " + str(len(stu_number)))
         phone = request.form.get('phone')
         email = request.form.get('email')
+        college = request.form.get('college')
         room_number_str = request.form.get('room')
         room_number = None
 
@@ -178,6 +179,10 @@ def update_stu():
             else:
                 is_stop = True
 
+        if college != '':
+            student.college = college
+            is_changed = True
+
         if room_number is not None:
             student.room_number = room_number
             is_changed = True
@@ -188,12 +193,12 @@ def update_stu():
             db.session.commit()
 
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin', isSuccessful="True"))
+                return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="True"))
             elif enter_type == "search":
                 return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin', isSuccessful="False"))
+                return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="False"))
             elif enter_type == "search":
                 return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
@@ -341,13 +346,12 @@ def search_gue():
                                                    )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
-        gue_list = Guest.query.filter(and_(Guest.stu_name.contains(key_word), Guest.is_deleted == False)).paginate(
+        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(
             page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
 
-        gue_list = Guest.query.filter(and_(Guest.student.stu_number == tag, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
-
+        gue_list = Guest.query.join(Student).filter(and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
         # ref_stu_list = Student.query.filter(Student.stu_number.contains(key_word)).all()
         # gue_list = []
         # for stu in ref_stu_list:
@@ -487,13 +491,13 @@ def update_gue():
             db.session.commit()
 
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="True"))
+                return redirect(url_for('main.home_dorm_admin_gue', page=page, isSuccessful="True"))
             elif enter_type == "search":
                 return redirect(
                     url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful="False"))
+                return redirect(url_for('main.home_dorm_admin_gue', page=page, isSuccessful="False"))
             elif enter_type == "search":
                 return redirect(
                     url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
