@@ -139,6 +139,7 @@ def update_stu():
     enter_type = request.args.get('enterType')
     page = request.args.get('page')
     is_changed = False
+    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
 
     if request.method == 'POST':
         stu_name = request.form.get('name')
@@ -160,23 +161,29 @@ def update_stu():
             if validate_stu_number(stu_number):
                 student.stu_number = stu_number
                 is_changed = True
+            else:
+                is_stop = True
 
         if phone != '':
             if validate_phone(phone):
                 student.phone = phone
                 is_changed = True
+            else:
+                is_stop = True
 
         if email != '':
             if validate_email(email):
                 student.email = email
                 is_changed = True
+            else:
+                is_stop = True
 
         if room_number is not None:
             student.room_number = room_number
             is_changed = True
 
         # 检查信息是否修改成功
-        if is_changed:
+        if is_changed and not is_stop:
             db.session.add(student)
             db.session.commit()
 
@@ -447,6 +454,7 @@ def update_gue():
     enter_type = request.args.get('enterType')
     page = request.args.get('page')
     is_changed = False
+    is_stop = False  # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
 
     if request.method == 'POST':
         gue_name = request.form.get('gue_name')
@@ -462,15 +470,19 @@ def update_gue():
                 student = Student.query.filter_by(stu_number=gue_stu_number).first()
                 guest.stu_id = student.id
                 is_changed = True
+            else:
+                is_stop = True
 
         if gue_phone != '':
             if validate_gue_phone(gue_phone):
                 guest.phone = gue_phone
                 is_changed = True
+            else:
+                is_stop = True
 
         # 检查信息是否修改成功
 
-        if is_changed:
+        if is_changed and not is_stop:
             db.session.add(guest)
             db.session.commit()
 
