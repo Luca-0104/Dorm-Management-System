@@ -17,7 +17,7 @@ def index():
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu', methods=['GET', 'POST'])
 def home_stu():
-    return render_template(".html")  # 待核对完善
+    return render_template("samples/studentHomepage.html")  # 待核对完善
 
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
@@ -38,7 +38,7 @@ def home_dorm_admin_gue():
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
-    return render_template(".html")  # 待核对完善
+    return render_template("samples/systemHomepage.html")  # 待核对完善
 
 
 # The profile page ----------------------------------------------------------------------------------------------
