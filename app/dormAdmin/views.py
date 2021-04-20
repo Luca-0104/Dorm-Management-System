@@ -139,7 +139,7 @@ def update_stu():
     enter_type = request.args.get('enterType')
     page = request.args.get('page')
     is_changed = False
-    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改.
+    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
 
     if request.method == 'POST':
         stu_name = request.form.get('name')
@@ -527,8 +527,27 @@ def validate_gue_phone(p):
 def check_Gue_Stu_ID():
     stu_id = request.args.get('id')
     user = Student.query.filter(Student.stu_number == stu_id).all()
+    if stu_id=="":
+        return jsonify(code=200, msg="this phone number is available")
+    print(len(user))
     if len(user) == 0:
+        print("enter")
         return jsonify(code=400, msg="This ID doesn't Exist")
     else:
         return jsonify(code=200, msg="this phone number is available")
 
+
+@dormAdmin.route('/dormCheckGueStuidAdd', methods=['GET', 'POST'])
+def check_Gue_Stu_ID_Add():
+    stu_id = request.args.get('id')
+    phone = request.args.get('phone')
+    gue_name = request.args.get('gue_name')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if stu_id=="" or gue_name=="" or phone=="":
+        return jsonify(code=400, msg="Please fill the required information")
+    print(len(user))
+    if len(user) == 0:
+        print("enter")
+        return jsonify(code=400, msg="This ID doesn't Exist")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
