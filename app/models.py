@@ -6,7 +6,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import login_manager
-from .tableInfo import stu_list
+from .tableInfo import stu_list, gue_list
 
 
 @login_manager.user_loader
@@ -34,11 +34,9 @@ class Guest(db.Model):
     __tablename__ = 'guests'
     id = db.Column(db.Integer, primary_key=True)
     gue_name = db.Column(db.String(64), unique=False, nullable=False)
-    phone = db.Column(db.String(64), unique=True, nullable=False)
-    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'))  # define the relation with Student
-    relation = db.Column(db.String(64), unique=False, nullable=False)
-    building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'))  # define the relation with DormBuilding
-    room_number = db.Column(db.Integer, unique=False, nullable=False)
+    phone = db.Column(db.String(64), unique=False, nullable=False)
+    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)  # define the relation with Student
+    note = db.Column(db.String(64), unique=False, default='Nothing')
     arrive_time = db.Column(db.DateTime(), default=datetime.utcnow)
     leave_time = db.Column(db.DateTime(), unique=False)
     is_deleted = db.Column(db.Boolean, default=False)
@@ -47,6 +45,22 @@ class Guest(db.Model):
     def __repr__(self):
         return '<Guest %r>' % self.gue_name
 
+    @staticmethod
+    def insert_guests():
+        """
+        This is a method for inserting the guests information, which means fulling the Guest table.
+        This should be used in the console only a single time.
+        """
+        for gue_info in gue_list:
+            gue_name = gue_info[0]
+            phone = gue_info[1]
+            stu_id = gue_info[2]
+
+            new_gue = Guest(gue_name=gue_name, phone=phone, stu_id=stu_id)
+
+            db.session.add(new_gue)
+            db.session.commit()
+
 
 # The table of dormitory buildings
 class DormBuilding(db.Model):
@@ -54,7 +68,6 @@ class DormBuilding(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     building_name = db.Column(db.String(64), unique=True)
     students = db.relationship('Student', backref='building')
-    guests = db.relationship('Guest', backref='building')
 
     def __repr__(self):
         return '<DormBuilding %r>' % self.building_name
