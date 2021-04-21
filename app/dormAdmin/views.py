@@ -83,11 +83,11 @@ def delete_stu():
     db.session.commit()
 
     if enter_type == "home":
-        return redirect(url_for('main.home_dorm_admin'))
+        return redirect(url_for('main.home_dorm_admin', page=page))
     elif enter_type == "search":
         return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page))
 
-    return redirect(url_for('main.home_dorm_admin'))
+    return redirect(url_for('main.home_dorm_admin', page=page))
 
 
 @dormAdmin.route('/add_stu', methods=['GET', 'POST'])
@@ -392,11 +392,11 @@ def delete_gue():
     db.session.commit()
 
     if enter_type == "home":
-        return redirect(url_for('main.home_dorm_admin_gue'))
+        return redirect(url_for('main.home_dorm_admin_gue', page=page))
     elif enter_type == "search":
         return redirect(url_for('dormAdmin.search_gue', content=content, tag=tag, page=page))
 
-    return redirect(url_for('main.home_dorm_admin_gue'))  # 待完善核对
+    return redirect(url_for('main.home_dorm_admin_gue', page=page))  # 待完善核对
 
 
 @dormAdmin.route('/leave_gue', endpoint='leave_gue')
@@ -414,11 +414,11 @@ def leave_gue():
     db.session.commit()
 
     if enter_type == "home":
-        return redirect(url_for('main.home_dorm_admin_gue'))
+        return redirect(url_for('main.home_dorm_admin_gue', page=page))
     elif enter_type == "search":
         return redirect(url_for('dormAdmin.search_gue', content=content, tag=tag, page=page))
 
-    return redirect(url_for('main.home_dorm_admin_gue'))  # 待完善核对
+    return redirect(url_for('main.home_dorm_admin_gue', page=page))  # 待完善核对
 
 
 @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
@@ -516,8 +516,8 @@ def validate_gue_stu_number(n):
 
 def validate_gue_phone(p):
     if len(p) == 11:
-        stu = Student.query.filter_by(stu_number=p).first()
-        if stu:
+        gue = Guest.query.filter_by(phone=p).first()
+        if not gue:
             return True
         return False
     return False

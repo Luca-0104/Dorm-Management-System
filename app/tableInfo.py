@@ -77,7 +77,8 @@ stu_list = [['stu1', '17371101', '13500000001', 'stu1@emails.bjut.edu.cn', 'Beij
             ['stu68', '17411201', '13500000068', 'stu68@emails.bjut.edu.cn', 'Faculty of Urban Construction', 8, 101],
             ['stu69', '17411202', '13500000069', 'stu69@emails.bjut.edu.cn', 'Faculty of Urban Construction', 8, 101],
             ['stu70', '17411301', '13500000070', 'stu70@emails.bjut.edu.cn', 'Faculty of Urban Construction', 8, 101],
-
+            ['stu71', '17411302', '13500000071', 'stu71@emails.bjut.edu.cn', 'Faculty of Urban Construction', 8, 102],
+            ['stu72', '17411303', '13500000072', 'stu72@emails.bjut.edu.cn', 'Faculty of Urban Construction', 8, 102],
 
             # ['stu1', '17371101', '13500000000', 'stu1@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 101],
             # ['stu1', '17371101', '13500000000', 'stu1@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 101],
@@ -132,5 +133,7 @@ gue_list = [
             ['gue17', '13500000017', 6],
             ['gue18', '13500000018', 6],
             ['gue19', '13500000019', 7],
-            ['gue20', '13500000020', 7]
-            ]
+            ['gue20', '13500000020', 7],
+            ['gue21', '13500000021', 7],
+            ['gue22', '13500000022', 7]
+]
