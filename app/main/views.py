@@ -17,8 +17,27 @@ def index():
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu', methods=['GET', 'POST'])
 def home_stu():
-    return render_template("samples/studentHomepage.html")  # 待核对完善
+    return render_template("samples/studentIndex.html",function="index")  # 待核对完善
 
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_bill', methods=['GET', 'POST'])
+def home_stu_bill():
+    return render_template("samples/studentBills.html",function="bills")  # 待核对
+
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_complain', methods=['GET', 'POST'])
+def home_stu_complain():
+    return render_template("samples/studentComplain.html",function="complain")  # 待核对
+
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_repair', methods=['GET', 'POST'])
+def home_stu_repair():
+    return render_template("samples/studentRepair.html",function="repair")  # 待核对
+
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_message', methods=['GET', 'POST'])
+def home_stu_message():
+    return render_template("samples/studentMessage.html",function="message")  # 待核对
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():

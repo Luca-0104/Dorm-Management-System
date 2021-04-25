@@ -73,22 +73,28 @@
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %} onclick="location.href='{{ url_for('main.home_sys_admin') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Index</span></a>
-		<a {% if function=="students" %}
+		{% endif %} onclick="location.href='{{ url_for('main.home_stu') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Index</span></a>
+		<a {% if function=="bills" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %} onclick="location.href='{{ url_for('main.home_sys_stu') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Students</span></a>
-		<a {% if function=="guests" %}
+		{% endif %} onclick="location.href='{{ url_for('main.home_stu_bill') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Bills</span></a>
+		<a {% if function=="complain" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %}  onclick="location.href='{{ url_for('main.home_sys_gue') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Guests Register</span></a>
-        <a {% if function=="dormAdmin" %}
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_complain') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Complain</span></a>
+        <a {% if function=="repair" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %}  onclick="location.href='{{ url_for('main.home_sys_dorm') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Dorm Administrators</span></a>
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_repair') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Repair</span></a>
+        <a {% if function=="message" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_message') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Message</span></a>
+
 	  </div>
     </div>
     <div class="col-10">
