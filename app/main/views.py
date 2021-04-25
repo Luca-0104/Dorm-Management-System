@@ -25,7 +25,7 @@ def home_dorm_admin():
     isSuccessful = request.args.get('isSuccessful', "True")
     pagenum = int(request.args.get('page', 1))
     pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template('samples/testindex.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students')
+    return render_template('samples/dormStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students')
 
 
 @main.route('/home_dorm_admin_gue', methods=['GET', 'POST'])
@@ -33,7 +33,7 @@ def home_dorm_admin_gue():
     isSuccessful = request.args.get('isSuccessful', "True")
     pagenum = int(request.args.get('page', 1))
     pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template('samples/guestRegister.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function="guests")
+    return render_template('samples/dormGuests.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function="guests")
 
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
