@@ -346,8 +346,7 @@ def search_gue():
                                                    )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
-        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(
-            page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
 
