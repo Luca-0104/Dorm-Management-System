@@ -65,7 +65,7 @@ def search_stu():
     #     stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).order_by(Student.room_number).paginate(page=pagenum, per_page=5)
 
     # print(stu_list)
-    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
+    return render_template('samples/dormStudents.html', pagination=stu_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='students')
 
 
@@ -127,7 +127,7 @@ def add_stu():
         else:
             return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
 
-    return render_template('samples/testindex.html', function='students')
+    return render_template('samples/dormStudents.html', function='students')
 
 
 @dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])
@@ -202,7 +202,7 @@ def update_stu():
             elif enter_type == "search":
                 return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
-    return render_template('samples/testindex.html', function='students')
+    return render_template('samples/dormStudents.html', function='students')
 
 
 def validate_stu_number(n):
@@ -373,7 +373,7 @@ def search_gue():
     # elif tag == 'leave_time':
     #     gue_list = Guest.query.filter(and_(Guest.leave_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template('samples/guestRegister.html', pagination=gue_list, enterType=enter_type, content=key_word,
+    return render_template('samples/dormGuests.html', pagination=gue_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='guests')  # 待完善核对
 
 
@@ -445,7 +445,7 @@ def add_gue():
         else:
             return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
 
-    return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
+    return render_template('samples/dormGuests.html', function='guests')  # 待完善核对
 
 
 @dormAdmin.route('/update_gue', methods=['GET', 'POST'])
@@ -501,7 +501,7 @@ def update_gue():
                 return redirect(
                     url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
 
-        return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
+        return render_template('samples/dormGuests.html', function='guests')  # 待完善核对
 
 
 def validate_gue_stu_number(n):
