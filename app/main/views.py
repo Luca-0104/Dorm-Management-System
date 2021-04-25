@@ -36,9 +36,27 @@ def home_dorm_admin_gue():
     return render_template('samples/dormGuests.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function="guests")
 
 
+
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
-    return render_template("samples/systemHomepage.html")  # 待核对完善
+    return render_template("samples/systemIndex.html",function="index")  # 待核对完善
+
+
+@main.route('/home_sys_gue', methods=['GET', 'POST'])
+def home_sys_gue():
+    return render_template("samples/systemGuests.html",function="guests" )  # 待核对完善
+
+
+@main.route('/home_sys_stu', methods=['GET', 'POST'])
+def home_sys_stu():
+    return render_template("samples/systemStudents.html",function="students")  # 待核对完善
+
+
+@main.route('/home_sys_dorm', methods=['GET', 'POST'])
+def home_sys_dorm():
+    return render_template("samples/systemDorm.html",function="dormAdmin")  # 待核对完善
+
+
 
 
 # The profile page ----------------------------------------------------------------------------------------------
