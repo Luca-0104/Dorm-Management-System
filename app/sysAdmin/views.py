@@ -46,3 +46,60 @@ def add_stu():
             return redirect(url_for('main.home_sys_admin', isSuccessful=False))
 
     return render_template('samples/testindex.html', function='students')
+
+
+@sysAdmin.route('/search_stu', methods=['GET', 'POST'])
+def search_stu():
+    """
+    fuzzy querying was used
+    :return: stu_list ab list of Student objects that meet the filter requirement
+    """
+    key_word = request.args.get('content')
+    tag = request.args.get('tag')
+    pagenum = int(request.args.get('page', 1))
+    enter_type = 'search'
+    is_successful = request.args.get('isSuccessful', "True")  # The default value is True
+
+    # print('tag: ' + tag)
+    # print('key_word:' + key_word)
+
+    stu_list = []
+    if tag == 'all':
+        stu_list = Student.query.filter(and_(or_(Student.stu_name.contains(key_word),
+                                                 Student.stu_number.contains(key_word),
+                                                 Student.phone.contains(key_word),
+                                                 Student.college.contains(key_word),
+                                                 Student.room_number.contains(key_word),
+                                                 # Student.enroll_date.contains(key_word)
+                                                 )), Student.is_deleted == False).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'stu_name':
+        stu_list = Student.query.filter(
+            and_(Student.stu_name.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'stu_number':
+        stu_list = Student.query.filter(
+            and_(Student.stu_number.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'phone':
+        stu_list = Student.query.filter(and_(Student.phone.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'college':
+        stu_list = Student.query.filter(and_(Student.college.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'room_number':
+        stu_list = Student.query.filter(
+            and_(Student.room_number.contains(key_word), Student.is_deleted == False)).order_by(
+            Student.room_number).paginate(page=pagenum, per_page=5)
+
+    # elif tag == 'enroll_date':
+    #     stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).order_by(Student.room_number).paginate(page=pagenum, per_page=5)
+
+    # print(stu_list)
+    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
+                           tag=tag, isSuccessful=is_successful, function='students')
