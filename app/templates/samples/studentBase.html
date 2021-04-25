@@ -25,27 +25,9 @@
   </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Building number
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Building 1</a>
-          <a class="dropdown-item" href="#">Building 2</a>
-          <a class="dropdown-item" href="#">Building 4</a>
-          <a class="dropdown-item" href="#">Building 5</a>
-          <a class="dropdown-item" href="#">Building 6</a>
-          <a class="dropdown-item" href="#">Building 7</a>
-          <a class="dropdown-item" href="#">Building 8</a>
-          <a class="dropdown-item" href="#">Building 9</a>
-          <a class="dropdown-item" href="#">Building 10</a>
-          <a class="dropdown-item" href="#">Building 11</a>
-          <a class="dropdown-item" href="#">Building 12</a>
-          <a class="dropdown-item" href="#">Building 13</a>
-          <a class="dropdown-item" href="#">Building 14</a>
-
-        </div>
-      </li>
+            {% block topLeft %}
+            
+            {% endblock %}
         </ul>
     {% block search %}
 
@@ -73,27 +55,27 @@
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %} onclick="location.href='{{ url_for('main.home_stu') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Index</span></a>
+		{% endif %} onclick="location.href='{{ url_for('main.home_stu') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="bi bi-file-earmark-person icon-margin"></i><span>Index</span></a>
 		<a {% if function=="bills" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %} onclick="location.href='{{ url_for('main.home_stu_bill') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Bills</span></a>
+		{% endif %} onclick="location.href='{{ url_for('main.home_stu_bill') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="bi bi-cash-stack icon-margin"></i><span>Bills</span></a>
 		<a {% if function=="complain" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_complain') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Complain</span></a>
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_complain') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-exclamation-triangle icon-margin"></i><span>Complain</span></a>
         <a {% if function=="repair" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_repair') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Repair</span></a>
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_repair') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-nut icon-margin"></i><span>Repair</span></a>
         <a {% if function=="message" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_message') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Message</span></a>
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_message') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-chat-dots icon-margin"></i><span>Message</span></a>
 
 	  </div>
     </div>
