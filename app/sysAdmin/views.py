@@ -103,3 +103,25 @@ def search_stu():
     # print(stu_list)
     return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='students')
+
+
+
+@sysAdmin.route('/delete_stu', endpoint='delete')
+def delete_stu():
+    id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
+    student = Student.query.get(id)
+    student.is_deleted = True
+    db.session.add(student)
+    db.session.commit()
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_sys_admin', page=page))
+    elif enter_type == "search":
+        return redirect(url_for('sysAdmin.search_stu', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_sys_admin', page=page))
