@@ -125,3 +125,160 @@ def delete_stu():
         return redirect(url_for('sysAdmin.search_stu', content=content, tag=tag, page=page))
 
     return redirect(url_for('main.home_sys_admin', page=page))
+
+@sysAdmin.route('/search_gue', methods=['GET', 'POST'])  # 路由名待完善核对
+def search_gue():
+    key_word = request.args.get('content')
+    tag = request.args.get('tag')
+    pagenum = int(request.args.get('page', 1))
+    enter_type = 'search'
+    is_successful = request.args.get('isSuccessful', "True")  # The default value is True
+
+    if tag == 'all':
+        stu = Student.query.filter_by(stu_number=key_word).first()
+        if stu:
+            gue_list = Guest.query.filter(and_(or_(Guest.gue_name.contains(key_word),
+                                                   Guest.phone.contains(key_word),
+                                                   Guest.stu_id == stu.id,
+                                                   Guest.arrive_time.contains(key_word),
+                                                   Guest.leave_time.contains(key_word),
+                                                   )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
+        else:
+            gue_list = Guest.query.filter(and_(or_(Guest.gue_name.contains(key_word),
+                                                   Guest.phone.contains(key_word),
+                                                   Guest.arrive_time.contains(key_word),
+                                                   Guest.leave_time.contains(key_word),
+                                                   )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'gue_name':
+        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'stu_number':
+
+        gue_list = Guest.query.join(Student).filter(and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        # ref_stu_list = Student.query.filter(Student.stu_number.contains(key_word)).all()
+        # gue_list = []
+        # for stu in ref_stu_list:
+        #     gue = Guest.query.filter(and_(Guest.stu_id == stu.id, Guest.is_deleted == False)).first()
+        #     if gue:
+        #         gue_list.append(gue)
+
+    elif tag == 'phone':
+        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'has_left':
+        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+
+    elif tag == 'has_not_left':
+        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+
+    # elif tag == 'arrive_time':
+    #     gue_list = Guest.query.filter(and_(Guest.arrive_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+    #
+    # elif tag == 'leave_time':
+    #     gue_list = Guest.query.filter(and_(Guest.leave_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+
+    return render_template('samples/guestRegister.html', pagination=gue_list, enterType=enter_type, content=key_word,
+                           tag=tag, isSuccessful=is_successful, function='guests')  # 待完善核对
+
+@sysAdmin.route('/add_gue', methods=['GET', 'POST'])
+def add_gue():
+    if request.method == 'POST':
+        gue_name = request.form.get('gue_name')
+        stu_number = request.form.get('stu_number')
+        phone = request.form.get('phone')
+        note = request.form.get('note')
+
+        if gue_name != '' and phone != '' and stu_number != '':
+            student = Student.query.filter_by(stu_number=stu_number).first()
+            if student:
+                if note != '':
+                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
+                else:
+                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
+
+                db.session.add(new_guest)
+                db.session.commit()
+
+                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
+            else:
+                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+        else:
+            return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+
+    return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
+
+@sysAdmin.route('/delete_gue', endpoint='delete_gue')
+def delete_gue():
+    id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
+    guest = Guest.query.get(id)
+    guest.is_deleted = True
+    db.session.add(guest)
+    db.session.commit()
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_dorm_admin_gue', page=page))
+    elif enter_type == "search":
+        return redirect(url_for('dormAdmin.search_gue', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_dorm_admin_gue', page=page))  # 待完善核对
+
+@sysAdmin.route('/update_gue', methods=['GET', 'POST'])
+def update_gue():
+    id = request.args.get('id')
+    guest = Guest.query.get(id)
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+    is_changed = False
+    is_stop = False  # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
+
+    if request.method == 'POST':
+        gue_name = request.form.get('gue_name')
+        gue_stu_number = request.form.get('stu_number')  # 待核对
+        gue_phone = request.form.get('phone')
+
+        if gue_name != '':
+            guest.gue_name = gue_name
+            is_changed = True
+
+        if gue_stu_number != '':
+            if validate_gue_stu_number(gue_stu_number):
+                student = Student.query.filter_by(stu_number=gue_stu_number).first()
+                guest.stu_id = student.id
+                is_changed = True
+            else:
+                is_stop = True
+
+        if gue_phone != '':
+            if validate_gue_phone(gue_phone):
+                guest.phone = gue_phone
+                is_changed = True
+            else:
+                is_stop = True
+
+        # 检查信息是否修改成功
+
+        if is_changed and not is_stop:
+            db.session.add(guest)
+            db.session.commit()
+
+            if enter_type == "home":
+                return redirect(url_for('main.home_dorm_admin_gue', page=page, isSuccessful="True"))
+            elif enter_type == "search":
+                return redirect(
+                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="True"))
+        else:
+            if enter_type == "home":
+                return redirect(url_for('main.home_dorm_admin_gue', page=page, isSuccessful="False"))
+            elif enter_type == "search":
+                return redirect(
+                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
+
+        return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
