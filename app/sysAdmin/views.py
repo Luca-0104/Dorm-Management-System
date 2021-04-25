@@ -200,11 +200,11 @@ def add_gue():
                 db.session.add(new_guest)
                 db.session.commit()
 
-                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
+                return redirect(url_for('main.home_sys_admin_gue', isSuccessful=True))
             else:
-                return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+                return redirect(url_for('main.home_sys_admin_gue', isSuccessful=False))
         else:
-            return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+            return redirect(url_for('main.home_sys_admin_gue', isSuccessful=False))
 
     return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
 
@@ -222,11 +222,11 @@ def delete_gue():
     db.session.commit()
 
     if enter_type == "home":
-        return redirect(url_for('main.home_dorm_admin_gue', page=page))
+        return redirect(url_for('main.home_sys_admin_gue', page=page))
     elif enter_type == "search":
-        return redirect(url_for('dormAdmin.search_gue', content=content, tag=tag, page=page))
+        return redirect(url_for('sysAdmin.search_gue', content=content, tag=tag, page=page))
 
-    return redirect(url_for('main.home_dorm_admin_gue', page=page))  # 待完善核对
+    return redirect(url_for('main.home_sys_admin_gue', page=page))  # 待完善核对
 
 @sysAdmin.route('/update_gue', methods=['GET', 'POST'])
 def update_gue():
@@ -270,15 +270,15 @@ def update_gue():
             db.session.commit()
 
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin_gue', page=page, isSuccessful="True"))
+                return redirect(url_for('main.home_sys_admin_gue', page=page, isSuccessful="True"))
             elif enter_type == "search":
                 return redirect(
-                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="True"))
+                    url_for('sysAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
-                return redirect(url_for('main.home_dorm_admin_gue', page=page, isSuccessful="False"))
+                return redirect(url_for('main.home_sys_admin_gue', page=page, isSuccessful="False"))
             elif enter_type == "search":
                 return redirect(
-                    url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
+                    url_for('sysAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
 
         return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
