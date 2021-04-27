@@ -139,7 +139,7 @@ def update_stu():
     enter_type = request.args.get('enterType')
     page = request.args.get('page')
     is_changed = False
-    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
+    is_stop = False  # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
 
     if request.method == 'POST':
         stu_name = request.form.get('name')
@@ -195,12 +195,14 @@ def update_stu():
             if enter_type == "home":
                 return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="True"))
             elif enter_type == "search":
-                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
+                return redirect(
+                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
                 return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="False"))
             elif enter_type == "search":
-                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
+                return redirect(
+                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
     return render_template('samples/testindex.html', function='students')
 
@@ -346,11 +348,13 @@ def search_gue():
                                                    )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
-        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(
+            page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
 
-        gue_list = Guest.query.join(Student).filter(and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.join(Student).filter(
+            and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
         # ref_stu_list = Student.query.filter(Student.stu_number.contains(key_word)).all()
         # gue_list = []
         # for stu in ref_stu_list:
@@ -359,13 +363,16 @@ def search_gue():
         #         gue_list.append(gue)
 
     elif tag == 'phone':
-        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(
+            page=pagenum, per_page=5)
 
     elif tag == 'has_left':
-        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum,
+                                                                                                        per_page=5)
 
     elif tag == 'has_not_left':
-        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum,
+                                                                                                         per_page=5)
 
     # elif tag == 'arrive_time':
     #     gue_list = Guest.query.filter(and_(Guest.arrive_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
@@ -420,21 +427,62 @@ def leave_gue():
     return redirect(url_for('main.home_dorm_admin_gue', page=page))  # 待完善核对
 
 
+"""
+旧版：按学生学号关联所访问学生
+"""
+# @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
+# def add_gue():
+#     if request.method == 'POST':
+#         gue_name = request.form.get('gue_name')
+#         stu_number = request.form.get('stu_number')
+#         phone = request.form.get('phone')
+#         note = request.form.get('note')
+#
+#         if gue_name != '' and phone != '' and stu_number != '':
+#             student = Student.query.filter_by(stu_number=stu_number).first()
+#             if student:
+#                 if note == '':
+#                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
+#                 else:
+#                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
+#
+#                 db.session.add(new_guest)
+#                 db.session.commit()
+#
+#                 return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
+#             else:
+#                 return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+#         else:
+#             return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+#
+#     return render_template('samples/guestRegister.html', function='guests')
+
+
+"""
+新版：按学生姓名关联所访问的学生，然后再筛选重名学生
+"""
+
+
 @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
 def add_gue():
     if request.method == 'POST':
         gue_name = request.form.get('gue_name')
-        stu_number = request.form.get('stu_number')
+        # stu_number = request.form.get('stu_number')
+        stu_name = request.form.get('stu_name')
         phone = request.form.get('phone')
         note = request.form.get('note')
 
-        if gue_name != '' and phone != '' and stu_number != '':
-            student = Student.query.filter_by(stu_number=stu_number).first()
-            if student:
-                if note != '':
-                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
+        if gue_name != '' and phone != '' and stu_name != '':
+            students = Student.query.filter_by(stu_name=stu_name).all()
+
+            if students:
+                if len(students) > 1:   # if there are multiple students with the same name
+                    return redirect(url_for('dormAdmin.choose_stu', students=students, gue_name=gue_name, phone=phone, note=note))
+
+                if note == '':
+                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=students[0].id)
                 else:
-                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
+                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=students[0].id, note=note)
 
                 db.session.add(new_guest)
                 db.session.commit()
@@ -445,7 +493,35 @@ def add_gue():
         else:
             return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
 
-    return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
+    return render_template('samples/guestRegister.html', function='guests')
+
+
+@dormAdmin.route('/choose_stu', methods=['GET', 'POST'])
+def choose_stu():
+    """
+    When adding a guest, if the there are multiple students with the same name of the related student, the guest should choose the correct one.
+    """
+    students = request.args.get('students')
+    gue_name = request.args.get('gue_name')
+    phone = request.args.get('phone')
+    note = request.args.get('note')
+
+    if request.method == 'POST':
+        student = request.form.get('student')
+
+        if note == '':
+            new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
+        else:
+            new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
+
+        db.session.add(new_guest)
+        db.session.commit()
+
+        return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
+
+    return render_template('samples/choose_stu.html', students=students, gue_name=gue_name, phone=phone, note=note)
+
+
 
 
 @dormAdmin.route('/update_gue', methods=['GET', 'POST'])
@@ -526,7 +602,7 @@ def validate_gue_phone(p):
 def check_Gue_Stu_ID():
     stu_id = request.args.get('id')
     user = Student.query.filter(Student.stu_number == stu_id).all()
-    if stu_id=="":
+    if stu_id == "":
         return jsonify(code=200, msg="this phone number is available")
     print(len(user))
     if len(user) == 0:
@@ -542,7 +618,7 @@ def check_Gue_Stu_ID_Add():
     phone = request.args.get('phone')
     gue_name = request.args.get('gue_name')
     user = Student.query.filter(Student.stu_number == stu_id).all()
-    if stu_id=="" or gue_name=="" or phone=="":
+    if stu_id == "" or gue_name == "" or phone == "":
         return jsonify(code=400, msg="Please fill the required information")
     print(len(user))
     if len(user) == 0:
