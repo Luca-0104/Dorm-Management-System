@@ -46,6 +46,27 @@ class Permission:
     SYS_ADMIN = 16
 
 
+# a table for all the user notifications
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    sender_id = db.Column(db.Integer, nullable=False)
+    receiver_id = db.Column(db.Integer, nullable=False)
+    reply = db.relationship('Reply', backref='notification')
+
+
+# a table for all the replies of notifications
+class Reply(db.Model):
+    __tablename__ = 'replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    notification_id = db.Column(db.Integer, db.ForeignKey('notifications.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+
 # The table of dormitory buildings
 class Guest(db.Model):
     __tablename__ = 'guests'
@@ -286,10 +307,16 @@ class User(UserMixin, db.Model):
     user_name = db.Column(db.String(64), unique=False, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))  # 在数据库模型中定义关系
     password_hash = db.Column(db.String(128))
-    # 资料页面信息
+
+    # about profiles
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    # about notifications
+    notification = db.relationship('Notification', backref='user')
+    reply = db.relationship('Reply', backref='user')
+
 
     def __repr__(self):
         return '<User %r>' % self.user_name
