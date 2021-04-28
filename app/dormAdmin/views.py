@@ -65,7 +65,7 @@ def search_stu():
     #     stu_list = Student.query.filter(and_(Student.enroll_date.contains(key_word), Student.is_deleted == False)).order_by(Student.room_number).paginate(page=pagenum, per_page=5)
 
     # print(stu_list)
-    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
+    return render_template('samples/dormStudents.html', pagination=stu_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='students')
 
 
@@ -127,7 +127,7 @@ def add_stu():
         else:
             return redirect(url_for('main.home_dorm_admin', isSuccessful=False))
 
-    return render_template('samples/testindex.html', function='students')
+    return render_template('samples/dormStudents.html', function='students')
 
 
 @dormAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])
@@ -195,16 +195,14 @@ def update_stu():
             if enter_type == "home":
                 return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="True"))
             elif enter_type == "search":
-                return redirect(
-                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
+                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
                 return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="False"))
             elif enter_type == "search":
-                return redirect(
-                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
+                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
-    return render_template('samples/testindex.html', function='students')
+    return render_template('samples/dormStudents.html', function='students')
 
 
 def validate_stu_number(n):
@@ -348,13 +346,11 @@ def search_gue():
                                                    )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
-        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(
-            page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
 
-        gue_list = Guest.query.join(Student).filter(
-            and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.join(Student).filter(and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
         # ref_stu_list = Student.query.filter(Student.stu_number.contains(key_word)).all()
         # gue_list = []
         # for stu in ref_stu_list:
@@ -363,16 +359,13 @@ def search_gue():
         #         gue_list.append(gue)
 
     elif tag == 'phone':
-        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(
-            page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'has_left':
-        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum,
-                                                                                                        per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'has_not_left':
-        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum,
-                                                                                                         per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     # elif tag == 'arrive_time':
     #     gue_list = Guest.query.filter(and_(Guest.arrive_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
@@ -380,7 +373,7 @@ def search_gue():
     # elif tag == 'leave_time':
     #     gue_list = Guest.query.filter(and_(Guest.leave_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template('samples/guestRegister.html', pagination=gue_list, enterType=enter_type, content=key_word,
+    return render_template('samples/dormGuests.html', pagination=gue_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='guests')  # 待完善核对
 
 
@@ -455,7 +448,7 @@ def add_gue():
         else:
             return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
 
-    return render_template('samples/guestRegister.html', function='guests')
+    return render_template('samples/dormGuests.html', function='guests')
 
 
 """
@@ -577,7 +570,7 @@ def update_gue():
                 return redirect(
                     url_for('dormAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
 
-        return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
+        return render_template('samples/dormGuests.html', function='guests')  # 待完善核对
 
 
 def validate_gue_stu_number(n):
