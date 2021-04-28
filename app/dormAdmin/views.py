@@ -430,59 +430,21 @@ def leave_gue():
 """
 旧版：按学生学号关联所访问学生
 """
-# @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
-# def add_gue():
-#     if request.method == 'POST':
-#         gue_name = request.form.get('gue_name')
-#         stu_number = request.form.get('stu_number')
-#         phone = request.form.get('phone')
-#         note = request.form.get('note')
-#
-#         if gue_name != '' and phone != '' and stu_number != '':
-#             student = Student.query.filter_by(stu_number=stu_number).first()
-#             if student:
-#                 if note == '':
-#                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
-#                 else:
-#                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
-#
-#                 db.session.add(new_guest)
-#                 db.session.commit()
-#
-#                 return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
-#             else:
-#                 return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
-#         else:
-#             return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
-#
-#     return render_template('samples/guestRegister.html', function='guests')
-
-
-"""
-新版：按学生姓名关联所访问的学生，然后再筛选重名学生
-"""
-
-
 @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
 def add_gue():
     if request.method == 'POST':
         gue_name = request.form.get('gue_name')
-        # stu_number = request.form.get('stu_number')
-        stu_name = request.form.get('stu_name')
+        stu_number = request.form.get('stu_number')
         phone = request.form.get('phone')
         note = request.form.get('note')
 
-        if gue_name != '' and phone != '' and stu_name != '':
-            students = Student.query.filter_by(stu_name=stu_name).all()
-
-            if students:
-                if len(students) > 1:   # if there are multiple students with the same name
-                    return redirect(url_for('dormAdmin.choose_stu', students=students, gue_name=gue_name, phone=phone, note=note))
-
+        if gue_name != '' and phone != '' and stu_number != '':
+            student = Student.query.filter_by(stu_number=stu_number).first()
+            if student:
                 if note == '':
-                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=students[0].id)
+                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
                 else:
-                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=students[0].id, note=note)
+                    new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
 
                 db.session.add(new_guest)
                 db.session.commit()
@@ -496,31 +458,69 @@ def add_gue():
     return render_template('samples/guestRegister.html', function='guests')
 
 
-@dormAdmin.route('/choose_stu', methods=['GET', 'POST'])
-def choose_stu():
-    """
-    When adding a guest, if the there are multiple students with the same name of the related student, the guest should choose the correct one.
-    """
-    students = request.args.get('students')
-    gue_name = request.args.get('gue_name')
-    phone = request.args.get('phone')
-    note = request.args.get('note')
-
-    if request.method == 'POST':
-        student = request.form.get('student')
-
-        if note == '':
-            new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
-        else:
-            new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
-
-        db.session.add(new_guest)
-        db.session.commit()
-
-        return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
-
-    return render_template('samples/choose_stu.html', students=students, gue_name=gue_name, phone=phone, note=note)
-
+"""
+新版：按学生姓名关联所访问的学生，然后再筛选重名学生
+"""
+#
+#
+# @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
+# def add_gue():
+#     if request.method == 'POST':
+#         gue_name = request.form.get('gue_name')
+#         # stu_number = request.form.get('stu_number')
+#         stu_name = request.form.get('stu_name')
+#         phone = request.form.get('phone')
+#         note = request.form.get('note')
+#
+#         if gue_name != '' and phone != '' and stu_name != '':
+#             students = Student.query.filter_by(stu_name=stu_name).all()
+#
+#             if students:
+#                 if len(students) > 1:   # if there are multiple students with the same name
+#                     return redirect(url_for('dormAdmin.choose_stu', students=students, gue_name=gue_name, phone=phone, note=note))
+#
+#                 if note == '':
+#                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=students[0].id)
+#                 else:
+#                     new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=students[0].id, note=note)
+#
+#                 db.session.add(new_guest)
+#                 db.session.commit()
+#
+#                 return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
+#             else:
+#                 return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+#         else:
+#             return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=False))
+#
+#     return render_template('samples/guestRegister.html', function='guests')
+#
+#
+# @dormAdmin.route('/choose_stu', methods=['GET', 'POST'])
+# def choose_stu():
+#     """
+#     When adding a guest, if the there are multiple students with the same name of the related student, the guest should choose the correct one.
+#     """
+#     students = request.args.get('students')
+#     gue_name = request.args.get('gue_name')
+#     phone = request.args.get('phone')
+#     note = request.args.get('note')
+#
+#     if request.method == 'POST':
+#         student = request.form.get('student')
+#
+#         if note == '':
+#             new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id)
+#         else:
+#             new_guest = Guest(gue_name=gue_name, phone=phone, stu_id=student.id, note=note)
+#
+#         db.session.add(new_guest)
+#         db.session.commit()
+#
+#         return redirect(url_for('main.home_dorm_admin_gue', isSuccessful=True))
+#
+#     return render_template('samples/choose_stu.html', students=students, gue_name=gue_name, phone=phone, note=note)
+#
 
 
 
