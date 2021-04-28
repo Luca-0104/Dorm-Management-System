@@ -6,7 +6,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import login_manager
-from .tableInfo import stu_list, gue_list
+from .tableInfo import stu_list, gue_list, da_list
 
 
 @login_manager.user_loader
@@ -20,6 +20,23 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+class Tools:
+    """
+    All the tool methods for creating the tables
+    """
+    @staticmethod
+    def fill_all_tables():
+        """
+        Fill all the tables in an specific order.
+        This should be used in the console only a single time.
+        """
+        Role.insert_roles()
+        DormBuilding.insert_dorm_buildings()
+        Student.insert_students()
+        Guest.insert_guests()
+        DAdmin.insert_das()
+
+
 # 权限常量（2^n, 所以组合求和不会冲突）
 class Permission:
     ACCUSE = 1
@@ -27,6 +44,27 @@ class Permission:
     LOST_ANNOUNCE = 4
     DORM_ADMIN = 8
     SYS_ADMIN = 16
+
+
+# a table for all the user notifications
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    sender_id = db.Column(db.Integer, nullable=False)
+    receiver_id = db.Column(db.Integer, nullable=False)
+    reply = db.relationship('Reply', backref='notification')
+
+
+# a table for all the replies of notifications
+class Reply(db.Model):
+    __tablename__ = 'replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    notification_id = db.Column(db.Integer, db.ForeignKey('notifications.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 # The table of dormitory buildings
@@ -68,6 +106,7 @@ class DormBuilding(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     building_name = db.Column(db.String(64), unique=True)
     students = db.relationship('Student', backref='building')
+    dormAdmins = db.relationship('DAdmin', backref='building')
 
     def __repr__(self):
         return '<DormBuilding %r>' % self.building_name
@@ -96,6 +135,58 @@ class DormBuilding(db.Model):
                 building = DormBuilding(building_name=b)
             db.session.add(building)
         db.session.commit()
+
+
+# The table of dormitory administrator information
+class DAdmin(db.Model):
+    __tablename__ = 'dormAdmins'
+    id = db.Column(db.Integer, primary_key=True)
+    da_name = db.Column(db.String(64), nullable=False)
+    da_number = db.Column(db.String(64), unique=True, nullable=False)
+    phone = db.Column(db.String(64), unique=True, nullable=False)
+    email = db.Column(db.String(64), unique=True)
+    building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
+    enroll_date = db.Column(db.DateTime(), default=datetime.utcnow)
+    is_deleted = db.Column(db.Boolean, default=False)
+    is_registered = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<DAdmin %r>' % self.da_name
+
+    def delete_da(self):
+        """
+        The function for delete dormitory administrator logically
+        """
+        self.is_deleted = True
+        db.session.add(self)
+        db.session.commit()
+
+    def register_da(self):
+        """
+        The function for register dormitory administrator logically
+        (Use this function if the dormitory administrator registers as an user)
+        """
+        self.is_registered = True
+        db.session.add(self)
+        db.session.commit()
+
+    @staticmethod
+    def insert_das():
+        """
+        This is a method for inserting the dormitory administrator information, which means fulling the dormitory administrator table.
+        This should be used in the console only a single time.
+        """
+        for da_info in da_list:
+
+            da_name = da_info[0]
+            da_number = da_info[1]
+            phone = da_info[2]
+            email = da_info[3]
+            building_id = da_info[4]
+
+            new_da = DAdmin(da_name=da_name, da_number=da_number, phone=phone, email=email, building_id=building_id)
+            db.session.add(new_da)
+            db.session.commit()
 
 
 # The table of dormitory information
@@ -216,10 +307,15 @@ class User(UserMixin, db.Model):
     user_name = db.Column(db.String(64), unique=False, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))  # 在数据库模型中定义关系
     password_hash = db.Column(db.String(128))
-    # 资料页面信息
+
+    # about profiles
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+
+    # about notifications
+    reply = db.relationship('Reply', backref='user')
+
 
     def __repr__(self):
         return '<User %r>' % self.user_name
