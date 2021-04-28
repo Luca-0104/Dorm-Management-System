@@ -1,1 +1,35 @@
 {% extends "samples/studentBase.html" %}
+
+{% block mainContent %}
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Topic</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      <th scope="col">Threads</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row" colspan="3"><a href="#" class="card-link">Repair</a></th>
+      <td>XXX</td>
+    </tr>
+    <tr>
+      <th scope="row" colspan="3"><a href="#" class="card-link">Complain</a></th>
+      <td>Jacob</td>
+    </tr>
+    <tr>
+      <th scope="row" colspan="3"><a href="#" class="card-link">Notifications</a></th>
+      <td>Jacob</td>
+    </tr>
+    <tr>
+      <th scope="row" colspan="3"><a href="#" class="card-link">Others</a></th>
+      <td>Larry</td>
+    </tr>
+  </tbody>
+</table>
+
+
+{% endblock %}
