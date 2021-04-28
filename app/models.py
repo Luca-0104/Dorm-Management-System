@@ -314,7 +314,6 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # about notifications
-    notification = db.relationship('Notification', backref='user')
     reply = db.relationship('Reply', backref='user')
 
 
