@@ -118,3 +118,22 @@ def edit_profile():
         user.user_name = user_name
 
     return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email, member_since=member_since)  # 待核对完善
+
+#-------------------以下部分应该后面写到student模块中----------------------
+
+@main.route("/home_stu_message/repair")
+def message_repair():
+    return render_template("samples/messageRepair.html", function="message")
+
+@main.route("/home_stu_message/complain")
+def message_complain():
+    return render_template("samples/messageComplain.html", function="message")
+
+@main.route("/home_stu_message/notification")
+def message_notification():
+    return render_template("samples/messageNotification.html", function="message")
+
+@main.route("/home_stu_message/others")
+def message_others():
+    return render_template("samples/messageOthers.html", function="message")
+
