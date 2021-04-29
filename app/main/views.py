@@ -137,3 +137,6 @@ def message_notification():
 def message_others():
     return render_template("samples/messageOthers.html", function="message")
 
+@main.route("/home_stu_message/details")
+def message_details():
+    return render_template("samples/Message.html", function="message")
