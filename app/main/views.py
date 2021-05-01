@@ -17,34 +17,40 @@ def index():
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu', methods=['GET', 'POST'])
 def home_stu():
-    return render_template("samples/studentIndex.html",function="index")  # 待核对完善
+    return render_template("samples/studentIndex.html", function="index")  # 待核对完善
+
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_bill', methods=['GET', 'POST'])
 def home_stu_bill():
-    return render_template("samples/studentBills.html",function="bills")  # 待核对
+    return render_template("samples/studentBills.html", function="bills")  # 待核对
+
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_complain', methods=['GET', 'POST'])
 def home_stu_complain():
-    return render_template("samples/studentComplain.html",function="complain")  # 待核对
+    return render_template("samples/studentComplain.html", function="complain")  # 待核对
+
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_repair', methods=['GET', 'POST'])
 def home_stu_repair():
-    return render_template("samples/studentRepair.html",function="repair")  # 待核对
+    return render_template("samples/studentRepair.html", function="repair")  # 待核对
+
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
-    return render_template("samples/studentMessage.html",function="message")  # 待核对
+    return render_template("samples/studentMessage.html", function="message")  # 待核对
+
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():
     isSuccessful = request.args.get('isSuccessful', "True")
     pagenum = int(request.args.get('page', 1))
     pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template('samples/dormStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students')
+    return render_template('samples/dormStudents.html', pagination=pagination, enterType='home',
+                           isSuccessful=isSuccessful, function='students')
 
 
 @main.route('/home_dorm_admin_gue', methods=['GET', 'POST'])
@@ -52,30 +58,28 @@ def home_dorm_admin_gue():
     isSuccessful = request.args.get('isSuccessful', "True")
     pagenum = int(request.args.get('page', 1))
     pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template('samples/dormGuests.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function="guests")
-
+    return render_template('samples/dormGuests.html', pagination=pagination, enterType='home',
+                           isSuccessful=isSuccessful, function="guests")
 
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
-    return render_template("samples/systemIndex.html",function="index")  # 待核对完善
+    return render_template("samples/systemIndex.html", function="index")  # 待核对完善
 
 
 @main.route('/home_sys_gue', methods=['GET', 'POST'])
 def home_sys_gue():
-    return render_template("samples/systemGuests.html",function="guests" )  # 待核对完善
+    return render_template("samples/systemGuests.html", function="guests")  # 待核对完善
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
-    return render_template("samples/systemStudents.html",function="students")  # 待核对完善
+    return render_template("samples/systemStudents.html", function="students")  # 待核对完善
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
 def home_sys_dorm():
-    return render_template("samples/systemDorm.html",function="dormAdmin")  # 待核对完善
-
-
+    return render_template("samples/systemDorm.html", function="dormAdmin")  # 待核对完善
 
 
 # The profile page ----------------------------------------------------------------------------------------------
@@ -117,26 +121,50 @@ def edit_profile():
         # 待补全
         user.user_name = user_name
 
-    return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email, member_since=member_since)  # 待核对完善
+    return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email,
+                           member_since=member_since)  # 待核对完善
 
-#-------------------以下部分应该后面写到student模块中----------------------
+
+# -------------------以下部分应该后面写到student模块中----------------------
 
 @main.route("/home_stu_message/repair")
 def message_repair():
     return render_template("samples/messageRepair.html", function="message")
 
+
 @main.route("/home_stu_message/complain")
 def message_complain():
     return render_template("samples/messageComplain.html", function="message")
+
 
 @main.route("/home_stu_message/notification")
 def message_notification():
     return render_template("samples/messageNotification.html", function="message")
 
+
 @main.route("/home_stu_message/others")
 def message_others():
     return render_template("samples/messageOthers.html", function="message")
 
+
 @main.route("/home_stu_message/details")
 def message_details():
     return render_template("samples/Message.html", function="message")
+
+#宿管回复保修
+@main.route("/home_dom_message/reply_repair")
+def message_reply_repair():
+    if request.method == 'POST':
+        repair_message = request.form.get("messageRepair")
+        dorm_id = user_id
+        message_id = request.form.get("message_id")
+
+        reply = dom_Message()
+        reply.message = repair_message
+        reply.dorm_id = dorm_id
+        reply.message_id = message_id
+        db.session.add(reply)
+        db.session.commit()
+
+        return redirect(url_for("message.repair") + "?message_id=" + message_id)
+    return redirect(url_for("dormAdmin.home"))
