@@ -8,45 +8,6 @@ from . import sysAdmin
 from .. import db
 from ..models import Student, Guest
 
-@sysAdmin.route('/add_stu', methods=['GET', 'POST'])
-def add_stu():
-    if request.method == 'POST':
-        stu_name = request.form.get('name')
-        stu_number = request.form.get('stu_ID')
-        phone = request.form.get('phone')
-        email = request.form.get('email')
-        college = request.form.get('college')
-        # building_id_str = request.form.get('building_id')
-        room_number_str = request.form.get('room')
-        # building_id = None
-        building_id = 1  # 暂时默认都给1，sprint3会将其改为宿管对应的楼号
-        room_number = None
-
-        # if building_id_str != '':
-        #     building_id = int(building_id_str)
-
-        if room_number_str != '':
-            room_number = int(room_number_str)
-
-        if stu_name != '' and stu_number != '' and phone != '' and email != '' and college != '' and building_id is not None and room_number is not None:
-            if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
-                new_student = Student(stu_name=stu_name,
-                                      stu_number=stu_number,
-                                      phone=phone,
-                                      email=email,
-                                      college=college,
-                                      building_id=building_id,
-                                      room_number=room_number)
-                db.session.add(new_student)
-                db.session.commit()
-                return redirect(url_for('main.home_sys_admin', isSuccessful=True))
-            else:
-                return redirect(url_for('main.home_sys_admin', isSuccessful=False))
-        else:
-            return redirect(url_for('main.home_sys_admin', isSuccessful=False))
-
-    return render_template('samples/testindex.html', function='students')
-
 
 @sysAdmin.route('/search_stu', methods=['GET', 'POST'])
 def search_stu():
@@ -126,6 +87,238 @@ def delete_stu():
 
     return redirect(url_for('main.home_sys_admin', page=page))
 
+
+@sysAdmin.route('/add_stu', methods=['GET', 'POST'])
+def add_stu():
+    if request.method == 'POST':
+        stu_name = request.form.get('name')
+        stu_number = request.form.get('stu_ID')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        college = request.form.get('college')
+        # building_id_str = request.form.get('building_id')
+        room_number_str = request.form.get('room')
+        # building_id = None
+        building_id = 1  # 暂时默认都给1，sprint3会将其改为宿管对应的楼号
+        room_number = None
+
+        # if building_id_str != '':
+        #     building_id = int(building_id_str)
+
+        if room_number_str != '':
+            room_number = int(room_number_str)
+
+        if stu_name != '' and stu_number != '' and phone != '' and email != '' and college != '' and building_id is not None and room_number is not None:
+            if validate_stu_number(stu_number) and validate_phone(phone) and validate_email(email):
+                new_student = Student(stu_name=stu_name,
+                                      stu_number=stu_number,
+                                      phone=phone,
+                                      email=email,
+                                      college=college,
+                                      building_id=building_id,
+                                      room_number=room_number)
+                db.session.add(new_student)
+                db.session.commit()
+                return redirect(url_for('main.home_sys_admin', isSuccessful=True))
+            else:
+                return redirect(url_for('main.home_sys_admin', isSuccessful=False))
+        else:
+            return redirect(url_for('main.home_sys_admin', isSuccessful=False))
+
+    return render_template('samples/testindex.html', function='students')
+
+
+@sysAdmin.route('/update_stu', endpoint='update', methods=['GET', 'POST'])
+def update_stu():
+    id = request.args.get('id')
+    student = Student.query.get(id)
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+    is_changed = False
+    is_stop = False      # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
+
+    if request.method == 'POST':
+        stu_name = request.form.get('name')
+        stu_number = request.form.get('stu_ID')
+        print("stu_number length: " + str(len(stu_number)))
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        college = request.form.get('college')
+        room_number_str = request.form.get('room')
+        room_number = None
+
+        if room_number_str != '':
+            room_number = int(room_number_str)
+
+        if stu_name != '':
+            student.stu_name = stu_name
+            is_changed = True
+
+        if stu_number != '':
+            if validate_stu_number(stu_number):
+                student.stu_number = stu_number
+                is_changed = True
+            else:
+                is_stop = True
+
+        if phone != '':
+            if validate_phone(phone):
+                student.phone = phone
+                is_changed = True
+            else:
+                is_stop = True
+
+        if email != '':
+            if validate_email(email):
+                student.email = email
+                is_changed = True
+            else:
+                is_stop = True
+
+        if college != '':
+            student.college = college
+            is_changed = True
+
+        if room_number is not None:
+            student.room_number = room_number
+            is_changed = True
+
+        # 检查信息是否修改成功
+        if is_changed and not is_stop:
+            db.session.add(student)
+            db.session.commit()
+
+            if enter_type == "home":
+                return redirect(url_for('main.home_sys_admin', page=page, isSuccessful="True"))
+            elif enter_type == "search":
+                return redirect(url_for('sysAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
+        else:
+            if enter_type == "home":
+                return redirect(url_for('main.home_sys_admin', page=page, isSuccessful="False"))
+            elif enter_type == "search":
+                return redirect(url_for('sysAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
+
+    return render_template('samples/testindex.html', function='students')
+
+
+def validate_stu_number(n):
+    """
+    Verify if the student number has not been used.
+    :param n:   student number
+    """
+    if len(n) == 8:
+        print('stu_number ok')
+        stu = Student.query.filter_by(stu_number=n).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_phone(p):
+    """
+    Verify if the phone number has not been used.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        stu = Student.query.filter_by(phone=p).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_email(e):
+    """
+    Verify if the email has not been used.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        stu = Student.query.filter_by(email=e).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+@sysAdmin.route('/dormAdd', methods=['GET', 'POST'])
+def check_add():
+    stu_number = request.args.get('id')
+    id = Student.query.filter(Student.stu_number == stu_number).all()
+    email = request.args.get('email')
+    emails = Student.query.filter(Student.email == email).all()
+    phone = request.args.get('phone')
+    phones = Student.query.filter(Student.phone == phone).all()
+    print(id, phone, email)
+    if stu_number == "" or email == "" or phone == "":
+        return jsonify(code=400, msg="You have to fill all the Information")
+    if len(id) > 0 or len(emails) > 0 or len(phones) > 0:
+        return jsonify(code=400, msg="Some Information is invalid")
+    if not validate_email(email) or not validate_phone(phone) or not validate_stu_number(stu_number):
+        return jsonify(code=400, msg="Some Information is invalid")
+    else:
+        return jsonify(code=200, msg="This Phone number is available")
+
+
+@sysAdmin.route('/dormModify', methods=['GET', 'POST'])
+def check_modify():
+    print("yes")
+    stu_id = request.args.get('id')
+    id = Student.query.filter(Student.stu_number == stu_id).all()
+    email = request.args.get('email')
+    emails = Student.query.filter(Student.email == email).all()
+    phone = request.args.get('phone')
+    phones = Student.query.filter(Student.phone == phone).all()
+    if len(id) > 0 or len(emails) > 0 or len(phones) > 0:
+        print("this")
+        return jsonify(code=400, msg="Some Information is invalid")
+    else:
+        return jsonify(code=200, msg="this Phone number is available")
+
+
+@sysAdmin.route('/dormCheckID', methods=['GET', 'POST'])
+def check_ID():
+    stu_id = request.args.get('id')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if len(user) > 0:
+        return jsonify(code=400, msg="The id has already existed")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+
+
+@sysAdmin.route('/dormCheckEmail', methods=['GET', 'POST'])
+def check_email():
+    email = request.args.get('email')
+    user = Student.query.filter(Student.email == email).all()
+    if len(user) > 0:
+        return jsonify(code=400, msg="The email has already existed")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+
+
+@sysAdmin.route('/dormCheckPhone', methods=['GET', 'POST'])
+def check_phone():
+    phone = request.args.get('phone')
+    user = Student.query.filter(Student.phone == phone).all()
+    if len(user) > 0:
+        return jsonify(code=400, msg="The Phone number has already existed")
+    else:
+        return jsonify(code=200, msg="this Phone number is available")
+
+
+# guests CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 @sysAdmin.route('/search_gue', methods=['GET', 'POST'])  # 路由名待完善核对
 def search_gue():
     key_word = request.args.get('content')
@@ -181,6 +374,50 @@ def search_gue():
     return render_template('samples/guestRegister.html', pagination=gue_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='guests')  # 待完善核对
 
+
+@sysAdmin.route('/delete_gue', endpoint='delete_gue')
+def delete_gue():
+    id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
+    guest = Guest.query.get(id)
+    guest.is_deleted = True
+    db.session.add(guest)
+    db.session.commit()
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_sys_admin_gue', page=page))
+    elif enter_type == "search":
+        return redirect(url_for('sysAdmin.search_gue', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_sys_admin_gue', page=page))  # 待完善核对
+
+
+@sysAdmin.route('/leave_gue', endpoint='leave_gue')
+def leave_gue():
+    id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
+    guest = Guest.query.get(id)
+    guest.has_left = True
+    guest.leave_time = datetime.now()
+    db.session.add(guest)
+    db.session.commit()
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_sys_admin_gue', page=page))
+    elif enter_type == "search":
+        return redirect(url_for('sysAdmin.search_gue', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_sys_admin_gue', page=page))  # 待完善核对
+
+
 @sysAdmin.route('/add_gue', methods=['GET', 'POST'])
 def add_gue():
     if request.method == 'POST':
@@ -208,25 +445,6 @@ def add_gue():
 
     return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
 
-@sysAdmin.route('/delete_gue', endpoint='delete_gue')
-def delete_gue():
-    id = request.args.get('id')
-    content = request.args.get('content')
-    tag = request.args.get('tag')
-    enter_type = request.args.get('enterType')
-    page = request.args.get('page')
-
-    guest = Guest.query.get(id)
-    guest.is_deleted = True
-    db.session.add(guest)
-    db.session.commit()
-
-    if enter_type == "home":
-        return redirect(url_for('main.home_sys_admin_gue', page=page))
-    elif enter_type == "search":
-        return redirect(url_for('sysAdmin.search_gue', content=content, tag=tag, page=page))
-
-    return redirect(url_for('main.home_sys_admin_gue', page=page))  # 待完善核对
 
 @sysAdmin.route('/update_gue', methods=['GET', 'POST'])
 def update_gue():
@@ -282,3 +500,51 @@ def update_gue():
                     url_for('sysAdmin.search_gue', content=content, tag=tag, page=page, isSuccessful="False"))
 
         return render_template('samples/guestRegister.html', function='guests')  # 待完善核对
+
+
+def validate_gue_stu_number(n):
+    if len(n) == 8:
+        stu = Student.query.filter_by(stu_number=n).first()
+        if stu:
+            return True
+        return False
+    return False
+
+
+def validate_gue_phone(p):
+    if len(p) == 11:
+        gue = Guest.query.filter_by(phone=p).first()
+        if not gue:
+            return True
+        return False
+    return False
+
+
+@sysAdmin.route('/sysCheckGueStuid', methods=['GET', 'POST'])
+def check_Gue_Stu_ID():
+    stu_id = request.args.get('id')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if stu_id=="":
+        return jsonify(code=200, msg="this phone number is available")
+    print(len(user))
+    if len(user) == 0:
+        print("enter")
+        return jsonify(code=400, msg="This ID doesn't Exist")
+    else:
+        return jsonify(code=200, msg="this phone number is available")
+
+
+@sysAdmin.route('/sysCheckGueStuidAdd', methods=['GET', 'POST'])
+def check_Gue_Stu_ID_Add():
+    stu_id = request.args.get('id')
+    phone = request.args.get('phone')
+    gue_name = request.args.get('gue_name')
+    user = Student.query.filter(Student.stu_number == stu_id).all()
+    if stu_id=="" or gue_name=="" or phone=="":
+        return jsonify(code=400, msg="Please fill the required information")
+    print(len(user))
+    if len(user) == 0:
+        print("enter")
+        return jsonify(code=400, msg="This ID doesn't Exist")
+    else:
+        return jsonify(code=200, msg="this phone number is available")

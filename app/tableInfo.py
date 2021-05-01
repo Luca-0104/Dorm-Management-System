@@ -3,6 +3,20 @@ For insert the information into the database
 Those information should be stored in this file
 """
 
+da_list = [['da1', 'A0000001', '13500000001', 'da1@emails.bjut.edu.cn', 1],
+           ['da2', 'A0000002', '13500000002', 'da2@emails.bjut.edu.cn', 2],
+           ['da3', 'A0000003', '13500000003', 'da3@emails.bjut.edu.cn', 3],
+           ['da4', 'A0000004', '13500000004', 'da4@emails.bjut.edu.cn', 4],
+           ['da5', 'A0000005', '13500000005', 'da5@emails.bjut.edu.cn', 5],
+           ['da6', 'A0000006', '13500000006', 'da6@emails.bjut.edu.cn', 6],
+           ['da7', 'A0000007', '13500000007', 'da7@emails.bjut.edu.cn', 7],
+           ['da8', 'A0000008', '13500000008', 'da8@emails.bjut.edu.cn', 8],
+           ['da9', 'A0000009', '13500000009', 'da9@emails.bjut.edu.cn', 9],
+           ['da10', 'A0000010', '13500000010', 'da10@emails.bjut.edu.cn', 10],
+           ['da11', 'A0000011', '13500000011', 'da11@emails.bjut.edu.cn', 11],
+           ['da12', 'A0000012', '13500000012', 'da12@emails.bjut.edu.cn', 12],
+           ['da13', 'A0000013', '13500000013', 'da13@emails.bjut.edu.cn', 13]]
+
 stu_list = [['stu1', '17371101', '13500000001', 'stu1@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 101],
             ['stu2', '17371102', '13500000002', 'stu2@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 102],
             ['stu3', '17371103', '13500000003', 'stu3@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 103],

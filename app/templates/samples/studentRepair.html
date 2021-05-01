@@ -1,0 +1,99 @@
+{% extends "samples/studentBase.html" %}
+{% block title %}
+<title>Repair</title>
+{% endblock %}
+
+{% block add %}
+     <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
+
+<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Repair Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="myFormAdd" action="{{ url_for('dormAdmin.add_stu') }}" method="post">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Room Number:</label>
+            <input type="text" class="form-control" name="stu_ID" id="stu_id"><span></span>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Name:</label>
+             <input type="text" class="form-control" name="name" id="name"><span></span>
+          </div>
+			<div class="form-group">
+            <label for="message-text" class="col-form-label">Phone:</label>
+             <input type="text" class="form-control" name="room" id="room"><span></span>
+          </div>
+            <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Broken Items:</label>
+                <div>
+             <select class="form-control" name="college">
+            <option selected value="Lock">Lock</option>
+            <option value="Lamps">Lamps </option>
+            <option value="cupboard ">cupboard </option>
+            <option value="Bed ">Bed </option>
+            <option value="air conditioning ">air conditioning</option>
+            <option value="Leaking">Leaking</option>
+          </select>
+
+                </div>
+
+          </div>
+			<div class="form-group">
+    <label for="exampleFormControlTextarea1">Detail</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="details"></textarea>
+  </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"   id="sendMessage"
+{#                {% if isSuccessful==True %}#}
+{#         data-toggle="modal" data-target="#alert"#}
+{#        {% endif %}#}
+        >Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block mainContent %}
+    <h1>Repair Record</h1>
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Post Date</th>
+      <th scope="col">Item</th>
+      <th scope="col">Status</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">2020-09-14</th>
+      <td>XXX</td>
+      <td>Reparied</td>
+      <td> <a href="#" class="card-link">More</a></td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

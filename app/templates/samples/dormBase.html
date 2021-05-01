@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+	  <link rel="stylesheet" href="../../static/css/bootstrap-4.0.0.css">
+
+    <!-- Bootstrap -->
+    <link href="../../static/css/bootstrap-4.0.0.css" rel="stylesheet">
+		<link rel="stylesheet" href="../../static/css/test.css">
+    <meta charset="UTF-8">
+    {# title#}
+    {% block title %}
+    {% endblock %}
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light nav-background">
+  <a class="navbar-brand brand-logo" href="#" id="brand"><img src="../../static/images/auth/index.png" alt="Logo"/></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% block topleftContent%}
+            {% endblock %}
+        </ul>
+    {% block search %}
+
+    {% endblock %}
+    {% block add %}
+
+    {% endblock %}
+    <li class="nav-item dropdown list-margin">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="bi bi-person-fill"></i>
+			<span>{{ current_user.user_name }}</span>
+        </a>
+		 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><i class="bi bi-gear-fill icon-margin"></i>Settings</a>
+          <a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-door-open-fill icon-margin"></i>Logout</a>
+          <a class="dropdown-item" href="#"><i class="bi bi-file-earmark-person-fill icon-margin"></i>Profile</a>
+        </div>
+	  </li>
+    </div>
+</nav>
+<div class="row">
+    <div class="col-2">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+		<a {% if function=="students" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %} onclick="location.href='{{ url_for('main.home_dorm_admin') }}'"  data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><em class="bi-people icon-margin"></em><span>Students</span></a>
+		<a {% if function=="guests" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_dorm_admin_gue') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Guests Register</span></a>		<a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false"><em class="bi bi-chat-square-dots icon-margin"></em>Messages</a>
+		<a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+	  </div>
+    </div>
+    <div class="col-10">
+        {% block mainContent %}
+        {% endblock %}
+    </div>
+</div>
+{% block js %}
+{% endblock %}
+</body>
+</html>
