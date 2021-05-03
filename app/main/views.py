@@ -100,8 +100,18 @@ def edit_profile():
     email = current_user.email
     member_since = current_user.member_since
 
+    role_id = current_user.role_id
+
     if request.method == 'POST':
         # 待核对完善
+
+        if role_id == 1:
+            pass
+        elif role_id == 2:
+            pass
+        elif role_id == 3:
+            pass
+
         user_name = request.form.get('user_name')
         stu_wor_id = request.form.get('stu_wor_id')
         phone = request.form.get('phone')
