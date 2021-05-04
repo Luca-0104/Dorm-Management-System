@@ -24,6 +24,7 @@ class Tools:
     """
     All the tool methods for creating the tables
     """
+
     @staticmethod
     def fill_all_tables():
         """
@@ -46,25 +47,91 @@ class Permission:
     SYS_ADMIN = 16
 
 
-# a table for all the user notifications
+class Repair(db.Model):
+    __tablename__ = 'repairs'
+    id = db.Column(db.Integer, primary_key=True)
+    item = db.Column(db.String(64), nullable=False)
+    detail = db.Column(db.Text)
+    date = db.Column(db.Date(), default=datetime.utcnow)
+    is_repaired = db.Column(db.Boolean, default=False)
+    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)  # define the relation with Student
+    replies = db.relationship('ReplyRepair', backref='repair')
+
+
+class Complain(db.Model):
+    __tablename__ = 'complains'
+    id = db.Column(db.Integer, primary_key=True)
+    detail = db.Column(db.Text)
+    time = db.Column(db.DateTime(), default=datetime.utcnow)
+    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
+    replies = db.relationship('ReplyComplain', backref='complain')
+
+
 class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    sender_id = db.Column(db.Integer, nullable=False)
-    receiver_id = db.Column(db.Integer, nullable=False)
-    reply = db.relationship('Reply', backref='notification')
+    detail = db.Column(db.Text)
+    time = db.Column(db.DateTime(), default=datetime.utcnow)
+    da_id = db.Column(db.Integer, db.ForeignKey('dormAdmins.id'), unique=False)
 
 
-# a table for all the replies of notifications
-class Reply(db.Model):
-    __tablename__ = 'replies'
+# class Other(db.Model):
+#     __tablename__ = 'others'
+#     id = db.Column(db.Integer, primary_key=True)
+#     detail = db.Column(db.Text)
+#     time = db.Column(db.DateTime(), default=datetime.utcnow)
+#     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
+#     replies = db.relationship('Reply', backref='other')
+
+
+# # a table for all the user notifications
+# class Notification(db.Model):
+#     __tablename__ = 'notifications'
+#     id = db.Column(db.Integer, primary_key=True)
+#     content = db.Column(db.Text)
+#     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+#     sender_id = db.Column(db.Integer, nullable=False)
+#     receiver_id = db.Column(db.Integer, nullable=False)
+
+
+# a table for all the replies of repair message
+class ReplyRepair(db.Model):
+    __tablename__ = 'repair_replies'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    notification_id = db.Column(db.Integer, db.ForeignKey('notifications.id'), nullable=False)
+    timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    repair_id = db.Column(db.Integer, db.ForeignKey('repairs.id'), nullable=False)
     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+
+# a table for all the replies of complain message
+class ReplyComplain(db.Model):
+    __tablename__ = 'complain_replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    complain_id = db.Column(db.Integer, db.ForeignKey('complains.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+
+# # a table for all the replies of Notification message
+# class ReplyNotification(db.Model):
+#     __tablename__ = 'notification_replies'
+#     id = db.Column(db.Integer, primary_key=True)
+#     content = db.Column(db.Text)
+#     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+#     notification_id = db.Column(db.Integer, db.ForeignKey('repairs.id'), nullable=False)
+#     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+
+# # a table for all the replies of repair message
+# class ReplyOther(db.Model):
+#     __tablename__ = 'other_replies'
+#     id = db.Column(db.Integer, primary_key=True)
+#     content = db.Column(db.Text)
+#     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+#     other_id = db.Column(db.Integer, db.ForeignKey('repairs.id'), nullable=False)
+#     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 # The table of dormitory buildings
@@ -150,6 +217,10 @@ class DAdmin(db.Model):
     is_deleted = db.Column(db.Boolean, default=False)
     is_registered = db.Column(db.Boolean, default=False)
 
+    # relationship with some types of messages
+    notifications = db.relationship('Notification', backref='dormAdmin')  # define the relation with the Notification table
+
+
     def __repr__(self):
         return '<DAdmin %r>' % self.da_name
 
@@ -177,7 +248,6 @@ class DAdmin(db.Model):
         This should be used in the console only a single time.
         """
         for da_info in da_list:
-
             da_name = da_info[0]
             da_number = da_info[1]
             phone = da_info[2]
@@ -204,6 +274,10 @@ class Student(db.Model):
     is_deleted = db.Column(db.Boolean, default=False)
     is_registered = db.Column(db.Boolean, default=False)
     guests = db.relationship('Guest', backref='student')  # define the relation with the Guest table
+
+    # relationship with some kinds of messages
+    repairs = db.relationship('Repair', backref='student')  # define the relation with the Repair table
+    complains = db.relationship('Complain', backref='student')  # define the relation with the Complain table
 
     def __repr__(self):
         return '<Student %r>' % self.stu_name
@@ -232,7 +306,6 @@ class Student(db.Model):
         This should be used in the console only a single time.
         """
         for stu_info in stu_list:
-
             stu_name = stu_info[0]
             stu_number = stu_info[1]
             phone = stu_info[2]
@@ -241,7 +314,8 @@ class Student(db.Model):
             building_id = stu_info[5]
             room_number = stu_info[6]
 
-            new_stu = Student(stu_name=stu_name, stu_number=stu_number, phone=phone, email=email, college=college, building_id=building_id, room_number=room_number)
+            new_stu = Student(stu_name=stu_name, stu_number=stu_number, phone=phone, email=email, college=college,
+                              building_id=building_id, room_number=room_number)
             db.session.add(new_stu)
             db.session.commit()
 
@@ -314,8 +388,8 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
     # about notifications
-    reply = db.relationship('Reply', backref='user')
-
+    repair_replies = db.relationship('ReplyRepair', backref='user')
+    complain_replies = db.relationship('ReplyComplain', backref='user')
 
     def __repr__(self):
         return '<User %r>' % self.user_name
@@ -344,5 +418,3 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
-
-
