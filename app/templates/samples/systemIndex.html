@@ -1,1 +1,221 @@
 {% extends "samples/systemBase.html" %}
+
+{% block mainContent %}
+ <!-- 图表容器 DOM -->
+    <div class="row">
+     <div id="container" class="col-8" style="min-width:200px;height:400px"></div>
+    <div id="container1" class="col-4" style="min-width:200px;height:400px"></div>
+    </div>
+    <div class="row">
+    <div id="container2" class="col-3" style="min-width:300px;height:400px"></div>
+    <div id="container3" class="col-9" style="min-width:200px;height:400px"></div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+
+            var chart = Highcharts.chart('container', {
+    chart: {
+        type: 'column',
+        renderTo: 'container'
+    },
+    title: {
+        text: 'Number of People on each floor'
+    },
+    subtitle: {
+        text: '2017-03'
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45  // 设置轴标签旋转角度
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'the number of people(person)'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'total number: <b>{point.y:.1f} person</b>'
+    },
+    series: [{
+        name: 'total number',
+        data: [
+            ['Ground Floor', 24.25],
+            ['First Floor', 23.50],
+            ['Second Floor', 21.51],
+            ['Third Floor', 16.78],
+            ['Fourth Floor', 16.06],
+            ['Fifth Floor', 15.20],
+            {#['CEM', 14.16],#}
+            {#['CAD', 13.51],#}
+            {#['FHG', 13.08],#}
+        ],
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f}', // :.1f 为保留 1 位小数
+            y: 10
+        }
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+
+        </script>
+ <script>// Make monochrome colors and set them as default for all pies
+Highcharts.getOptions().plotOptions.pie.colors = (function () {
+    var colors = [],
+        base = Highcharts.getOptions().colors[0],
+        i;
+    for (i = 0; i < 10; i += 1) {
+        // Start out with a darkened base color (negative brighten), and end
+        // up with a much brighter color
+        colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+    }
+    return colors;
+}());
+// 初始化图表
+var chart = Highcharts.chart('container1', {
+    title: {
+        text: 'College Proportion'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: 'College Proportion',
+        data: [
+            ['BDIC',   45.0],
+            ['FHS',       26.8],
+            {
+                name: 'FIT',
+                y: 12.8,
+                sliced: true,
+                {#selected: true#}
+            },
+            ['FMM',    8.5],
+            ['FHSS',     6.2],
+        ]
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+        </script>
+    <script>
+var chart = Highcharts.chart('container2', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Grade Proportion'
+    },
+    xAxis: {
+        categories: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
+        title: {
+            text: null
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'the number of people',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'justify'
+        }
+    },
+    tooltip: {
+        valueSuffix: 'person'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true,
+                allowOverlap: true // 允许数据标签重叠
+            }
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'top',
+        x: -40,
+        y: 100,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+        shadow: true
+    },
+    series: [{
+        name:"the number of people",
+        data: [107, 31, 635, 203, 2]
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+    </script>
+    <script>
+    var chart = Highcharts.chart('container3', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Guests'
+    },
+    xAxis: {
+        categories: [ '一月', '二月', '三月', '四月', '五月', '六月', '七月']
+    },
+    yAxis: {
+        title: {
+            text: 'the number of people(person)'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                // 开启数据标签
+                enabled: true
+            },
+            // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Guests',
+        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0]
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+
+    </script>
+    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+{% endblock %}
