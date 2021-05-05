@@ -2,14 +2,46 @@
 
 {% block mainContent %}
  <!-- 图表容器 DOM -->
-    <div class="row">
-     <div id="container" class="col-8" style="min-width:200px;height:400px"></div>
-    <div id="container1" class="col-4" style="min-width:200px;height:400px"></div>
+    <div class="container ">
+        <h1 class="row">Welcom to Building X</h1>
+    <div class="row bg-white my-3 p-3 shadow-sm">
+
+      <div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="30%" y="50%" fill="#000" dy=".3em">Students</text></svg>
+
+        <h2>X students</h2>
+        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#787"/><text x="30%" y="50%" fill="#000" dy=".3em">Guests</text></svg>
+
+        <h2>X Guests</h2>
+        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+<div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#767"/><text x="30%" y="50%" fill="#000" dy=".3em">Messages</text></svg>
+
+        <h2>X Messages</h2>
+        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+    <div class="row bg-white my-3 p-3">
+        <div id="container" class="col-8 bg-white rounded shadow-sm" style="min-width:200px;height:400px"></div>
+    <div id="container1" class="col-4 bg-light rounded shadow-sm" style="min-width:200px;height:400px"></div>
     </div>
-    <div class="row">
-    <div id="container2" class="col-3" style="min-width:300px;height:400px"></div>
-    <div id="container3" class="col-9" style="min-width:200px;height:400px"></div>
+    <div class="row bg-white my-3 p-3">
+    <div id="container2" class="col-4 bg-light rounded shadow-sm" style="min-width:300px;height:400px"></div>
+    <div id="container3" class="col-8 bg-white rounded shadow-sm" style="min-width:200px;height:400px"></div>
     </div>
+
+    </div>
+
+
+
+
+
+
 
 {% endblock %}
 {% block js %}
@@ -173,7 +205,7 @@ var chart = Highcharts.chart('container2', {
         shadow: true
     },
     series: [{
-        name:"the number of people",
+        name:"students",
         data: [107, 31, 635, 203, 2]
     }],
     credits: {

@@ -72,6 +72,9 @@ def home_dorm_admin_gue():
                            isSuccessful=isSuccessful, function="guests")
 
 
+@main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
+def home_dorm_admin_message():
+    return render_template('samples/dormMessage.html',function="message")
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
     return render_template("samples/systemIndex.html", function="index")  # 待核对完善
