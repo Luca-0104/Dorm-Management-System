@@ -53,6 +53,7 @@ class Repair(db.Model):
     item = db.Column(db.String(64), nullable=False)
     detail = db.Column(db.Text)
     date = db.Column(db.Date(), default=datetime.utcnow)
+    finish_time = db.Column(db.DateTime(), unique=False)
     is_repaired = db.Column(db.Boolean, default=False)
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)  # define the relation with Student
     replies = db.relationship('ReplyRepair', backref='repair')

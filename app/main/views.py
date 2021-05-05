@@ -5,7 +5,7 @@ from app.main import main
 from app.auth.views import get_role_true
 
 # The index page ----------------------------------------------------------------------------------------------
-from app.models import User, Student, Guest, Repair
+from app.models import User, Student, Guest, Repair, Complain
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -29,7 +29,12 @@ def home_stu_bill():
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_complain', methods=['GET', 'POST'])
 def home_stu_complain():
-    return render_template("samples/studentComplain.html", function="complain")  # 待核对
+    pagenum = int(request.args.get('page', 1))
+    stu_num = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_num).first()
+    stu_id = stu.id
+    pagination = Complain.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
+    return render_template("samples/studentComplain.html", pagination=pagination, enterType='home', function="complain")  # 待核对
 
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
@@ -140,7 +145,7 @@ def edit_profile():
                            member_since=member_since)  # 待核对完善
 
 
-# -------------------以下部分应该后面写到student模块中----------------------
+# -------------------以下部分应该后面写到student蓝本和dormAdmin蓝本中----------------------
 
 # @main.route("/home_stu_message/repair")
 # def message_repair():

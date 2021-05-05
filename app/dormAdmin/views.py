@@ -6,7 +6,7 @@ from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import dormAdmin
 from .. import db
-from ..models import Student, Guest
+from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair
 
 
 # students CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -619,3 +619,150 @@ def check_Gue_Stu_ID_Add():
         return jsonify(code=400, msg="This ID doesn't Exist")
     else:
         return jsonify(code=200, msg="this phone number is available")
+
+
+# message system --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+@dormAdmin.route('mark_repaired')
+def mark_repaired():
+    id = request.args.get('id')
+
+    repair = Repair.query.get(id)
+    repair.is_repaired = True
+    repair.finish_time = datetime.now()
+    db.session.add(repair)
+    db.session.commit()
+
+    return redirect(url_for('dormAdmin.message_repair'))
+
+
+@dormAdmin.route('da_reply', methods=['GET', 'POST'])
+def da_reply():
+    """
+    The function for replying the message (da --> stu)
+    """
+    author_id = current_user.id
+    reply_type = request.args.get('reply_type')
+    if reply_type == 'complain_reply':
+        complain_id = request.args.get('complain_id')
+    elif reply_type == 'repair_reply':
+        repair_id = request.args.get('require_id')
+
+    if request.method == 'POST':
+        content = request.form.get('content')
+        if reply_type == 'complain_reply':
+            new_reply = ReplyComplain(content=content, complain_id=complain_id, author_id=author_id)
+        elif reply_type == 'repair_reply':
+            new_reply = ReplyRepair(content=content, repair_id=repair_id, author_id=author_id)
+        db.session.add(new_reply)
+        db.session.commit()
+
+    if reply_type == 'complain_reply':
+        return redirect(url_for('dormAdmin.message_details', message_type='complain', complain_id=complain_id))
+    elif reply_type == 'repair_reply':
+        return redirect(url_for('dormAdmin.message_details', message_type='repair', repair_id=repair_id))
+
+
+@dormAdmin.route("/home_stu_message/repair")    # 待核对
+def message_repair():
+    """
+    The function for showing the repair information in the message system
+    Only the repair information of this building
+    """
+
+    # get a list of students who lives in the building that is being administrated by this dorm administrator
+    da_num = current_user.stu_wor_id
+    da = DAdmin.query.filter_by(da_number=da_num).first()
+    building_id = da.building_id
+    stu_list = Student.query.filter_by(building_id=building_id).all()           # 待优化
+
+    # create a list, which contains repair objects of each student in this building
+    repair_list = []
+    for stu in stu_list:
+        repairs = stu.repairs
+        for r in repairs:
+            repair_list.append(r)
+
+    return render_template("samples/messageRepair.html", function="message", repair_list=repair_list)   # 待核对
+
+
+@dormAdmin.route("/home_stu_message/complain")  # 待核对
+def message_complain():
+    """
+    The function for showing the complain information in the message system
+    Only the complain information of this building
+    """
+
+    # get a list of students who lives in the building that is being administrated by this dorm administrator
+    da_num = current_user.stu_wor_id
+    da = DAdmin.query.filter_by(da_number=da_num).first()
+    building = da.buiding
+    stu_list = building.students
+
+    # create a list, which contains complain objects of each student in this building
+    complain_list = []
+    for stu in stu_list:
+        complains = stu.complains
+        for c in complains:
+            complain_list.append(c)
+
+    return render_template("samples/messageComplain.html", function="message", complain_list=complain_list)     # 待核对
+
+
+@dormAdmin.route("/home_stu_message/notification")       # 待核对
+def message_notification():
+    """
+    The function for showing the notification information in the message system
+    Only show the notification that are published by the dorm administrator of this building
+    """
+
+    # get the list of all the dormAdmins in this building
+    da_num = current_user.stu_wor_id
+    da = DAdmin.query.filter_by(da_number=da_num).first()
+    building = da.buiding
+    da_list = building.dormAdmins
+
+    # create a list, which contains all the notifications that are published by the dorm administrators in this building
+    notification_list = []
+    for da in da_list:
+        notifications = da.notifications
+        for n in notifications:
+            notification_list.append(n)
+
+    return render_template("samples/messageNotification.html", function="message", notification_list=notification_list) # 待核对
+
+
+@dormAdmin.route("/home_stu_message/details")   # 待核对
+def message_details():
+    """
+    The function for showing the detail page
+    """
+    # get the type of message
+    message_type = request.args.get('message_type')
+
+    # according to the type of message, get the according id
+    if message_type == 'repair':
+        repair_id = request.args.get('repair_id')
+
+        # get the list of replies of this piece of message
+        repair = Repair.query.filter_by(id=repair_id).first()
+        reply_list = repair.replies
+        # 待核对
+        return render_template("samples/Message.html", function="message", message_type=message_type, repair_id=repair_id, reply_list=reply_list)
+
+    elif message_type == 'complain':
+        complain_id = request.args.get('complain_id')
+
+        # get the list of replies of this piece of message
+        complain = Complain.query.filter_by(id=complain_id).first()
+        reply_list = complain.replies
+        # 待核对
+        return render_template("samples/Message.html", function="message", message_type=message_type, complain_id=complain_id, reply_list=reply_list)
+
+    elif message_type == 'notification':
+        notification_id = request.args.get('notification_id')
+        # 待核对
+        return render_template("samples/Message.html", function="message", message_type=message_type, notification_id=notification_id)
+
+    # return render_template("samples/Message.html", function="message")
