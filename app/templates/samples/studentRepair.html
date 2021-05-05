@@ -65,8 +65,13 @@
         <tr>
             <th scope="row">{{ repair.date }}</th>
             <td>{{ repair.item }}</td>
-            <td>{{ repair.is_repaired}}</td>
-            <td><a class="card-link" href="{{ url_for('student.message_details') }}"></a></td>
+            <td>{% if  repair.is_repaired  %}
+                {{ 'Repaired' }}
+                {% else %}
+                {{ 'In progress' }}
+            {% endif %}
+                </td>
+            <td><a class="card-link" href="{{ url_for('student.message_details') }}">More</a></td>
   {% endfor %}
   </tbody>
 </table>
