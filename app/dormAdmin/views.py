@@ -664,7 +664,7 @@ def da_reply():
         return redirect(url_for('dormAdmin.message_details', message_type='repair', repair_id=repair_id))
 
 
-@dormAdmin.route("/home_stu_message/repair")    # 待核对
+@dormAdmin.route("/home_dormAdmin_message/repair")    # 待核对
 def message_repair():
     """
     The function for showing the repair information in the message system
@@ -684,10 +684,10 @@ def message_repair():
         for r in repairs:
             repair_list.append(r)
 
-    return render_template("samples/messageRepair.html", function="message", repair_list=repair_list)   # 待核对
+    return render_template("samples/dormMessageRepair.html", function="message", repair_list=repair_list)   # 待核对
 
 
-@dormAdmin.route("/home_stu_message/complain")  # 待核对
+@dormAdmin.route("/home_dormAdmin_message/complain")  # 待核对
 def message_complain():
     """
     The function for showing the complain information in the message system
@@ -710,7 +710,7 @@ def message_complain():
     return render_template("samples/messageComplain.html", function="message", complain_list=complain_list)     # 待核对
 
 
-@dormAdmin.route("/home_stu_message/notification")       # 待核对
+@dormAdmin.route("/home_dormAdmin_message/notification")       # 待核对
 def message_notification():
     """
     The function for showing the notification information in the message system
@@ -733,7 +733,7 @@ def message_notification():
     return render_template("samples/messageNotification.html", function="message", notification_list=notification_list) # 待核对
 
 
-@dormAdmin.route("/home_stu_message/details")   # 待核对
+@dormAdmin.route("/home_dormAdmin_message/details")   # 待核对
 def message_details():
     """
     The function for showing the detail page
@@ -749,7 +749,7 @@ def message_details():
         repair = Repair.query.filter_by(id=repair_id).first()
         reply_list = repair.replies
         # 待核对
-        return render_template("samples/Message.html", function="message", message_type=message_type, repair_id=repair_id, reply_list=reply_list)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, repair_id=repair_id, reply_list=reply_list)
 
     elif message_type == 'complain':
         complain_id = request.args.get('complain_id')
@@ -758,11 +758,11 @@ def message_details():
         complain = Complain.query.filter_by(id=complain_id).first()
         reply_list = complain.replies
         # 待核对
-        return render_template("samples/Message.html", function="message", message_type=message_type, complain_id=complain_id, reply_list=reply_list)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, complain_id=complain_id, reply_list=reply_list)
 
     elif message_type == 'notification':
         notification_id = request.args.get('notification_id')
         # 待核对
-        return render_template("samples/Message.html", function="message", message_type=message_type, notification_id=notification_id)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification_id=notification_id)
 
-    # return render_template("samples/Message.html", function="message")
+    return render_template("samples/Message.html", function="message")

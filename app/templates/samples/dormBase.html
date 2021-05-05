@@ -59,8 +59,13 @@
             class="nav-link active"
 		{% else %}
             class="nav-link"
-		{% endif %}  onclick="location.href='{{ url_for('main.home_dorm_admin_gue') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Guests Register</span></a>		<a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false"><em class="bi bi-chat-square-dots icon-margin"></em>Messages</a>
-		<a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+		{% endif %}  onclick="location.href='{{ url_for('main.home_dorm_admin_gue') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Guests Register</span></a>
+
+            <a {% if function=="message" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_dorm_admin_message') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-messages" aria-selected="false"><em class="bi bi-chat-square-dots icon-margin"></em>Messages</a>
 	  </div>
     </div>
     <div class="col-10">
