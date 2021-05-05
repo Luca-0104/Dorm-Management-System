@@ -729,7 +729,7 @@ def message_complain():
         for c in complains:
             complain_list.append(c)
 
-    return render_template("samples/messageComplain.html", function="message", complain_list=complain_list)     # 待核对
+    return render_template("samples/dormMessageComplainsa.html", function="message", complain_list=complain_list)     # 待核对
 
 
 @dormAdmin.route("/home_dormAdmin_message/notification")       # 待核对
@@ -752,7 +752,7 @@ def message_notification():
         for n in notifications:
             notification_list.append(n)
 
-    return render_template("samples/messageNotification.html", function="message", notification_list=notification_list) # 待核对
+    return render_template("samples/dormMessageNotification.html", function="message", notification_list=notification_list) # 待核对
 
 
 @dormAdmin.route("/home_dormAdmin_message/details")   # 待核对
