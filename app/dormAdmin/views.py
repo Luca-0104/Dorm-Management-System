@@ -771,7 +771,7 @@ def message_details():
         repair = Repair.query.filter_by(id=repair_id).first()
         reply_list = repair.replies
         # 待核对
-        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, repair_id=repair_id, reply_list=reply_list)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, repair=repair, reply_list=reply_list)
 
     elif message_type == 'complain':
         complain_id = request.args.get('complain_id')
@@ -780,11 +780,12 @@ def message_details():
         complain = Complain.query.filter_by(id=complain_id).first()
         reply_list = complain.replies
         # 待核对
-        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, complain_id=complain_id, reply_list=reply_list)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, complain=complain, reply_list=reply_list)
 
     elif message_type == 'notification':
         notification_id = request.args.get('notification_id')
+        notification = Notification.query.filter_by(id=notification_id).first()
         # 待核对
-        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification_id=notification_id)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification=notification)
 
     return render_template("samples/dormMessageDetails.html", function="message")

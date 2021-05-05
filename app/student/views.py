@@ -139,7 +139,7 @@ def message_details():
         reply_list = repair.replies
 
         # 待考究：是传一个repair_id还是一个repair对象好？complain和notification亦然
-        return render_template("samples/Message.html", function="message", message_type=message_type, repair_id=repair_id, reply_list=reply_list)
+        return render_template("samples/Message.html", function="message", message_type=message_type, repair=repair, reply_list=reply_list)
 
     elif message_type == 'complain':
         complain_id = request.args.get('complain_id')
@@ -148,11 +148,12 @@ def message_details():
         complain = Complain.query.filter_by(id=complain_id).first()
         reply_list = complain.replies
 
-        return render_template("samples/Message.html", function="message", message_type=message_type, complain_id=complain_id, reply_list=reply_list)
+        return render_template("samples/Message.html", function="message", message_type=message_type, complain=complain, reply_list=reply_list)
 
     elif message_type == 'notification':
         notification_id = request.args.get('notification_id')
-        return render_template("samples/Message.html", function="message", message_type=message_type, notification_id=notification_id)
+        notification = Notification.query.filter_by(id=notification_id).first()
+        return render_template("samples/Message.html", function="message", message_type=message_type, notification=notification)
 
     return render_template("samples/Message.html", function="message")
 
