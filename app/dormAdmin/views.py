@@ -719,7 +719,7 @@ def message_complain():
     # get a list of students who lives in the building that is being administrated by this dorm administrator
     da_num = current_user.stu_wor_id
     da = DAdmin.query.filter_by(da_number=da_num).first()
-    building = da.buiding
+    building = da.building
     stu_list = building.students
 
     # create a list, which contains complain objects of each student in this building
@@ -742,7 +742,7 @@ def message_notification():
     # get the list of all the dormAdmins in this building
     da_num = current_user.stu_wor_id
     da = DAdmin.query.filter_by(da_number=da_num).first()
-    building = da.buiding
+    building = da.building
     da_list = building.dormAdmins
 
     # create a list, which contains all the notifications that are published by the dorm administrators in this building
@@ -787,4 +787,4 @@ def message_details():
         # 待核对
         return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification_id=notification_id)
 
-    return render_template("samples/Message.html", function="message")
+    return render_template("samples/dormMessageDetails.html", function="message")
