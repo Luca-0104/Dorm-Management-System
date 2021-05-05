@@ -13,7 +13,7 @@
           {{ repair.date}} by <a href="#">{{ repair.student.stu_name }}</a> from {{repair.student.room_number}}
       </p>
         <p class="media-body pb-3 mb-0 small lh-125 col-1 align-content-lg-center">
-               <a href="{{ url_for('student.message_details') }}?message_type=repair" class="card-link">More</a>
+               <a href="{{ url_for('student.message_details') }}?message_type=repair&repair_id={{ repair.id }}" class="card-link">More</a>
       </p>
     </div>
     {% endfor %}

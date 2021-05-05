@@ -4,22 +4,16 @@
 
 <h1>Details on Repair</h1>
     <p class="media-body pb-3 mb-0 lh-125 ">
-          January 1, 2014 by <a href="#">Mark</a> from 316
+          {{ repair.date }} by <a href="#">{{repair.student.name}}</a> from {{repair.student.room_number}}
     </p>
 <dl class="row">
   <dt class="col-sm-3">Broken Items</dt>
   <dd class="col-sm-9">
-    <p>XX</p>
-    <p>XX</p>
+    <p>{{ repair.item }}</p>
   </dd>
   <dt class="col-sm-3">Details</dt>
         <dd class="col-sm-9">
-    <p>Yeah, she dances to her own beat. Oh, no. You could've been the greatest. 'Cause, baby, you're a firework. Maybe a reason why all the doors are closed. Open up your heart and just let it begin. So très chic, yeah, she's a classic.
-
-    Bikinis, zucchinis, Martinis, no weenies. I know there will be sacrifice but that's the price. This is how we do it. I'm not sticking around to watch you go down. You think you're so rock and roll, but you're really just a joke. I know one spark will shock the world, yeah yeah. Can't replace you with a million rings.
-
-Trying to connect the dots, don't know what to tell my boss. Before you met me I was alright but things were kinda heavy. You just gotta ignite the light and let it shine. Glitter all over the room pink flamingos in the pool. </p>
-  </dd>
+    <p>{{ repair.detail }}  </dd>
 </dl>
 <div class="row">
   <p class="col-11">
@@ -42,11 +36,7 @@ Trying to connect the dots, don't know what to tell my boss. Before you met me I
         </button>
       </div>
       <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
-          </div>
+        <form id="Reply" action="{{ url_for('student.stu_reply') }}?reply_type={{ message_type }}" method="post">
           <div class="form-group">
             <label for="message-text" class="col-form-label">Message:</label>
             <textarea class="form-control" id="message-text"></textarea>
@@ -55,37 +45,24 @@ Trying to connect the dots, don't know what to tell my boss. Before you met me I
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
+        <button type="button" class="btn btn-primary" id="stu_Reply">Send message</button>
       </div>
     </div>
   </div>
 </div>
 <div class="collapse" id="collapseExample">
   <div class="card card-body">
-    <div class="media text-muted pt-3">
+      {% for reply in reply_list %}
+      <div class="media text-muted pt-3">
       <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
 
       <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-        <strong class="d-block text-gray-dark">@username</strong>
-        Playing ping pong all night long, everything's all neon and hazy. Yeah, she's so in demand. She's sweet as pie but if you break her heart. But down to earth. It's time to face the music I'm no longer your muse. I guess that I forgot I had a choice.
+        <strong class="d-block text-gray-dark">@{{reply.user.user_name}}</strong>
+          {{ reply.content }}
       </p>
     </div>
-    <div class="media text-muted pt-3">
-      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+      {% endfor %}
 
-      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-        <strong class="d-block text-gray-dark">@username</strong>
-        Standing on the frontline when the bombs start to fall. Heaven is jealous of our love, angels are crying from up above. Can't replace you with a million rings. Boy, when you're with me I'll give you a taste. There’s no going back. Before you met me I was alright but things were kinda heavy. Heavy is the head that wears the crown.
-      </p>
-    </div>
-    <div class="media text-muted pt-3">
-      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-
-      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-        <strong class="d-block text-gray-dark">@username</strong>
-        Will you do the same for me? It's time to face the music I'm no longer your muse. Heard it's beautiful, be the judge and my girls gonna take a vote. I can feel a phoenix inside of me. Heaven is jealous of our love, angels are crying from up above. Yeah, you take me to utopia.
-      </p>
-    </div>
     <small class="d-block text-right mt-3">
       <a href="#">All updates</a>
     </small>
@@ -94,4 +71,13 @@ Trying to connect the dots, don't know what to tell my boss. Before you met me I
   </div>
 </div>
 
+{% endblock %}
+
+{% block js %}
+<script>
+ $('#stu_Reply').click(function(){
+	document.getElementById("Reply").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+</script>
 {% endblock %}
