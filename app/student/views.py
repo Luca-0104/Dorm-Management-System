@@ -6,30 +6,30 @@ from .. import db
 from ..models import Student, Repair, ReplyComplain, ReplyRepair, Complain, DAdmin, Notification
 
 
-@student.route('stu_reply', methods=['GET', 'POST'])
+@student.route('/stu_reply', methods=['GET', 'POST'])
 def stu_reply():
     """
     The function for replying the message (stu --> da)
     """
     author_id = current_user.id
     reply_type = request.args.get('reply_type')
-    if reply_type == 'complain_reply':
+    if reply_type == 'complain':
         complain_id = request.args.get('complain_id')
-    elif reply_type == 'repair_reply':
-        repair_id = request.args.get('require_id')
+    elif reply_type == 'repair':
+        repair_id = request.args.get('repair_id')
 
     if request.method == 'POST':
         content = request.form.get('content')
-        if reply_type == 'complain_reply':
-            new_reply = ReplyComplain(content=content, complain_id=complain_id, author_id=author_id)
-        elif reply_type == 'repair_reply':
-            new_reply = ReplyRepair(content=content, repair_id=repair_id, author_id=author_id)
+        if reply_type == 'complain':
+            new_reply = ReplyComplain(content=content, complain_id=complain_id, auth_id=author_id)
+        elif reply_type == 'repair':
+            new_reply = ReplyRepair(content=content, repair_id=repair_id, auth_id=author_id)
         db.session.add(new_reply)
         db.session.commit()
 
-    if reply_type == 'complain_reply':
+    if reply_type == 'complain':
         return redirect(url_for('student.message_details', message_type='complain', complain_id=complain_id))
-    elif reply_type == 'repair_reply':
+    elif reply_type == 'repair':
         return redirect(url_for('student.message_details', message_type='repair', repair_id=repair_id))
 
 

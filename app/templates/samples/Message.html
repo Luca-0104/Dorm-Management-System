@@ -36,10 +36,16 @@
         </button>
       </div>
       <div class="modal-body">
-        <form id="Reply" action="{{ url_for('student.stu_reply') }}?reply_type={{ message_type }}" method="post">
+        <form id="Reply" {% if message_type=="repair" %}
+              action="{{ url_for('student.stu_reply') }}?reply_type={{ message_type }}&repair_id={{ repair.id }}"
+              {% else %}
+              action="{{ url_for('student.stu_complain') }}?reply_type={{ message_type }}&repair_id={{ complain.id }}"
+              {% endif %}
+              method="post">
+
           <div class="form-group">
             <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <textarea class="form-control" id="message-text" name="content"></textarea>
           </div>
         </form>
       </div>
