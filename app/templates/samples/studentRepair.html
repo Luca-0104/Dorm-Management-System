@@ -71,7 +71,7 @@
                 {{ 'In progress' }}
             {% endif %}
                 </td>
-            <td><a class="card-link" href="{{ url_for('student.message_details') }}">More</a></td>
+            <td><a class="card-link" href="{{ url_for('student.message_details') }}?message_type=repair">More</a></td>
   {% endfor %}
   </tbody>
 </table>
