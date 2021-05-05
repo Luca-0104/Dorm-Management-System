@@ -6,7 +6,7 @@ from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import dormAdmin
 from .. import db
-from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair
+from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair, Notification
 
 
 # students CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -622,6 +622,28 @@ def check_Gue_Stu_ID_Add():
 
 
 # message system --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# 待写 宿管发布notification
+@dormAdmin.route('/release_notice', methods=['GET', 'POST'])
+def release_notice():
+    """
+    This is a function for dorm administrator to release an announcement AKA. notification
+    """
+    # get the id of the current dorm administrator
+    work_num = current_user.stu_wor_id
+    da = DAdmin.query.filter_by(da_number=work_num).first()
+    da_id = da.id
+
+    # get the detailed content fo this notification
+    if request.method == 'POST':
+        detail = request.form.get('detail')
+
+        # create a new notification object and add it into the database
+        new_notification = Notification(detail=detail, da_id=da_id)
+        db.session.add(new_notification)
+        db.session.commit()
+
+    return redirect(url_for('message_notification'))
 
 
 @dormAdmin.route('mark_repaired')
