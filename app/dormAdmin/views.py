@@ -765,4 +765,4 @@ def message_details():
         # 待核对
         return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification_id=notification_id)
 
-    return render_template("samples/Message.html", function="message")
+    return render_template("samples/dormMessageDetails.html", function="message")
