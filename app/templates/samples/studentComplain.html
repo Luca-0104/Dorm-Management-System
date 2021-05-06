@@ -50,7 +50,7 @@
   <tbody>
   {% for complain in pagination.items %}
    <tr>
-      <th scope="row">{{complain.time}}</th>
+      <th scope="row">{{complain.time.strftime("%Y-%m-%d")}}</th>
       <td style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">{{ complain.detail }}</td>
       <td> <a href="{{ url_for('student.message_details') }}?message_type=complain&complain_id={{ complain.id }}" class="card-link">More</a></td>
     </tr>
