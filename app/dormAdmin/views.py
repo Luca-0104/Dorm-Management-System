@@ -643,7 +643,7 @@ def release_notice():
         db.session.add(new_notification)
         db.session.commit()
 
-    return redirect(url_for('message_notification'))
+    return redirect(url_for('dormAdmin.message_notification'))
 
 
 @dormAdmin.route('/mark_repaired')
