@@ -46,7 +46,7 @@ def add_complain():
 
         if detail != '' and stu_id is not None:
             # Add complain information into the complain table
-            new_complain = Repair(detail=detail, stu_id=stu_id)
+            new_complain = Complain(detail=detail, stu_id=stu_id)
             db.session.add(new_complain)
             db.session.commit()
 
