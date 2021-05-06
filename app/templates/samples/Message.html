@@ -81,7 +81,7 @@
   </div>
 </div>
 
-{% else %}
+{% elif message_type=="complain" %}
 <h1>Details on Complains</h1>
     <p class="media-body pb-3 mb-0 lh-125 ">
           {{ complain.time.strftime("%Y-%m-%d") }}
@@ -161,6 +161,17 @@
   </div>
 
   </div>
+{% elif message_type=="notification" %}
+
+    <h1>Announcement</h1>
+    <p class="media-body pb-3 mb-0 lh-125 ">
+          {{ notification.time.strftime("%Y-%m-%d") }}
+    </p>
+<dl class="row">
+  <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">
+    <p>{{ notification.detail }}  </dd>
+</dl>
 
 
 {% endif %}
@@ -176,3 +187,4 @@
 });
 </script>
 {% endblock %}
+

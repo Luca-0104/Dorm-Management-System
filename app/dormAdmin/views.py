@@ -643,7 +643,7 @@ def release_notice():
         db.session.add(new_notification)
         db.session.commit()
 
-    return redirect(url_for('message_notification'))
+    return redirect(url_for('dormAdmin.message_notification'))
 
 
 @dormAdmin.route('/mark_repaired')
@@ -788,4 +788,4 @@ def message_details():
         # 待核对
         return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification=notification)
 
-    return render_template("samples/dormMessageDetails.html", function="message")
+    # return render_template("samples/dormMessageDetails.html", function="message")

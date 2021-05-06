@@ -118,7 +118,8 @@ def message_notification():
         notifications = da.notifications
         for n in notifications:
             notification_list.append(n)
-
+    for i in notification_list:
+        print(i.time)
     return render_template("samples/messageNotification.html", function="message", notification_list=notification_list)
 
 

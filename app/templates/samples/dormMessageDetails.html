@@ -38,8 +38,10 @@
       <div class="modal-body">
         <form id="Reply" {% if message_type=="repair" %}
               action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&repair_id={{ repair.id }}"
-              {% else %}
+              {% elif message_type=="complain" %}
               action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&complain_id={{ complain.id }}"
+             {% elif message_type=="notification" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&notification_id={{ notification.id }}"
               {% endif %}
               method="post">
 
@@ -82,7 +84,7 @@
   </div>
 </div>
 
-{% else %}
+{% elif message_type=="complain" %}
 <h1>Details on Complains</h1>
     <p class="media-body pb-3 mb-0 lh-125 ">
           {{ complain.time.strftime("%Y-%m-%d") }}
@@ -114,8 +116,10 @@
       <div class="modal-body">
         <form id="Reply" {% if message_type=="repair" %}
               action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&repair_id={{ repair.id }}"
-              {% else %}
+              {% elif message_type=="complain" %}
               action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&complain_id={{ complain.id }}"
+              {% elif message_type=="notification" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&notification_id={{ notification.id }}"
               {% endif %}
               method="post">
 
@@ -162,6 +166,17 @@
   </div>
 
   </div>
+{% elif message_type=="notification" %}
+
+    <h1>Announcement</h1>
+    <p class="media-body pb-3 mb-0 lh-125 ">
+          {{ notification.time.strftime("%Y-%m-%d") }}
+    </p>
+<dl class="row">
+  <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">
+    <p>{{ notification.detail }}  </dd>
+</dl>
 
 
 {% endif %}
