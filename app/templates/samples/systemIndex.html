@@ -3,10 +3,10 @@
 {% block mainContent %}
  <!-- 图表容器 DOM -->
     <div class="container ">
-        <h1 class="row">Welcome to {% if building_id == '0' %}
+        <h1 class="row">Welcome to {% if building_id == 0 %}
                 BJUT Dorm Management System
             {% else %}
-                BUILDING {{ building_id }}
+                BUILDING  {{ building_id }}
             {% endif %}</h1>
     <div class="row bg-white my-3 p-3 shadow-sm">
 

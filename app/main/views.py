@@ -481,7 +481,8 @@ def home_sys_admin():
                            floor_stu_num_list=floor_stu_num_list,   # graph2
                            college_dict=college_dict,               # graph3
                            stage_list=stage_list,                   # graph4
-                           gue_num_list=gue_num_list                # graph5
+                           gue_num_list=gue_num_list
+                           # graph5
                            )  # 待核对完善
 
 
@@ -494,7 +495,12 @@ def home_sys_gue():
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
     building_id = request.args.get('building_id',0)
-    return render_template("samples/systemStudents.html", function="students",building_id=building_id)  # 待核对完善
+    isSuccessful = request.args.get('isSuccessful', "True")
+    pagenum = int(request.args.get('page', 1))
+    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
+                           isSuccessful=isSuccessful, function='students',building_id=building_id)
+
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
