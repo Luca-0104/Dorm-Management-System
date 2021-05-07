@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import request, redirect, render_template, url_for
 from flask_login import login_required, current_user
@@ -7,8 +7,9 @@ from flask_login import login_required, current_user
 from app.main import main
 from app.auth.views import get_role_true
 
-# The index page ----------------------------------------------------------------------------------------------
 from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin
+
+# The index page ----------------------------------------------------------------------------------------------
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -263,8 +264,16 @@ def home_da_index():
     #     elif (datetime.utcnow() - gue.arrive_time).days == 6:
     #         gue7 += 1
     #
-    # # a list stores the numbers of guests in this building in last 7 days, numbers are ordered from today to 7 days ago
-    # gue_num_list = [gue1, gue2, gue3, gue4, gue5, gue6, gue7]
+    # day1 = datetime.now().strftime('%Y-%m-%d')
+    # day2 = (day1 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day3 = (day2 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day4 = (day3 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day5 = (day4 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day6 = (day5 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day7 = (day6 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    #
+    # # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
+    # gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
     return render_template("samples/systemIndex.html", function="index",    # 模板名待核对
                            # basic_number_dict=basic_number_dict,     # graph1
@@ -313,7 +322,7 @@ def home_sys_admin():
     # floor5 = 0
     # floor6 = 0
     # for stu in stu_list:
-    #     floor = stu.room_number / 100
+    #     floor = stu.room_number // 100
     #     if floor == 1:
     #         floor1 += 1
     #     elif floor == 2:
@@ -430,8 +439,16 @@ def home_sys_admin():
     #     elif (datetime.utcnow() - gue.arrive_time).days == 6:
     #         gue7 += 1
     #
-    # # a list stores the numbers of guests in this building in last 7 days, numbers are ordered from today to 7 days ago
-    # gue_num_list = [gue1, gue2, gue3, gue4, gue5, gue6, gue7]
+    # day1 = datetime.now().strftime('%Y-%m-%d')
+    # day2 = (day1 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day3 = (day2 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day4 = (day3 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day5 = (day4 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day6 = (day5 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    # day7 = (day6 + timedelta(days=-1)).strftime('%Y-%m-%d')
+    #
+    # # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
+    # gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
 
     return render_template("samples/systemIndex.html", function="index",
