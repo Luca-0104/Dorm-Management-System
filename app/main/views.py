@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from flask import request, redirect, render_template, url_for
 from flask_login import login_required, current_user
+from sqlalchemy import and_
 
 from app.main import main
 from app.auth.views import get_role_true
@@ -448,14 +449,6 @@ def home_sys_admin():
         elif (datetime.utcnow() - gue.arrive_time).days == 6:
             gue7 += 1
 
-    # day1 = datetime.now().strftime('%Y-%m-%d')
-    # day2 = (day1 + timedelta(days=-1)).strftime('%Y-%m-%d')
-    # day3 = (day2 + timedelta(days=-1)).strftime('%Y-%m-%d')
-    # day4 = (day3 + timedelta(days=-1)).strftime('%Y-%m-%d')
-    # day5 = (day4 + timedelta(days=-1)).strftime('%Y-%m-%d')
-    # day6 = (day5 + timedelta(days=-1)).strftime('%Y-%m-%d')
-    # day7 = (day6 + timedelta(days=-1)).strftime('%Y-%m-%d')
-
     d1 = datetime.now()
     d2 = d1 + timedelta(days=-1)
     d3 = d2 + timedelta(days=-1)
@@ -475,8 +468,7 @@ def home_sys_admin():
     # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
     gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
-
-    return render_template("samples/systemIndex.html", function="index",
+    return render_template("samples/systemIndex.html", function="index", building_id=building_id,
                            basic_number_dict=basic_number_dict,     # graph1
                            floor_stu_num_list=floor_stu_num_list,   # graph2
                            college_dict=college_dict,               # graph3
@@ -487,14 +479,24 @@ def home_sys_admin():
 
 @main.route('/home_sys_gue', methods=['GET', 'POST'])
 def home_sys_gue():
-    building_id = request.args.get('building_id',0)
-    return render_template("samples/systemGuests.html", function="guests", building_id=building_id)  # 待核对完善
+    building_id = request.args.get('building_id', '0')
+    pagenum = int(request.args.get('page', 1))
+    if building_id == '0':
+        pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    else:
+        pagination = Guest.query.join(Student).filter(and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)  # 待核对完善
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
-    building_id = request.args.get('building_id',0)
-    return render_template("samples/systemStudents.html", function="students",building_id=building_id)  # 待核对完善
+    building_id = request.args.get('building_id', '0')
+    if building_id == '0':
+        pass
+    else:
+        pass
+    return render_template("samples/systemStudents.html", function="students", building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
