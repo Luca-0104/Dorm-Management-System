@@ -1,3 +1,6 @@
+import time
+from datetime import datetime
+
 from flask import request, redirect, render_template, url_for
 from flask_login import login_required, current_user
 
@@ -5,7 +8,7 @@ from app.main import main
 from app.auth.views import get_role_true
 
 # The index page ----------------------------------------------------------------------------------------------
-from app.models import User, Student, Guest, Repair, Complain
+from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -34,7 +37,8 @@ def home_stu_complain():
     stu = Student.query.filter_by(stu_number=stu_num).first()
     stu_id = stu.id
     pagination = Complain.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
-    return render_template("samples/studentComplain.html", pagination=pagination, enterType='home', function="complain")  # 待核对
+    return render_template("samples/studentComplain.html", pagination=pagination, enterType='home',
+                           function="complain")  # 待核对
 
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
@@ -45,7 +49,8 @@ def home_stu_repair():
     stu = Student.query.filter_by(stu_number=stu_num).first()
     stu_id = stu.id
     pagination = Repair.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
-    return render_template("samples/studentRepair.html", pagination=pagination, enterType='home', function="repair")  # 待核对
+    return render_template("samples/studentRepair.html", pagination=pagination, enterType='home',
+                           function="repair")  # 待核对
 
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
@@ -74,12 +79,174 @@ def home_dorm_admin_gue():
 
 @main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
 def home_dorm_admin_message():
-    return render_template('samples/dormMessage.html',function="message")
+    return render_template('samples/dormMessage.html', function="message")
 
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
-    return render_template("samples/systemIndex.html", function="index")  # 待核对完善
+    """
+    A function for showing the data graphs in the initial page of system administrator
+    """
+    # building_id = request.args.get('building_id')
+    #
+    # # building_id == 0 means this is the initial login status (before selecting a specific dorm building),
+    # # which will show the information of all the dorm buildings
+    # if building_id == 0:
+    #     stu_list = Student.query.all()
+    #     da_list = DAdmin.query.all()
+    #     gue_list = Guest.query.all()
+    # else:
+    #     building = DormBuilding.query.filter_by(id=building_id).first()
+    #     stu_list = building.students
+    #     da_list = building.dormAdmins
+    #     gue_list = []
+    #     for stu in stu_list:
+    #         gues = stu.guests
+    #         for gue in gues:
+    #             if gue not in gue_list:
+    #                 gue_list.append(gue)
+    #
+    #
+    # # ******************** for graph 1 ********************
+    # # a dict stores the number of students, dorm administrators and system administrators
+    # basic_number_dict = {'stu_num': len(stu_list), 'da_num': len(da_list), 'gue_num': len(gue_list)}
+    #
+    # # ******************** for graph 2 ********************
+    # floor1 = 0
+    # floor2 = 0
+    # floor3 = 0
+    # floor4 = 0
+    # floor5 = 0
+    # floor6 = 0
+    # for stu in stu_list:
+    #     floor = stu.room_number / 100
+    #     if floor == 1:
+    #         floor1 += 1
+    #     elif floor == 2:
+    #         floor2 += 1
+    #     elif floor == 3:
+    #         floor3 += 1
+    #     elif floor == 4:
+    #         floor4 += 1
+    #     elif floor == 5:
+    #         floor5 += 1
+    #     elif floor == 6:
+    #         floor6 += 1
+    #
+    # # a list of number of students in each floor
+    # floor_stu_num_list = [floor1, floor2, floor3, floor4, floor5, floor6]
+    #
+    # # ******************** for graph 3 ********************
+    # bdic = 0
+    # fhss = 0
+    # fit = 0
+    # fmm = 0
+    # fuc = 0
+    # fs = 0
+    # fels = 0
+    # cem = 0
+    # cad = 0
+    # fhc = 0
+    #
+    # for stu in stu_list:
+    #     if stu.college == 'Beijing Dublin International College':
+    #         bdic += 1
+    #     elif stu.college == 'Faculty of Humanities and Social Sciences':
+    #         fhss += 1
+    #     elif stu.college == 'Faculty of Information Technology':
+    #         fit += 1
+    #     elif stu.college == 'Faculty of Materials and Manufacturing':
+    #         fmm += 1
+    #     elif stu.college == 'Faculty of Urban Construction':
+    #         fuc += 1
+    #     elif stu.college == 'Faculty of Science':
+    #         fs += 1
+    #     elif stu.college == 'Faculty of Environment and Life Sciences':
+    #         fels += 1
+    #     elif stu.college == 'College of Economic and Management':
+    #         cem += 1
+    #     elif stu.college == 'College of Art and Design':
+    #         cad += 1
+    #     elif stu.college == 'FanGongXiu Honors College':
+    #         fhc += 1
+    #
+    # # a dict for storing the number of students of each college in this building
+    # college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem, 'CAD': cad, 'FHC': fhc}
+    #
+    # # ******************** for graph 4 ********************
+    # year_now = time.localtime().tm_year % 1000 % 100    # for today, year_now should be 21
+    # month_now = time.localtime().tm_mon                 # for today, month_now should be 5
+    #
+    # stage1 = 0
+    # stage2 = 0
+    # stage3 = 0
+    # stage4 = 0
+    #
+    # for stu in stu_list:
+    #     stu_number = stu.stu_number
+    #     year = int(stu_number[0:2])
+    #
+    #     if 9 <= month_now <= 12:    # the first semester of the year
+    #         diff = year_now - year
+    #         if diff == 0:
+    #             stage1 += 1
+    #         elif diff == 1:
+    #             stage2 += 1
+    #         elif diff == 2:
+    #             stage3 += 1
+    #         elif diff == 3:
+    #             stage4 += 1
+    #
+    #     else:                       # the second semester of the year
+    #         diff = year_now - year
+    #         if diff == 1:
+    #             stage1 += 1
+    #         elif diff == 2:
+    #             stage2 += 1
+    #         elif diff == 3:
+    #             stage3 += 1
+    #         elif diff == 4:
+    #             stage4 += 1
+    #
+    # # a list stores the numbers of students in different stage, ordered from stage1 to stage4
+    # stage_list = [stage1, stage2, stage3, stage4]
+    #
+    # # ******************** for graph 5 ********************
+    # gue1 = 0
+    # gue2 = 0
+    # gue3 = 0
+    # gue4 = 0
+    # gue5 = 0
+    # gue6 = 0
+    # gue7 = 0
+    #
+    # for gue in gue_list:
+    #     if (datetime.utcnow() - gue.arrive_time).days == 0:
+    #         gue1 += 1
+    #     elif (datetime.utcnow() - gue.arrive_time).days == 1:
+    #         gue2 += 1
+    #     elif (datetime.utcnow() - gue.arrive_time).days == 2:
+    #         gue3 += 1
+    #     elif (datetime.utcnow() - gue.arrive_time).days == 3:
+    #         gue4 += 1
+    #     elif (datetime.utcnow() - gue.arrive_time).days == 4:
+    #         gue5 += 1
+    #     elif (datetime.utcnow() - gue.arrive_time).days == 5:
+    #         gue6 += 1
+    #     elif (datetime.utcnow() - gue.arrive_time).days == 6:
+    #         gue7 += 1
+    #
+    # # a list stores the numbers of guests in this building in last 7 days, numbers are ordered from today to 7 days ago
+    # gue_num_list = [gue1, gue2, gue3, gue4, gue5, gue6, gue7]
+
+
+    return render_template("samples/systemIndex.html", function="index",
+                           # basic_number_dict=basic_number_dict,     # graph1
+                           # floor_stu_num_list=floor_stu_num_list,   # graph2
+                           # college_dict=college_dict,               # graph3
+                           # stage_list=stage_list,                   # graph4
+                           # gue_num_list=gue_num_list                # graph5
+                           )  # 待核对完善
 
 
 @main.route('/home_sys_gue', methods=['GET', 'POST'])
@@ -149,29 +316,28 @@ def edit_profile():
     return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email,
                            member_since=member_since)  # 待核对完善
 
-
 # -------------------以下部分应该后面写到student蓝本和dormAdmin蓝本中----------------------
 
 # @main.route("/home_stu_message/repair")
 # def message_repair():
 #     return render_template("samples/messageRepair.html", function="message")
 
-
-@main.route("/home_stu_message/complain")
-def message_complain():
-    return render_template("samples/messageComplain.html", function="message")
-
-
-@main.route("/home_stu_message/notification")
-def message_notification():
-    return render_template("samples/messageNotification.html", function="message")
-
-
-@main.route("/home_stu_message/others")
-def message_others():
-    return render_template("samples/messageOthers.html", function="message")
-
-
-@main.route("/home_stu_message/details")
-def message_details():
-    return render_template("samples/Message.html", function="message")
+#
+# @main.route("/home_stu_message/complain")
+# def message_complain():
+#     return render_template("samples/messageComplain.html", function="message")
+#
+#
+# @main.route("/home_stu_message/notification")
+# def message_notification():
+#     return render_template("samples/messageNotification.html", function="message")
+#
+#
+# @main.route("/home_stu_message/others")
+# def message_others():
+#     return render_template("samples/messageOthers.html", function="message")
+#
+#
+# @main.route("/home_stu_message/details")
+# def message_details():
+#     return render_template("samples/Message.html", function="message")
