@@ -67,6 +67,11 @@ def home_stu_message():
     return render_template("samples/studentMessage.html", function="message")  # 待核对
 
 
+@main.route('/home_dorm_admin_index', methods=['GET', 'POST'])
+def home_dorm_admin_index():
+        return render_template('samples/dormIndex.html',function="index")
+
+
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():
     isSuccessful = request.args.get('isSuccessful', "True")
@@ -462,12 +467,14 @@ def home_sys_admin():
 
 @main.route('/home_sys_gue', methods=['GET', 'POST'])
 def home_sys_gue():
-    return render_template("samples/systemGuests.html", function="guests")  # 待核对完善
+    building_id = request.args.get('building_id',0)
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
-    return render_template("samples/systemStudents.html", function="students")  # 待核对完善
+    building_id = request.args.get('building_id',0)
+    return render_template("samples/systemStudents.html", function="students",building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])

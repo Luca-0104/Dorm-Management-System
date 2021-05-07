@@ -3,26 +3,30 @@
 {% block mainContent %}
  <!-- 图表容器 DOM -->
     <div class="container ">
-        <h1 class="row">Welcom to Building X</h1>
+        <h1 class="row">Welcome to {% if building_id == '0' %}
+                BJUT Dorm Management System
+            {% else %}
+                BUILDING {{ building_id }}
+            {% endif %}</h1>
     <div class="row bg-white my-3 p-3 shadow-sm">
 
       <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="30%" y="50%" fill="#000" dy=".3em">Students</text></svg>
 
-        <h2>X students</h2>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        <h2>{{basic_number_dict['stu_num']}} students</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_stu') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#787"/><text x="30%" y="50%" fill="#000" dy=".3em">Guests</text></svg>
 
-        <h2>X Guests</h2>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        <h2>{{basic_number_dict['gue_num']}} Guests</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_gue') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
 <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#767"/><text x="30%" y="50%" fill="#000" dy=".3em">Messages</text></svg>
 
-        <h2>X Messages</h2>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        <h2>{{basic_number_dict['da_num']}} Dormitory Administrators</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_dorm') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
 
@@ -79,12 +83,14 @@
     series: [{
         name: 'total number',
         data: [
-            ['Ground Floor', 24.25],
-            ['First Floor', 23.50],
-            ['Second Floor', 21.51],
-            ['Third Floor', 16.78],
-            ['Fourth Floor', 16.06],
-            ['Fifth Floor', 15.20],
+            ['Ground Floor', {{floor_stu_num_list[0]}}],
+            ['First Floor', {{floor_stu_num_list[1]}}],
+            ['Second Floor', {{floor_stu_num_list[2]}}],
+            ['Third Floor', {{floor_stu_num_list[3]}}],
+            ['Fourth Floor', {{floor_stu_num_list[4]}}],
+            ['Fifth Floor', {{floor_stu_num_list[5]}}],
+            ['Fifth Floor', {{floor_stu_num_list[5]}}],
+
             {#['CEM', 14.16],#}
             {#['CAD', 13.51],#}
             {#['FHG', 13.08],#}
@@ -141,17 +147,24 @@ var chart = Highcharts.chart('container1', {
         type: 'pie',
         name: 'College Proportion',
         data: [
-            ['BDIC',   45.0],
-            ['FHS',       26.8],
-            {
-                name: 'FIT',
-                y: 12.8,
-                sliced: true,
-                {#selected: true#}
-            },
-            ['FMM',    8.5],
-            ['FHSS',     6.2],
+            {#['BDIC',{{ college_dict['BDIC'] }}],#}
+            {#['FHS', 26.8],#}
+            {#{#}
+            {#    name: 'FIT',#}
+            {#    y: 12.8,#}
+            {#    sliced: true,#}
+            {#    selected: true#}
+            {# },#}
+            {#['FMM',    8.5],#}
+            {#['FHSS',     6.2],#}
+            {% for college in college_dict.items() %}
+                {% if college[1] > 0 %}
+                    ['{{ college[0] }}',{{ college[1] }}],
+                {% endif %}
+            {% endfor %}
+
         ]
+
     }],
     credits: {
             enabled: false     //不显示LOGO
@@ -206,7 +219,7 @@ var chart = Highcharts.chart('container2', {
     },
     series: [{
         name:"students",
-        data: [107, 31, 635, 203, 2]
+        data: [{{ stage_list[0] }}, {{ stage_list[1] }},{{ stage_list[2] }}, {{ stage_list[3] }}]
     }],
     credits: {
             enabled: false     //不显示LOGO
