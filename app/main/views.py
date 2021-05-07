@@ -498,12 +498,12 @@ def home_sys_stu():
     return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
                            isSuccessful=isSuccessful, function='students',building_id=building_id)
 
-    building_id = request.args.get('building_id', '0')
-    if building_id == '0':
-        pass
-    else:
-        pass
-    return render_template("samples/systemStudents.html", function="students", building_id=building_id)  # 待核对完善
+    # building_id = request.args.get('building_id', '0')
+    # if building_id == '0':
+    #     pass
+    # else:
+    #     pass
+    # return render_template("samples/systemStudents.html", function="students", building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
