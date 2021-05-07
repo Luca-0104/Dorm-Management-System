@@ -76,17 +76,17 @@
     series: [{
         name: 'total number',
         data: [
-            {#['Ground Floor', {{floor_stu_num_list[0]}}],#}
-            {#['First Floor', {{floor_stu_num_list[1]}}],#}
-            {#['Second Floor', {{floor_stu_num_list[2]}}],#}
-            {#['Third Floor', {{floor_stu_num_list[3]}}],#}
-            {#['Fourth Floor', {{floor_stu_num_list[4]}}],#}
-            {#['Fifth Floor', {{floor_stu_num_list[5]}}],#}
-            {#['Fifth Floor', {{floor_stu_num_list[5]}}],#}
+            ['Ground Floor', {{floor_stu_num_list[0]}}],
+            ['First Floor', {{floor_stu_num_list[1]}}],
+            ['Second Floor', {{floor_stu_num_list[2]}}],
+            ['Third Floor', {{floor_stu_num_list[3]}}],
+            ['Fourth Floor', {{floor_stu_num_list[4]}}],
+            ['Fifth Floor', {{floor_stu_num_list[5]}}],
+            ['Fifth Floor', {{floor_stu_num_list[5]}}],
 
-            ['CEM', 14.16],
-            ['CAD', 13.51],
-            ['FHG', 13.08],
+            {#['CEM', 14.16],#}
+            {#['CAD', 13.51],#}
+            {#['FHG', 13.08],#}
         ],
         dataLabels: {
             enabled: true,
@@ -164,6 +164,61 @@ var chart = Highcharts.chart('container1', {
         }
 });
         </script>
+     <script>
+var chart = Highcharts.chart('container2', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Grade Proportion'
+    },
+    xAxis: {
+        categories: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
+        title: {
+            text: null
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'the number of people',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'justify'
+        }
+    },
+    tooltip: {
+        valueSuffix: 'person'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true,
+                allowOverlap: true // 允许数据标签重叠
+            }
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'top',
+        x: -40,
+        y: 100,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+        shadow: true
+    },
+    series: [{
+        name:"students",
+        data: [{{ stage_list[0] }}, {{ stage_list[1] }},{{ stage_list[2] }}, {{ stage_list[3] }}]
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+    </script>
     <script>
 var chart = Highcharts.chart('container3', {
     chart: {

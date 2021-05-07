@@ -147,7 +147,7 @@ def home_dorm_admin_index():
     floor5 = 0
     floor6 = 0
     for stu in stu_list:
-        floor = stu.room_number / 100
+        floor = stu.room_number // 100
         if floor == 1:
             floor1 += 1
         elif floor == 2:
