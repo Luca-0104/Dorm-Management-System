@@ -25,49 +25,6 @@
     </form>
 {% endblock %}
 
-{% block add %}
- <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
-
-<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Guest</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="myFormAdd" action="{{ url_for('sysAdmin.add_gue') }}" method="post">
-          <div class="form-group">
-                <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Guest Name:<span style="color: red">*</span></label>
-            <input type="text" class="form-control" name="gue_name" id="gue_name">
-          </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Phone:<span style="color: red">*</span></label>
-             <input type="text" class="form-control" name="phone" id="gue_phone" aria-label="Amount (to the nearest dollar)"><span></span>
-          </div>
-			<div class="form-group">
-            <label for="message-text" class="col-form-label">Student Number:<span style="color: red">*</span></label>
-             <input type="text" class="form-control" name="stu_number" id="gue_stu_id"><span></span>
-          </div>
-            <div class="form-group">
-            <label for="message-text" class="col-form-label">Note:</label>
-             <input type="text" class="form-control" name="note" ><span></span>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary"   id="sendMessage"
-{#                {% if isSuccessful==True %}#}
-{#         data-toggle="modal" data-target="#alert"#}
-{#        {% endif %}#}
-        >Confirm</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
 
 {% block mainContent %}
     <div class="tab-content" id="v-pills-tabContent">

@@ -165,62 +165,7 @@ var chart = Highcharts.chart('container1', {
 });
         </script>
     <script>
-var chart = Highcharts.chart('container2', {
-    chart: {
-        type: 'bar'
-    },
-    title: {
-        text: 'Grade Proportion'
-    },
-    xAxis: {
-        categories: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
-        title: {
-            text: null
-        }
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'the number of people',
-            align: 'high'
-        },
-        labels: {
-            overflow: 'justify'
-        }
-    },
-    tooltip: {
-        valueSuffix: 'person'
-    },
-    plotOptions: {
-        bar: {
-            dataLabels: {
-                enabled: true,
-                allowOverlap: true // 允许数据标签重叠
-            }
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'top',
-        x: -40,
-        y: 100,
-        floating: true,
-        borderWidth: 1,
-        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-        shadow: true
-    },
-    series: [{
-        name:"students",
-        data: [{{ stage_list[0] }}, {{ stage_list[1] }},{{ stage_list[2] }}, {{ stage_list[3] }}]
-    }],
-    credits: {
-            enabled: false     //不显示LOGO
-        }
-});
-    </script>
-    <script>
-    var chart = Highcharts.chart('container3', {
+var chart = Highcharts.chart('container3', {
     chart: {
         type: 'line'
     },
@@ -228,7 +173,13 @@ var chart = Highcharts.chart('container2', {
         text: 'Guests'
     },
     xAxis: {
-        categories: [ '一月', '二月', '三月', '四月', '五月', '六月', '七月']
+        categories: [ '{{gue_num_list[6][0]}}',
+            '{{gue_num_list[5][0]}}',
+            '{{gue_num_list[4][0]}}',
+            '{{gue_num_list[3][0]}}',
+            '{{gue_num_list[2][0]}}',
+            '{{gue_num_list[1][0]}}',
+            '{{gue_num_list[0][0]}}']
     },
     yAxis: {
         title: {
@@ -247,7 +198,13 @@ var chart = Highcharts.chart('container2', {
     },
     series: [{
         name: 'Guests',
-        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0]
+        data: [{{gue_num_list[6][1]}},
+            {{gue_num_list[5][1]}},
+            {{gue_num_list[4][1]}},
+            {{gue_num_list[3][1]}},
+            {{gue_num_list[2][1]}},
+            {{gue_num_list[1][1]}},
+            {{gue_num_list[0][1]}}]
     }],
     credits: {
             enabled: false     //不显示LOGO
