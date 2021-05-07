@@ -491,6 +491,13 @@ def home_sys_gue():
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
+    building_id = request.args.get('building_id',0)
+    isSuccessful = request.args.get('isSuccessful', "True")
+    pagenum = int(request.args.get('page', 1))
+    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
+                           isSuccessful=isSuccessful, function='students',building_id=building_id)
+
     building_id = request.args.get('building_id', '0')
     if building_id == '0':
         pass
