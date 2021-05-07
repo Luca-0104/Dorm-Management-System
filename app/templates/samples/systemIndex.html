@@ -3,26 +3,30 @@
 {% block mainContent %}
  <!-- 图表容器 DOM -->
     <div class="container ">
-        <h1 class="row">Welcom to Building X</h1>
+        <h1 class="row">Welcome to {% if building_id == '0' %}
+                BJUT Dorm Management System
+            {% else %}
+                BUILDING {{ building_id }}
+            {% endif %}</h1>
     <div class="row bg-white my-3 p-3 shadow-sm">
 
       <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="30%" y="50%" fill="#000" dy=".3em">Students</text></svg>
 
         <h2>X students</h2>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_stu') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#787"/><text x="30%" y="50%" fill="#000" dy=".3em">Guests</text></svg>
 
         <h2>X Guests</h2>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_gue') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
 <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#767"/><text x="30%" y="50%" fill="#000" dy=".3em">Messages</text></svg>
 
         <h2>X Messages</h2>
-        <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_dorm') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
 

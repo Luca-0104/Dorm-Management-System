@@ -59,6 +59,11 @@ def home_stu_message():
     return render_template("samples/studentMessage.html", function="message")  # 待核对
 
 
+@main.route('/home_dorm_admin_index', methods=['GET', 'POST'])
+def home_dorm_admin_index():
+        return render_template('samples/dormIndex.html',function="index")
+
+
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
 def home_dorm_admin():
     isSuccessful = request.args.get('isSuccessful', "True")
@@ -87,7 +92,7 @@ def home_sys_admin():
     """
     A function for showing the data graphs in the initial page of system administrator
     """
-    # building_id = request.args.get('building_id')
+    building_id = request.args.get('building_id',0)
     #
     # # building_id == 0 means this is the initial login status (before selecting a specific dorm building),
     # # which will show the information of all the dorm buildings
@@ -240,7 +245,7 @@ def home_sys_admin():
     # gue_num_list = [gue1, gue2, gue3, gue4, gue5, gue6, gue7]
 
 
-    return render_template("samples/systemIndex.html", function="index",
+    return render_template("samples/systemIndex.html", function="index",building_id=building_id
                            # basic_number_dict=basic_number_dict,     # graph1
                            # floor_stu_num_list=floor_stu_num_list,   # graph2
                            # college_dict=college_dict,               # graph3
@@ -251,12 +256,14 @@ def home_sys_admin():
 
 @main.route('/home_sys_gue', methods=['GET', 'POST'])
 def home_sys_gue():
-    return render_template("samples/systemGuests.html", function="guests")  # 待核对完善
+    building_id = request.args.get('building_id',0)
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
-    return render_template("samples/systemStudents.html", function="students")  # 待核对完善
+    building_id = request.args.get('building_id',0)
+    return render_template("samples/systemStudents.html", function="students",building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])

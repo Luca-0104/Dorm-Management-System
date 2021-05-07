@@ -30,22 +30,59 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Building number
+            {% if building_id == '0' %}
+                ALL
+            {% else %}
+                BUILDING {{ building_id }}
+            {% endif %}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Building 1</a>
-          <a class="dropdown-item" href="#">Building 2</a>
-          <a class="dropdown-item" href="#">Building 4</a>
-          <a class="dropdown-item" href="#">Building 5</a>
-          <a class="dropdown-item" href="#">Building 6</a>
-          <a class="dropdown-item" href="#">Building 7</a>
-          <a class="dropdown-item" href="#">Building 8</a>
-          <a class="dropdown-item" href="#">Building 9</a>
-          <a class="dropdown-item" href="#">Building 10</a>
-          <a class="dropdown-item" href="#">Building 11</a>
-          <a class="dropdown-item" href="#">Building 12</a>
-          <a class="dropdown-item" href="#">Building 13</a>
-          <a class="dropdown-item" href="#">Building 14</a>
+            {% if function == "index" %}
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=0">ALL</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=1">Building 1</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=2">Building 2</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=3">Building 3</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=4">Building 4</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=5">Building 5</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=6">Building 6</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=7">Building 7</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=8">Building 8</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=9">Building 9</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=10">Building 10</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=11">Building 11</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=12">Building 12</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_admin')}}?building_id=13">Building 13</a>
+                {% elif function == "students" %}
+                <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=1">Building 1</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=2">Building 2</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=3">Building 3</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=4">Building 4</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=5">Building 5</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=6">Building 6</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=7">Building 7</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=8">Building 8</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=9">Building 9</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=10">Building 10</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=11">Building 11</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=12">Building 12</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_stu')}}?building_id=13">Building 13</a>
+                {% elif function == "guests" %}
+                <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=1">Building 1</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=2">Building 2</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=3">Building 3</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=4">Building 4</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=5">Building 5</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=6">Building 6</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=7">Building 7</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=8">Building 8</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=9">Building 9</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=10">Building 10</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=11">Building 11</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=12">Building 12</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=13">Building 13</a>
+
+            {% endif %}
+
 
         </div>
       </li>
