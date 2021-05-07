@@ -35,7 +35,7 @@ def search_stu():
                                                  Student.college.contains(key_word),
                                                  Student.room_number.contains(key_word),
                                                  # Student.enroll_date.contains(key_word)
-                                                 )), Student.is_deleted == False).order_by(
+                                                 ), Student.is_deleted == False)).order_by(
             Student.room_number).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_name':
@@ -337,13 +337,13 @@ def search_gue():
                                                    Guest.stu_id == stu.id,
                                                    Guest.arrive_time.contains(key_word),
                                                    Guest.leave_time.contains(key_word),
-                                                   )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
+                                                   ), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
         else:
             gue_list = Guest.query.filter(and_(or_(Guest.gue_name.contains(key_word),
                                                    Guest.phone.contains(key_word),
                                                    Guest.arrive_time.contains(key_word),
                                                    Guest.leave_time.contains(key_word),
-                                                   )), Guest.is_deleted == False).paginate(page=pagenum, per_page=5)
+                                                   ), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
         gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)

@@ -486,29 +486,28 @@ def home_sys_gue():
     else:
         pagination = Guest.query.join(Student).filter(and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)  # 待核对完善
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
 def home_sys_stu():
-    building_id = request.args.get('building_id',0)
+    building_id = request.args.get('building_id', '0')
     isSuccessful = request.args.get('isSuccessful', "True")
     pagenum = int(request.args.get('page', 1))
-    pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
-                           isSuccessful=isSuccessful, function='students',building_id=building_id)
 
-    # building_id = request.args.get('building_id', '0')
-    # if building_id == '0':
-    #     pass
-    # else:
-    #     pass
-    # return render_template("samples/systemStudents.html", function="students", building_id=building_id)  # 待核对完善
+    if building_id == '0':
+        pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    else:
+        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
+
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students', building_id=building_id)
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
 def home_sys_dorm():
-    return render_template("samples/systemDorm.html", function="dormAdmin")  # 待核对完善
+    pagenum = int(request.args.get('page', 1))
+    pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination)  # 待核对完善
 
 
 # The profile page ----------------------------------------------------------------------------------------------
