@@ -17,7 +17,7 @@
         <a href="{{ url_for('student.message_repair') }}" class="card-link"><h3>Repair</h3></a>
       </div>
         <div class="media-body pb-3 mb-0 small lh-125 col-4">
-        <strong class="d-block text-gray-dark">20</strong>
+        <strong class="d-block text-gray-dark">{{mes_num_dict["repair"]}}</strong>
       </div>
     </div>
     <div class="media text-muted pt-3 border-bottom border-gray">
@@ -28,7 +28,7 @@
         <a href="{{ url_for('student.message_complain') }}" class="card-link"><h3>Complain</h3></a>
       </div>
         <div class="media-body pb-3 mb-0 small lh-125 col-4">
-        <strong class="d-block text-gray-dark">20</strong>
+        <strong class="d-block text-gray-dark">{{mes_num_dict["complain"]}}</strong>
       </div>
     </div>
     <div class="media text-muted pt-3 border-bottom border-gray">
@@ -39,7 +39,7 @@
         <a href="{{ url_for('student.message_notification') }}" class="card-link"><h3>Notifications</h3></a>
       </div>
         <div class="media-body pb-3 mb-0 small lh-125 col-4">
-        <strong class="d-block text-gray-dark">20</strong>
+        <strong class="d-block text-gray-dark">{{ mes_num_dict["notification"] }}</strong>
       </div>
     </div>
      </div>
