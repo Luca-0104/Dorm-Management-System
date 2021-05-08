@@ -65,7 +65,22 @@ def home_stu_repair():
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
-    return render_template("samples/studentMessage.html", function="message")  # 待核对
+    stu_number = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_number).first()
+
+    repair_num = len(stu.repairs)
+    complain_num = len(stu.complains)
+    notification_num = 0
+
+    building = stu.building
+    da_list = building.dormAdmins
+    for da in da_list:
+        notification_num += len(da.notifications)
+
+    # a dict stores the number of each kind of message
+    mes_num_dict = {'repair': repair_num, 'complain': complain_num, 'notification': notification_num}
+
+    return render_template("samples/studentMessage.html", function="message", mes_num_dict=mes_num_dict)  # 待核对
 
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
@@ -88,7 +103,26 @@ def home_dorm_admin_gue():
 
 @main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
 def home_dorm_admin_message():
-    return render_template('samples/dormMessage.html', function="message")
+    da_number = current_user.stu_wor_id
+    da = DAdmin.query.filter_by(da_number=da_number).first()
+
+    repair_num = 0
+    complain_num = 0
+    notification_num = 0
+
+    building = da.building
+    stu_list = building.students
+    da_list = building.dormAdmins
+    for stu in stu_list:
+        repair_num += len(stu.repairs)
+        complain_num += len(stu.complains)
+    for da in da_list:
+        notification_num += len(da.notifications)
+
+    # a dict stores the number of each kind of message
+    mes_num_dict = {'repair': repair_num, 'complain': complain_num, 'notification': notification_num}
+
+    return render_template('samples/dormMessage.html', function="message", mes_num_dict=mes_num_dict)
 
 
 @main.route('/home_dorm_admin_index', methods=['GET', 'POST'])
