@@ -39,6 +39,14 @@ def create_app(config_name):
     from .dormAdmin import dormAdmin as dormAdmin_blueprint
     app.register_blueprint(dormAdmin_blueprint, url_prefix='/dormAdmin')
 
+    # sysAdmin blueprint registration
+    from .sysAdmin import sysAdmin as sysAdmin_blueprint
+    app.register_blueprint(sysAdmin_blueprint, url_prefix='/sysAdmin')
+
+    # student blueprint registration
+    from .student import student as student_blueprint
+    app.register_blueprint(student_blueprint, url_prefix='/student')
+
     return app
 
 

@@ -1,0 +1,278 @@
+{% extends "samples/systemBase.html" %}
+
+{% block mainContent %}
+ <!-- 图表容器 DOM -->
+    <div class="container ">
+        <h1 class="row">Welcome to {% if building_id == "0" %}
+                BJUT Dorm Management System
+            {% else %}
+                BUILDING  {{ building_id }}
+            {% endif %}</h1>
+    <div class="row bg-white my-3 p-3 shadow-sm">
+
+      <div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="30%" y="50%" fill="#000" dy=".3em">Students</text></svg>
+
+        <h2>{{basic_number_dict['stu_num']}} students</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_stu') }}">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+      <div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#787"/><text x="30%" y="50%" fill="#000" dy=".3em">Guests</text></svg>
+
+        <h2>{{basic_number_dict['gue_num']}} Guests</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_gue') }}">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+<div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#767"/><text x="5%" y="50%" fill="#000" dy=".3em">Dorm Administartor</text></svg>
+
+        <h2>{{basic_number_dict['da_num']}} Dormitory Administrators</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_dorm') }}">View details &raquo;</a></p>
+      </div><!-- /.col-lg-4 -->
+    </div><!-- /.row -->
+
+    <div class="row bg-white my-3 p-3">
+        <div id="container" class="col-8 bg-white rounded shadow-sm" style="min-width:200px;height:400px"></div>
+    <div id="container1" class="col-4 bg-light rounded shadow-sm" style="min-width:200px;height:400px"></div>
+    </div>
+    <div class="row bg-white my-3 p-3">
+    <div id="container2" class="col-4 bg-light rounded shadow-sm" style="min-width:300px;height:400px"></div>
+    <div id="container3" class="col-8 bg-white rounded shadow-sm" style="min-width:200px;height:400px"></div>
+    </div>
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}
+{% block js %}
+    <script>
+
+            var chart = Highcharts.chart('container', {
+    chart: {
+        type: 'column',
+        renderTo: 'container'
+    },
+    title: {
+        text: 'Number of People on each floor'
+    },
+    subtitle: {
+        text: '2017-03'
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45  // 设置轴标签旋转角度
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'the number of people(person)'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'total number: <b>{point.y:.1f} person</b>'
+    },
+    series: [{
+        name: 'total number',
+        data: [
+            ['Ground Floor', {{floor_stu_num_list[0]}}],
+            ['First Floor', {{floor_stu_num_list[1]}}],
+            ['Second Floor', {{floor_stu_num_list[2]}}],
+            ['Third Floor', {{floor_stu_num_list[3]}}],
+            ['Fourth Floor', {{floor_stu_num_list[4]}}],
+            ['Fifth Floor', {{floor_stu_num_list[5]}}],
+            ['Fifth Floor', {{floor_stu_num_list[5]}}],
+
+            {#['CEM', 14.16],#}
+            {#['CAD', 13.51],#}
+            {#['FHG', 13.08],#}
+        ],
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f}', // :.1f 为保留 1 位小数
+            y: 10
+        }
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+
+        </script>
+ <script>// Make monochrome colors and set them as default for all pies
+Highcharts.getOptions().plotOptions.pie.colors = (function () {
+    var colors = [],
+        base = Highcharts.getOptions().colors[0],
+        i;
+    for (i = 0; i < 10; i += 1) {
+        // Start out with a darkened base color (negative brighten), and end
+        // up with a much brighter color
+        colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+    }
+    return colors;
+}());
+// 初始化图表
+var chart = Highcharts.chart('container1', {
+    title: {
+        text: 'College Proportion'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: 'College Proportion',
+        data: [
+            {#['BDIC',{{ college_dict['BDIC'] }}],#}
+            {#['FHS', 26.8],#}
+            {#{#}
+            {#    name: 'FIT',#}
+            {#    y: 12.8,#}
+            {#    sliced: true,#}
+            {#    selected: true#}
+            {# },#}
+            {#['FMM',    8.5],#}
+            {#['FHSS',     6.2],#}
+            {% for college in college_dict.items() %}
+                {% if college[1] > 0 %}
+                    ['{{ college[0] }}',{{ college[1] }}],
+                {% endif %}
+            {% endfor %}
+
+        ]
+
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+        </script>
+    <script>
+var chart = Highcharts.chart('container2', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Grade Proportion'
+    },
+    xAxis: {
+        categories: ['Freshman', 'Sophomore', 'Junior', 'Senior'],
+        title: {
+            text: null
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'the number of people',
+            align: 'high'
+        },
+        labels: {
+            overflow: 'justify'
+        }
+    },
+    tooltip: {
+        valueSuffix: 'person'
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                enabled: true,
+                allowOverlap: true // 允许数据标签重叠
+            }
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'top',
+        x: -40,
+        y: 100,
+        floating: true,
+        borderWidth: 1,
+        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+        shadow: true
+    },
+    series: [{
+        name:"students",
+        data: [{{ stage_list[0] }}, {{ stage_list[1] }},{{ stage_list[2] }}, {{ stage_list[3] }}]
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+    </script>
+    <script>
+    var chart = Highcharts.chart('container3', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'Guests'
+    },
+    xAxis: {
+        categories: [ '{{gue_num_list[6][0]}}',
+            '{{gue_num_list[5][0]}}',
+            '{{gue_num_list[4][0]}}',
+            '{{gue_num_list[3][0]}}',
+            '{{gue_num_list[2][0]}}',
+            '{{gue_num_list[1][0]}}',
+            '{{gue_num_list[0][0]}}']
+    },
+    yAxis: {
+        title: {
+            text: 'the number of people(person)'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                // 开启数据标签
+                enabled: true
+            },
+            // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Guests',
+        data: [{{gue_num_list[6][1]}},
+            {{gue_num_list[5][1]}},
+            {{gue_num_list[4][1]}},
+            {{gue_num_list[3][1]}},
+            {{gue_num_list[2][1]}},
+            {{gue_num_list[1][1]}},
+            {{gue_num_list[0][1]}}]
+    }],
+    credits: {
+            enabled: false     //不显示LOGO
+        }
+});
+
+    </script>
+    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+{% endblock %}

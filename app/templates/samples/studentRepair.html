@@ -1,0 +1,86 @@
+{% extends "samples/studentBase.html" %}
+{% block title %}
+<title>Repair</title>
+{% endblock %}
+
+{% block add %}
+     <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
+
+<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Repair Form</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="myFormAdd" action="{{ url_for('student.add_repair') }}" method="post">
+            <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Broken Items:</label>
+                <div>
+             <select class="form-control" name="item">
+            <option selected value="Lock">Lock</option>
+            <option value="Lamps">Lamps </option>
+            <option value="cupboard ">cupboard </option>
+            <option value="Bed ">Bed </option>
+            <option value="air conditioning ">air conditioning</option>
+            <option value="Leaking">Leaking</option>
+          </select>
+
+                </div>
+
+          </div>
+			<div class="form-group">
+    <label for="exampleFormControlTextarea1">Detail</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="detail"></textarea>
+  </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"   id="sendMessage">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block mainContent %}
+    <h1>Repair Record</h1>
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Post Date</th>
+      <th scope="col">Item</th>
+      <th scope="col">Status</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+   {% for repair in pagination.items %}
+        <tr>
+            <th scope="row">{{ repair.date }}</th>
+            <td>{{ repair.item }}</td>
+            <td>{% if  repair.is_repaired  %}
+                {{ 'Repaired' }}
+                {% else %}
+                {{ 'In progress' }}
+            {% endif %}
+                </td>
+            <td><a class="card-link" href="{{ url_for('student.message_details') }}?message_type=repair&repair_id={{ repair.id }}">More</a></td>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('#sendMessage').click(function() {
+            	document.getElementById("myFormAdd").submit();
+
+        });
+    </script>
+{% endblock %}

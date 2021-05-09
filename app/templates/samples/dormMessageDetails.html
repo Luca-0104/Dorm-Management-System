@@ -1,0 +1,194 @@
+{% extends "samples/dormBase.html" %}
+
+{% block mainContent %}
+    <div class="my-3 p-3 bg-white rounded shadow-sm ">
+{% if message_type == "repair" %}
+<h1>Details on Repair</h1>
+    <p class="media-body pb-3 mb-0 lh-125 ">
+          {{ repair.date }} by <a href="#">{{repair.student.name}}</a> from {{repair.student.room_number}}, phone number is {{ repair.student.phone }}
+    </p>
+<dl class="row">
+  <dt class="col-sm-3">Broken Items</dt>
+  <dd class="col-sm-9">
+    <p>{{ repair.item }}</p>
+  </dd>
+  <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">
+    <p>{{ repair.detail }}  </dd>
+</dl>
+<div class="row">
+  <p class="col-11">
+  <a  data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Show All Replies
+  </a>
+
+</p>
+        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Reply</button>
+
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="Reply" {% if message_type=="repair" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&repair_id={{ repair.id }}"
+              {% elif message_type=="complain" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&complain_id={{ complain.id }}"
+             {% elif message_type=="notification" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&notification_id={{ notification.id }}"
+              {% endif %}
+              method="post">
+
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" name="content"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="stu_Reply">Send message</button>
+
+    </div>
+  </div>
+</div>
+</div>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+      {% for reply in reply_list %}
+      <div class="media text-muted pt-3">
+          {% if reply.user.role_id == 1 %}
+              <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+          {% elif reply.user.role_id==2 %}
+                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+          {% endif %}
+                     <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+
+        <strong class="d-block text-gray-dark">@{{reply.user.user_name}}</strong>
+          {{ reply.content }}
+      </p>
+    </div>
+      {% endfor %}
+
+    <small class="d-block text-right mt-3">
+      <a href="#">All updates</a>
+    </small>
+  </div>
+
+  </div>
+</div>
+
+{% elif message_type=="complain" %}
+<h1>Details on Complains</h1>
+    <p class="media-body pb-3 mb-0 lh-125 ">
+          {{ complain.time.strftime("%Y-%m-%d") }}
+    </p>
+<dl class="row">
+  <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">
+    <p>{{ complain.detail }}  </dd>
+</dl>
+<div class="row">
+  <p class="col-11">
+  <a  data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Show All Replies
+  </a>
+
+</p>
+        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Reply</button>
+
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="Reply" {% if message_type=="repair" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&repair_id={{ repair.id }}"
+              {% elif message_type=="complain" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&complain_id={{ complain.id }}"
+              {% elif message_type=="notification" %}
+              action="{{ url_for('dormAdmin.da_reply') }}?reply_type={{ message_type }}&notification_id={{ notification.id }}"
+              {% endif %}
+              method="post">
+
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" name="content"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="stu_Reply">Send message</button>
+
+    </div>
+  </div>
+</div>
+</div>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+      {% for reply in reply_list %}
+      <div class="media text-muted pt-3">
+          {% if reply.user.role_id == 1 %}
+              <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+
+        <strong class="d-block text-gray-dark">@Anonymous</strong>
+          {{ reply.content }}
+      </p>
+          {% elif reply.user.role_id==2 %}
+                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+               <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+
+        <strong class="d-block text-gray-dark">@{{reply.user.user_name}}</strong>
+          {{ reply.content }}
+          {% endif %}
+
+      </p>
+    </div>
+      {% endfor %}
+
+    <small class="d-block text-right mt-3">
+      <a href="#">All updates</a>
+    </small>
+  </div>
+
+  </div>
+{% elif message_type=="notification" %}
+
+    <h1>Announcement</h1>
+    <p class="media-body pb-3 mb-0 lh-125 ">
+          {{ notification.time.strftime("%Y-%m-%d") }}
+    </p>
+<dl class="row">
+  <dt class="col-sm-3">Details</dt>
+        <dd class="col-sm-9">
+    <p>{{ notification.detail }}  </dd>
+</dl>
+
+
+{% endif %}
+{% endblock %}
+
+
+
+{% block js %}
+<script>
+ $('#stu_Reply').click(function(){
+	document.getElementById("Reply").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+</script>
+{% endblock %}

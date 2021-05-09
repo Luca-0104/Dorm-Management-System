@@ -1,0 +1,380 @@
+{% extends "samples/systemBase.html" %}
+{% block title %}
+<title>Manage Students</title>
+{% endblock %}
+
+
+{% block search %}
+    <form class="form-inline my-2 my-lg-0">
+      <div class="input-group icon-margin">
+  <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" name="search">
+  <div class="input-group-append">
+
+    <select class="custom-select selet-size" id="inputGroupSelect01">
+    <option selected value="all">All</option>
+    <option value="stu_name">Name</option>
+    <option value="stu_number">Student ID</option>
+    <option value="college">College</option>
+    <option value="room_number">Room Number</option>
+    <option value="enroll_date">Enroll Date</option>
+        <option value="phone">Phone</option>
+
+  </select>
+  </div>
+</div>
+{#      <button class="btn btn-outline-success my-2 my-sm-0 icon-margin" type="submit" id="search1">Search</button>#}
+          <button type="button" class="btn btn-outline-success my-2 my-sm-0 icon-margin" id="search1"><i class="bi bi-search"></i>search</button>
+    </form>
+{% endblock %}
+
+
+{% block mainContent %}
+    <div class="tab-content" id="v-pills-tabContent">
+      <table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Student ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">College</th>
+	  <th scope="col">Room Number</th>
+		<th scope="col">Email</th>
+		<th scope="col">Phone</th>
+
+    </tr>
+  </thead>
+  <tbody>
+  {% for student in pagination.items %}
+        <tr>
+            <th scope="row">{{ student.stu_number }}</th>
+            <td>{{ student.stu_name }}</td>
+            <td>{{ student.college}}</td>
+            <td>{{ student.room_number }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.phone }}</td>
+
+        </tr>
+  {% endfor %}
+<div class="modal fade" id="alert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{#    <tr>#}
+{#      <th scope="row">1</th>#}
+{#      <td>Mark</td>#}
+{#      <td>Otto</td>#}
+{#		<td>ucd@</td>#}
+{#      <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary" id="delete"><em class="bi bi-x-square icon-margin"></em>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#      <th scope="row">2</th>#}
+{#      <td>Jacob</td>#}
+{#      <td>Thornton</td>#}
+{#		<td>UCD@</td>#}
+{#        <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#	  </tr>#}
+{#		<tr>#}
+{#      <th scope="row">3</th>#}
+{#      <td>Larry</td>#}
+{#      <td>the Bird</td>#}
+{#       <td><div class="btn-group" role="group" aria-label="Basic example">#}
+{#  <button type="button" class="btn btn-secondary"><i class="bi bi-x-square icon-margin"></i>delete</button>#}
+{#  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="bi bi-pencil icon-margin"></i>modify</button>#}
+{#</div></td>#}
+{#    </tr>#}
+{#<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#  <div class="modal-dialog">#}
+{#    <div class="modal-content">#}
+{#      <div class="modal-header">#}
+{#        <h5 class="modal-title" id="exampleModalLabel">Modified Information</h5>#}
+{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#          <span aria-hidden="true">&times;</span>#}
+{#        </button>#}
+{#      </div>#}
+{#      <div class="modal-body">#}
+{#        <form id="myForm" action="{{ url_for('dormAdmin.add_stu') }}" method="post">#}
+{#          <div class="form-group">#}
+{#            <label for="recipient-name" class="col-form-label">Student ID:</label>#}
+{#            <input type="text" class="form-control" name="stu_ID">#}
+{#          </div>#}
+{#          <div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Name:</label>#}
+{#             <input type="text" class="form-control" name="name">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Room:</label>#}
+{#             <input type="text" class="form-control" name="room">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Phone:</label>#}
+{#             <input type="text" class="form-control" name="phone">#}
+{#          </div>#}
+{#			<div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Email:</label>#}
+{#             <input type="text" class="form-control" name="email">#}
+{#          </div>#}
+{#        </form>#}
+{#      </div>#}
+{#      <div class="modal-footer">#}
+{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#        <button type="button" class="btn btn-primary" id="sendMessage">Confirm</button>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>   #}
+  </tbody>
+</table>
+    <nav aria-label="Page navigation ">
+  <ul class="pagination">
+    <li {% if not pagination.has_prev %}
+    class="page-item disabled"
+    {% endif %}>
+        {% if enterType=="home" %}
+       <a class="page-link" href="{{url_for('main.home_sys_stu')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
+        {% elif enterType=="search" %}
+       <a class="page-link" href="{{url_for('sysAdmin.search_stu')}}?page={{ pagination.prev_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
+        {% endif %}
+
+    </li>
+      {% for pagenum in range(1,pagination.pages + 1) %}
+    <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">
+    <a class="page-link" {% if enterType == "home" %}
+         href="{{url_for('main.home_sys_stu')}}?page={{ pagenum }}"
+    {% elif enterType == "search" %}
+           href="{{url_for('sysAdmin.search_stu')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"
+    {% endif %} >{{pagenum}}</a>
+
+    </li>
+    {% endfor %}
+
+
+        <li {% if not pagination.has_next %}
+    class="page-item disabled"
+    {% endif %}>
+        {% if enterType=="home" %}
+       <a class="page-link" href="{{url_for('main.home_sys_stu')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
+        {% elif enterType=="search" %}
+       <a class="page-link" href="{{url_for('sysAdmin.search_stu')}}?page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>
+        {% endif %}
+
+    </li>
+  </ul>
+</nav>
+    </div>
+{% endblock %}
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="../../static/js/search.js"></script>
+    <script src="../../static/js/dormExamine.js"></script>
+<script>
+    $('#sendMessage').click(function(){
+let id = $('#stu_id').val();
+        let phone = $('#phone').val();
+        let email = $('#email').val();
+        console.log(id,phone,email);
+        $.get('sysAdmin/sysAdd', {id: id, phone:phone,email:email}, function (data) {
+            console.log(data);
+            if (data.code !== 200) {
+                alert("Failed to Add\n"+data.msg);
+            } else {
+                alert("Add Successfully");
+            }
+        });
+
+	document.getElementById("myFormAdd").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+    {% for student in pagination.items %}
+    $('#sendMessagemodify{{ student.id }}').click(function(){
+        let id = $('#stu_id{{ student.id }}').val();
+        let phone = $('#phone{{ student.id }}').val();
+        let email = $('#email{{ student.id }}').val();
+        console.log(id,phone,email);
+        $.get('sysAdmin/sysModify', {id: id, phone:phone,email:email}, function (data) {
+            console.log(data);
+            if (data.code !== 200) {
+                alert("Failed to modify\n"+data.msg);
+            } else {
+                alert("Modify Successfully");
+            }
+        });
+
+	document.getElementById("myFormModify{{ student.id }}").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+
+    {% endfor %}
+    {% for student in pagination.items %}
+    $('#brand').click(function () {
+	console.log("email{{ student.id }}");
+    });
+    $('#stu_id{{ student.id }}').blur(function () {
+    let id = $(this).val();
+    let span_ele = $(this).next('span');
+    console.log(id);
+    if(id.length===8) {
+        span_ele.text('');
+        $.get('sysAdmin/sysCheckID', {id: id}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+    }else {
+        span_ele.css({"color":"#ff0011","font-size":"12px"});
+        span_ele.text('The unacceptable ID format');
+    }
+});
+
+$('#email{{ student.id }}').blur(function () {
+    let email = $(this).val();
+    let span_ele = $(this).next('span');
+        span_ele.text('');
+        $.get('sysAdmin/sysCheckEmail', {email: email}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+});
+
+$('#phone{{ student.id }}').blur(function () {
+    let phone = $(this).val();
+    let span_ele = $(this).next('span');
+    if(phone.length===11) {
+        span_ele.text('');
+        $.get('sysAdmin/sysCheckPhone', {phone: phone}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+    }else {
+        span_ele.css({"color":"#ff0011","font-size":"12px"});
+        span_ele.text('The unacceptable ID format');
+    }
+});
+    {% endfor %}
+
+</script>
+{% block js %}
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="../../static/js/search.js"></script>
+    <script src="../../static/js/dormExamine.js"></script>
+<script>
+    $('#sendMessage').click(function(){
+let id = $('#stu_id').val();
+        let phone = $('#phone').val();
+        let email = $('#email').val();
+        console.log(id,phone,email);
+        $.get('sysAdmin/sysAdd', {id: id, phone:phone,email:email}, function (data) {
+            console.log(data);
+            if (data.code !== 200) {
+                alert("Failed to Add\n"+data.msg);
+            } else {
+                alert("Add Successfully");
+            }
+        });
+
+	document.getElementById("myFormAdd").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+    {% for student in pagination.items %}
+    $('#sendMessagemodify{{ student.id }}').click(function(){
+        let id = $('#stu_id{{ student.id }}').val();
+        let phone = $('#phone{{ student.id }}').val();
+        let email = $('#email{{ student.id }}').val();
+        console.log(id,phone,email);
+        $.get('sysAdmin/sysModify', {id: id, phone:phone,email:email}, function (data) {
+            console.log(data);
+            if (data.code !== 200) {
+                alert("Failed to modify\n"+data.msg);
+            } else {
+                alert("Modify Successfully");
+            }
+        });
+
+	document.getElementById("myFormModify{{ student.id }}").submit();
+    {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
+});
+
+    {% endfor %}
+    {% for student in pagination.items %}
+    $('#brand').click(function () {
+	console.log("email{{ student.id }}");
+    });
+    $('#stu_id{{ student.id }}').blur(function () {
+    let id = $(this).val();
+    let span_ele = $(this).next('span');
+    console.log(id);
+    if(id.length===8) {
+        span_ele.text('');
+        $.get('sysAdmin/sysCheckID', {id: id}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+    }else {
+        span_ele.css({"color":"#ff0011","font-size":"12px"});
+        span_ele.text('The unacceptable ID format');
+    }
+});
+
+$('#email{{ student.id }}').blur(function () {
+    let email = $(this).val();
+    let span_ele = $(this).next('span');
+        span_ele.text('');
+        $.get('sysAdmin/sysCheckEmail', {email: email}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+});
+
+$('#phone{{ student.id }}').blur(function () {
+    let phone = $(this).val();
+    let span_ele = $(this).next('span');
+    if(phone.length===11) {
+        span_ele.text('');
+        $.get('sysAdmin/sysCheckPhone', {phone: phone}, function (data) {
+            // console.log(data)
+            if(data.code !== 200){
+                span_ele.css({"color": "#ff0011","font-size":"12px"});
+                span_ele.text(data.msg);
+            }
+        })
+    }else {
+        span_ele.css({"color":"#ff0011","font-size":"12px"});
+        span_ele.text('The unacceptable ID format');
+    }
+});
+    {% endfor %}
+
+</script>
+{% endblock %}

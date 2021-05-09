@@ -122,4 +122,18 @@
   list-style: none;
 }
 
+.btn-size{
+  height: 300px !important;
+}
 
+.margin-bottom{
+  margin-bottom: 10px;
+}
+
+.make-wrap{
+    width:5px;
+    display:block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

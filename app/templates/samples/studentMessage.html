@@ -1,0 +1,47 @@
+{% extends "samples/studentBase.html" %}
+
+{% block mainContent %}
+
+     <div class="my-3 p-3 bg-white rounded shadow-sm ">
+     <div class="row">
+         <h6 class="border-bottom border-gray pb-2 mb-0 col-8">Topics</h6>
+         <h6 class="border-bottom border-gray pb-2 mb-0 col-4">Threads</h6>
+
+     </div>
+
+    <div class="media text-muted pt-3 border-bottom border-gray">
+
+      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+
+      <div class="media-body pb-3 mb-0 small lh-125 col-8">
+        <a href="{{ url_for('student.message_repair') }}" class="card-link"><h3>Repair</h3></a>
+      </div>
+        <div class="media-body pb-3 mb-0 small lh-125 col-4">
+        <strong class="d-block text-gray-dark">{{mes_num_dict["repair"]}}</strong>
+      </div>
+    </div>
+    <div class="media text-muted pt-3 border-bottom border-gray">
+
+      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#000000"/><text x="50%" y="50%" fill="#000000" dy=".3em">32x32</text></svg>
+
+      <div class="media-body pb-3 mb-0 small lh-125 col-8">
+        <a href="{{ url_for('student.message_complain') }}" class="card-link"><h3>Complain</h3></a>
+      </div>
+        <div class="media-body pb-3 mb-0 small lh-125 col-4">
+        <strong class="d-block text-gray-dark">{{mes_num_dict["complain"]}}</strong>
+      </div>
+    </div>
+    <div class="media text-muted pt-3 border-bottom border-gray">
+
+      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
+
+      <div class="media-body pb-3 mb-0 small lh-125 col-8">
+        <a href="{{ url_for('student.message_notification') }}" class="card-link"><h3>Notifications</h3></a>
+      </div>
+        <div class="media-body pb-3 mb-0 small lh-125 col-4">
+        <strong class="d-block text-gray-dark">{{ mes_num_dict["notification"] }}</strong>
+      </div>
+    </div>
+     </div>
+
+{% endblock %}
