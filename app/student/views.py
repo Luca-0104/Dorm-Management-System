@@ -159,4 +159,9 @@ def message_details():
     return render_template("samples/Message.html", function="message")
 
 
-
+@student.route("/home_stu_change", methods=['GET','POST'])
+def user_change():
+    if request.method == "post":
+        icon = request.files.get('icon')
+        print(icon)
+    return render_template('samples/studentIndex.html',function="index")

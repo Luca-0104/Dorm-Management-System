@@ -61,7 +61,10 @@ def home_stu_repair():
     return render_template("samples/studentRepair.html", pagination=pagination, enterType='home',
                            function="repair")  # 待核对
 
-
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
+def home_stu_LAF():
+    return render_template("samples/studentLF.html",function="lost and found")
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():

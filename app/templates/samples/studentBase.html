@@ -76,6 +76,12 @@
 		{% else %}
             class="nav-link"
 		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_message') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-chat-dots icon-margin"></i><span>Message</span></a>
+         <a {% if function=="lost and found" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_LAF') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-bag icon-margin"></i><span>Lost and Found</span></a>
+
 
 	  </div>
     </div>
