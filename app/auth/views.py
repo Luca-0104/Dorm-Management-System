@@ -46,7 +46,7 @@ def login():
                     if role_id == 1:
                         url = 'main.home_stu'
                     elif role_id == 2:
-                        url = 'main.home_dorm_admin'
+                        url = 'main.home_dorm_admin_index'
                     elif role_id == 3:
                         url = 'main.home_sys_admin'
                     return redirect(url_for(url))

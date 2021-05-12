@@ -1,9 +1,8 @@
-{% extends "samples/systemBase.html" %}
-
+{% extends "samples/dormBase.html" %}
 {% block mainContent %}
  <!-- 图表容器 DOM -->
     <div class="container ">
-        <h1 class="row">Welcome to {% if building_id == "0" %}
+        <h1 class="row">Welcome to {% if building_id == 0 %}
                 BJUT Dorm Management System
             {% else %}
                 BUILDING  {{ building_id }}
@@ -14,19 +13,19 @@
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="30%" y="50%" fill="#000" dy=".3em">Students</text></svg>
 
         <h2>{{basic_number_dict['stu_num']}} students</h2>
-        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_stu') }}">View details &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_dorm_admin') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
       <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#787"/><text x="30%" y="50%" fill="#000" dy=".3em">Guests</text></svg>
 
         <h2>{{basic_number_dict['gue_num']}} Guests</h2>
-        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_gue') }}">View details &raquo;</a></p>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_dorm_admin_gue') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
-<div class="col-lg-4">
-        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#767"/><text x="5%" y="50%" fill="#000" dy=".3em">Dorm Administartor</text></svg>
+    <div class="col-lg-4">
+        <svg class="bd-placeholder-img rounded-circle" width="160" height="160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#767"/><text x="30%" y="50%" fill="#000" dy=".3em">Messages</text></svg>
 
-        <h2>{{basic_number_dict['da_num']}} Dormitory Administrators</h2>
-        <p><a class="btn btn-secondary" href="{{ url_for('main.home_sys_dorm') }}">View details &raquo;</a></p>
+        <h2>{{basic_number_dict['mes_num']}} Messages</h2>
+        <p><a class="btn btn-secondary" href="{{ url_for('main.home_dorm_admin_message') }}">View details &raquo;</a></p>
       </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
 
@@ -40,12 +39,6 @@
     </div>
 
     </div>
-
-
-
-
-
-
 
 {% endblock %}
 {% block js %}
@@ -171,7 +164,7 @@ var chart = Highcharts.chart('container1', {
         }
 });
         </script>
-    <script>
+     <script>
 var chart = Highcharts.chart('container2', {
     chart: {
         type: 'bar'
@@ -227,7 +220,7 @@ var chart = Highcharts.chart('container2', {
 });
     </script>
     <script>
-    var chart = Highcharts.chart('container3', {
+var chart = Highcharts.chart('container3', {
     chart: {
         type: 'line'
     },
@@ -274,5 +267,4 @@ var chart = Highcharts.chart('container2', {
 });
 
     </script>
-    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
 {% endblock %}
