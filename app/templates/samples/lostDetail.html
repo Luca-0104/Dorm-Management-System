@@ -1,0 +1,108 @@
+{% extends 'samples/studentBase.html' %}
+{% block mainContent %}
+<div class="col-lg-8 mx-auto p-3 py-md-5 bg-light rounded shadow-sm">
+  <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <h1>Lost Detail</h1>
+  </header>
+
+  <main>
+    <div class=" border-bottom margin-bottom">
+        <dl class="row">
+              <dt class="col-sm-3">Subject</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+              <dt class="col-sm-3">Category</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+              <dt class="col-sm-3">Owner's name</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+              <dt class="col-sm-3">Found in Where</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+              <dt class="col-sm-3">Now the item In</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+              <dt class="col-sm-3">Status</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+              <dt class="col-sm-3">Status</dt>
+              <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+        </dl>
+    </div>
+
+
+
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <h1>Pictures</h1>
+  </header>
+
+    <div class="row g-5">
+      <div class="col-md-6">
+         <img class=" align-content-lg-center"  height="100%" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
+      </div>
+
+      <div class="col-md-6">
+                <img class=" align-content-lg-center"  height="100%" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
+      </div>
+    </div>
+  </main>
+  <footer class="pt-5 my-5 text-muted border-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <a class="card-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">show all replies</a>
+             <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Comment</button>
+        </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Comment:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="collapse" id="collapseExample">
+  <div class="my-3 p-3 bg-white rounded shadow-sm">
+    <h6 class="border-bottom border-gray pb-2 mb-0">Recent updates</h6>
+    <div class="media text-muted pt-3">
+                    <img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="../../static/images/auth/login.jpg" alt="icon"/>
+
+      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <strong class="d-block text-gray-dark">@username</strong>
+        Playing ping pong all night long, everything's all neon and hazy. Yeah, she's so in demand. She's sweet as pie but if you break her heart. But down to earth. It's time to face the music I'm no longer your muse. I guess that I forgot I had a choice.
+      </p>
+    </div>
+
+    <div class="media text-muted pt-3">
+      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+
+      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <strong class="d-block text-gray-dark">@username</strong>
+        Standing on the frontline when the bombs start to fall. Heaven is jealous of our love, angels are crying from up above. Can't replace you with a million rings. Boy, when you're with me I'll give you a taste. There’s no going back. Before you met me I was alright but things were kinda heavy. Heavy is the head that wears the crown.
+      </p>
+    </div>
+    <div class="media text-muted pt-3">
+      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
+
+      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <strong class="d-block text-gray-dark">@username</strong>
+        Will you do the same for me? It's time to face the music I'm no longer your muse. Heard it's beautiful, be the judge and my girls gonna take a vote. I can feel a phoenix inside of me. Heaven is jealous of our love, angels are crying from up above. Yeah, you take me to utopia.
+      </p>
+    </div>
+    <small class="d-block text-right mt-3">
+      <a href="#">All updates</a>
+    </small>
+  </div>
+</div>
+  </footer>
+</div>
+{% endblock %}

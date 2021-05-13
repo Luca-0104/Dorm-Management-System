@@ -1,7 +1,6 @@
 {% extends "samples/studentBase.html" %}
+
 {% block mainContent %}
-
-
   <div class="b-example-divider"></div>
 
   <div class="container px-4 py-5" id="hanging-icons">
@@ -13,7 +12,7 @@
         <div>
           <h2>Lost</h2>
           <p>In this page, you can find lost things posted by other</p>
-          <a href="#" class="btn btn-primary">
+          <a href="{{ url_for('student.stu_lost') }}" class="btn btn-primary">
             Primary button
           </a>
         </div>
@@ -22,7 +21,7 @@
         <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
         </div>
         <div>
-          <h2>Featured title</h2>
+          <h2>Found</h2>
           <p>In this page, you can find lost things posted by other</p>
           <a href="#" class="btn btn-primary">
             Primary button

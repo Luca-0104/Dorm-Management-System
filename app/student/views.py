@@ -160,8 +160,18 @@ def message_details():
 
 
 @student.route("/home_stu_change", methods=['GET','POST'])
-def user_change():
+def stu_change():
     if request.method == "post":
         icon = request.files.get('icon')
         print(icon)
     return render_template('samples/studentIndex.html',function="index")
+
+
+@student.route("home_stu_lost_and_found/lost", methods=['GET','POST'])
+def stu_lost():
+    return render_template('samples/studentLost.html',function="lost and found")
+
+
+@student.route("/home_stu_lost_and_found/lost_detail", methods=['GET','POST'])
+def lost_detail():
+    return  render_template('samples/lostDetail.html', function="lost and found")
