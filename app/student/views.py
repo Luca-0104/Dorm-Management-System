@@ -305,7 +305,7 @@ def lost_and_found_lost():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Lost.query.paginate(page=pagenum, per_page=5)
-    return render_template(".html", function="lostAndFound", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("samples/studentLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @student.route("/home_stu_lost_and_found/found")
@@ -315,7 +315,7 @@ def lost_and_found_found():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Found.query.paginate(page=pagenum, per_page=5)
-    return render_template(".html", function="lostAndFound", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template(".html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @student.route("/home_stu_lost_and_found/details")
@@ -334,7 +334,7 @@ def lost_and_found_details():
         lost = Lost.query.filter_by(id=lost_id).first()
         reply_list = lost.replies
 
-        return render_template(".html", function="lostAndFound", lnf_type=lnf_type, lost=lost,
+        return render_template("samples/lostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
                                reply_list=reply_list)       # 待核对
 
     elif lnf_type == 'found':
@@ -344,25 +344,25 @@ def lost_and_found_details():
         found = Found.query.filter_by(id=found_id).first()
         reply_list = found.replies
 
-        return render_template(".html", function="lostAndFound", lnf_type=lnf_type, found=found,
+        return render_template("", function="lost and found", lnf_type=lnf_type, found=found,
                                reply_list=reply_list)       # 待核对
 
     return render_template(".html", function="lostAndFound")      # 待核对
 
 
-@student.route("/home_stu_change", methods=['GET','POST'])
+@student.route("/home_stu_change", methods=['GET', 'POST'])
 def stu_change():
     if request.method == "post":
         icon = request.files.get('icon')
         print(icon)
-    return render_template('samples/studentIndex.html',function="index")
+    return render_template('samples/studentIndex.html', function="index")
 
 
-@student.route("home_stu_lost_and_found/lost", methods=['GET','POST'])
+@student.route("home_stu_lost_and_found/lost", methods=['GET', 'POST'])
 def stu_lost():
-    return render_template('samples/studentLost.html',function="lost and found")
+    return render_template('samples/studentLost.html', function="lost and found")
 
 
-@student.route("/home_stu_lost_and_found/lost_detail", methods=['GET','POST'])
+@student.route("/home_stu_lost_and_found/lost_detail", methods=['GET', 'POST'])
 def lost_detail():
-    return  render_template('samples/lostDetail.html', function="lost and found")
+    return render_template('samples/lostDetail.html', function="lost and found")

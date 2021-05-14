@@ -169,7 +169,7 @@ def home_stu_lost():
     stu_id = stu.id
     pagination = Lost.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
     return render_template(".html", pagination=pagination, enterType='home',
-                           function="lost")  # 待核对
+                           function="lost and found")  # 待核对
 
 
 @main.route('/home_stu_found', methods=['GET', 'POST'])
@@ -180,7 +180,7 @@ def home_stu_found():
     stu_id = stu.id
     pagination = Found.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
     return render_template(".html", pagination=pagination, enterType='home',
-                           function="found")  # 待核对
+                           function="lost and found")  # 待核对
 
 
 @main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
@@ -188,7 +188,7 @@ def home_stu_lost_and_found():
     stu_number = current_user.stu_wor_id
     stu = Student.query.filter_by(stu_number=stu_number).first()
 
-    return render_template("samples/studentMessage.html", function="lostAndFound")  # 待核对
+    return render_template("samples/studentLF.html", function="lost and found")  # 待核对
 
 
 # ----------------------------------------------- main pages of dormitory administrator -----------------------------------------------
