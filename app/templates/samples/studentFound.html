@@ -161,8 +161,9 @@
 {% block mainContent %}
 <div class="album py-5 bg-light">
     <div class="container">
+        <div class="row">
+
         {% for found in pagination.items %}
-         <div class="row">
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
               <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if found.icon %}
