@@ -114,7 +114,7 @@ class Found(db.Model):
     item = db.Column(db.String(64), nullable=False)
     place = db.Column(db.String(64), nullable=False)
     found_time = db.Column(db.DateTime(), nullable=False)
-    icon = db.Column(db.String(256))
+    icon = db.Column(db.String(256), default='upload/found/default__0__.jpg')
     detail = db.Column(db.Text, default='nothing')
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
     post_time = db.Column(db.DateTime(), default=datetime.utcnow)
