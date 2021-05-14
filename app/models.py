@@ -47,6 +47,9 @@ class Permission:
     SYS_ADMIN = 16
 
 
+# ------------------------------------------------ message tables ---------------------------------------------------
+
+
 class Repair(db.Model):
     __tablename__ = 'repairs'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,6 +61,9 @@ class Repair(db.Model):
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)  # define the relation with Student
     replies = db.relationship('ReplyRepair', backref='repair')
 
+    def __repr__(self):
+        return '<Repair %r>' % self.item
+
 
 class Complain(db.Model):
     __tablename__ = 'complains'
@@ -67,6 +73,9 @@ class Complain(db.Model):
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
     replies = db.relationship('ReplyComplain', backref='complain')
 
+    def __repr__(self):
+        return '<Complain %r>' % self.detail
+
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
@@ -75,24 +84,48 @@ class Notification(db.Model):
     time = db.Column(db.DateTime(), default=datetime.utcnow)
     da_id = db.Column(db.Integer, db.ForeignKey('dormAdmins.id'), unique=False)
 
-
-# class Other(db.Model):
-#     __tablename__ = 'others'
-#     id = db.Column(db.Integer, primary_key=True)
-#     detail = db.Column(db.Text)
-#     time = db.Column(db.DateTime(), default=datetime.utcnow)
-#     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
-#     replies = db.relationship('Reply', backref='other')
+    def __repr__(self):
+        return '<Notification %r>' % self.detail
 
 
-# # a table for all the user notifications
-# class Notification(db.Model):
-#     __tablename__ = 'notifications'
-#     id = db.Column(db.Integer, primary_key=True)
-#     content = db.Column(db.Text)
-#     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-#     sender_id = db.Column(db.Integer, nullable=False)
-#     receiver_id = db.Column(db.Integer, nullable=False)
+# ------------------------------------------------ lost & found tables ---------------------------------------------------
+
+
+class Lost(db.Model):
+    __tablename__ = 'lost_items'
+    id = db.Column(db.Integer, primary_key=True)
+    item = db.Column(db.String(64), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    place = db.Column(db.String(64), default='unknown')
+    lost_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    detail = db.Column(db.Text, default='nothing')
+    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
+    post_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    replies = db.relationship('ReplyLost', backref='lost')
+    is_done = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<Lost %r>' % self.item
+
+
+class Found(db.Model):
+    __tablename__ = 'found_items'
+    id = db.Column(db.Integer, primary_key=True)
+    item = db.Column(db.String(64), nullable=False)
+    place = db.Column(db.String(64), nullable=False)
+    found_time = db.Column(db.DateTime(), nullable=False)
+    icon = db.Column(db.String(256))
+    detail = db.Column(db.Text, default='nothing')
+    stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
+    post_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    replies = db.relationship('ReplyFound', backref='found')
+    is_done = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<Found %r>' % self.item
+
+
+# ------------------------------------------------ reply tables ---------------------------------------------------
 
 
 # a table for all the replies of repair message
@@ -115,24 +148,25 @@ class ReplyComplain(db.Model):
     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
-# # a table for all the replies of Notification message
-# class ReplyNotification(db.Model):
-#     __tablename__ = 'notification_replies'
-#     id = db.Column(db.Integer, primary_key=True)
-#     content = db.Column(db.Text)
-#     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
-#     notification_id = db.Column(db.Integer, db.ForeignKey('repairs.id'), nullable=False)
-#     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+class ReplyLost(db.Model):
+    __tablename__ = 'lost_replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    lost_id = db.Column(db.Integer, db.ForeignKey('lost_items.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
-# # a table for all the replies of repair message
-# class ReplyOther(db.Model):
-#     __tablename__ = 'other_replies'
-#     id = db.Column(db.Integer, primary_key=True)
-#     content = db.Column(db.Text)
-#     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
-#     other_id = db.Column(db.Integer, db.ForeignKey('repairs.id'), nullable=False)
-#     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+class ReplyFound(db.Model):
+    __tablename__ = 'found_replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    found_id = db.Column(db.Integer, db.ForeignKey('found_items.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+
+# -------------------------------------------------------------------------------------------------------------------------------
 
 
 # The table of dormitory buildings
@@ -280,6 +314,10 @@ class Student(db.Model):
     repairs = db.relationship('Repair', backref='student')  # define the relation with the Repair table
     complains = db.relationship('Complain', backref='student')  # define the relation with the Complain table
 
+    # relationship with the 'lost and found' system
+    lost_items = db.relationship('Lost', backref='student')    # define the relation with the Lost table
+    found_items = db.relationship('Found', backref='student')    # define the relation with the Found table
+
     def __repr__(self):
         return '<Student %r>' % self.stu_name
 
@@ -388,9 +426,11 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    # about notifications
+    # about replies
     repair_replies = db.relationship('ReplyRepair', backref='user')
     complain_replies = db.relationship('ReplyComplain', backref='user')
+    lost_replies = db.relationship('ReplyLost', backref='user')
+    found_replies = db.relationship('ReplyFound', backref='user')
 
     def __repr__(self):
         return '<User %r>' % self.user_name

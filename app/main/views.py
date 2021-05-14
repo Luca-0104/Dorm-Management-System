@@ -8,18 +8,21 @@ from sqlalchemy import and_
 from app.main import main
 from app.auth.views import get_role_true
 
-from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin
-
-# The index page ----------------------------------------------------------------------------------------------
+from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin, Lost, Found
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    The initial index page for choosing a role to login or signup
+    """
     get_role_true()  # if we are in the index page, we should get ready for getting the role_id
     return render_template("samples/myindex.html")
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+# ----------------------------------------------- main pages of students  -----------------------------------------------
+
+
 @main.route('/home_stu', methods=['GET', 'POST'])
 def home_stu():
     """
@@ -32,13 +35,11 @@ def home_stu():
     return render_template("samples/studentIndex.html", function="index", stu=stu)  # 待核对完善
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_bill', methods=['GET', 'POST'])
 def home_stu_bill():
     return render_template("samples/studentBills.html", function="bills")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_complain', methods=['GET', 'POST'])
 def home_stu_complain():
     pagenum = int(request.args.get('page', 1))
@@ -50,7 +51,6 @@ def home_stu_complain():
                            function="complain")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_repair', methods=['GET', 'POST'])
 def home_stu_repair():
     pagenum = int(request.args.get('page', 1))
@@ -62,7 +62,6 @@ def home_stu_repair():
                            function="repair")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
     stu_number = current_user.stu_wor_id
@@ -80,7 +79,40 @@ def home_stu_message():
     # a dict stores the number of each kind of message
     mes_num_dict = {'repair': repair_num, 'complain': complain_num, 'notification': notification_num}
 
-    return render_template("samples/studentMessage.html", function="message", mes_num_dict=mes_num_dict)  # 待核对
+    return render_template("samples/studentMessage.html", function="message", mes_num_dict=mes_num_dict)
+
+
+@main.route('/home_stu_lost', methods=['GET', 'POST'])
+def home_stu_lost():
+    pagenum = int(request.args.get('page', 1))
+    stu_num = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_num).first()
+    stu_id = stu.id
+    pagination = Lost.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
+    return render_template(".html", pagination=pagination, enterType='home',
+                           function="lost")  # 待核对
+
+
+@main.route('/home_stu_found', methods=['GET', 'POST'])
+def home_stu_found():
+    pagenum = int(request.args.get('page', 1))
+    stu_num = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_num).first()
+    stu_id = stu.id
+    pagination = Found.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
+    return render_template(".html", pagination=pagination, enterType='home',
+                           function="found")  # 待核对
+
+
+@main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
+def home_stu_lost_and_found():
+    stu_number = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_number).first()
+
+    return render_template("samples/studentMessage.html", function="lostAndFound")  # 待核对
+
+
+# ----------------------------------------------- main pages of dormitory administrator -----------------------------------------------
 
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
@@ -99,6 +131,11 @@ def home_dorm_admin_gue():
     pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template('samples/dormGuests.html', pagination=pagination, enterType='home',
                            isSuccessful=isSuccessful, function="guests")
+
+
+@main.route('/home_da_lost_and_found', methods=['GET', 'POST'])
+def home_da_lost_and_found():
+    return render_template('', function="lostAndFound")   # 待核对
 
 
 @main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
@@ -328,6 +365,8 @@ def home_dorm_admin_index():
                            )
 
 
+# ----------------------------------------------- main pages of system administrator -----------------------------------------------
+
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
     """
@@ -545,56 +584,56 @@ def home_sys_dorm():
 
 
 # The profile page ----------------------------------------------------------------------------------------------
-@main.route('/user/<username>')
-def user_profile(username):
-    u = User.query.filter_by(user_name=username).first_or_404()
-    if u.role_id == 1:
-        stu = Student.query.filter_by(stu_number=u.stu_wor_id).first()
-        return render_template('student.html', user=u, student=stu)  # 待核对完善
-    elif u.role_id == 2:
-        return render_template('dormAdmin.html', user=u)  # 待核对完善
-    elif u.role_id == 3:
-        return render_template('sysAdmin.html', user=u)  # 待核对完善
-
-
-@main.route('/edit-profile', methods=['GET', 'POST'])
-@login_required
-def edit_profile():
-    user_name = current_user.user_name
-    stu_wor_id = current_user.stu_wor_id
-    phone = current_user.phone
-    email = current_user.email
-    member_since = current_user.member_since
-
-    role_id = current_user.role_id
-
-    if request.method == 'POST':
-        # 待核对完善
-
-        if role_id == 1:
-            pass
-        elif role_id == 2:
-            pass
-        elif role_id == 3:
-            pass
-
-        user_name = request.form.get('user_name')
-        stu_wor_id = request.form.get('stu_wor_id')
-        phone = request.form.get('phone')
-        email = request.form.get('email')
-        about_me = request.form.get('about_me')
-        college = request.form.get('college')
-        building_id = request.form.get('building_id')
-        room_number = request.form.get('room_number')
-
-        user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
-        according_stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-
-        # 待补全
-        user.user_name = user_name
-
-    return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email,
-                           member_since=member_since)  # 待核对完善
+# @main.route('/user/<username>')
+# def user_profile(username):
+#     u = User.query.filter_by(user_name=username).first_or_404()
+#     if u.role_id == 1:
+#         stu = Student.query.filter_by(stu_number=u.stu_wor_id).first()
+#         return render_template('student.html', user=u, student=stu)  # 待核对完善
+#     elif u.role_id == 2:
+#         return render_template('dormAdmin.html', user=u)  # 待核对完善
+#     elif u.role_id == 3:
+#         return render_template('sysAdmin.html', user=u)  # 待核对完善
+#
+#
+# @main.route('/edit-profile', methods=['GET', 'POST'])
+# @login_required
+# def edit_profile():
+#     user_name = current_user.user_name
+#     stu_wor_id = current_user.stu_wor_id
+#     phone = current_user.phone
+#     email = current_user.email
+#     member_since = current_user.member_since
+#
+#     role_id = current_user.role_id
+#
+#     if request.method == 'POST':
+#         # 待核对完善
+#
+#         if role_id == 1:
+#             pass
+#         elif role_id == 2:
+#             pass
+#         elif role_id == 3:
+#             pass
+#
+#         user_name = request.form.get('user_name')
+#         stu_wor_id = request.form.get('stu_wor_id')
+#         phone = request.form.get('phone')
+#         email = request.form.get('email')
+#         about_me = request.form.get('about_me')
+#         college = request.form.get('college')
+#         building_id = request.form.get('building_id')
+#         room_number = request.form.get('room_number')
+#
+#         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
+#         according_stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+#
+#         # 待补全
+#         user.user_name = user_name
+#
+#     return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email,
+#                            member_since=member_since)  # 待核对完善
 
 # -------------------以下部分应该后面写到student蓝本和dormAdmin蓝本中----------------------
 
