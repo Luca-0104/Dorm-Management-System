@@ -11,7 +11,11 @@
 {#            <img class="img-circle img-thumbnail" src="../../static/images/auth/login.jpg" alt="头像"/>#}
             <div class="card-body">
                 <p class="card-text">
-                    <img class="rounded-circle align-content-lg-center"  height="115" width="115"   src="../../static/images/auth/login.jpg" alt="icon"/>
+                    <img class="rounded-circle align-content-lg-center"  height="115" width="115"   src="{% if user.icon %}
+                    {{ url_for('static',filename =user.icon) }}
+                    {% else %}
+                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
+                    {% endif %}" alt="icon"/>
                 </p>
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Change Icon</button>
