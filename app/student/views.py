@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from flask import request, render_template, redirect, url_for
@@ -147,9 +148,16 @@ def add_found():
 
         item = request.form.get('item')
         place = request.form.get('place')
-        found_time = request.form.get('found_time')
+
+        year = request.form.get('year')
+        month = request.form.get('month')
+        day = request.form.get('day')
+        hour = request.form.get('hour')
+        found_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
+        found_time = datetime.datetime.strptime(found_time, "%Y-%m-%d %H:%M:%S")
+
         detail = request.form.get('detail')     # able to be blank
-        icon = request.files.get('icon')        # able to be blank in the database, but we will not allow this happens
+        icon = request.files.get('found_icon')        # able to be blank in the database, but we will not allow this happens
 
         stu_num = current_user.stu_wor_id
         stu = Student.query.filter_by(stu_number=stu_num).first()
@@ -158,33 +166,31 @@ def add_found():
         icon_name = icon.filename
         suffix = icon_name.rsplit('.')[-1]
         if suffix in ALLOWED_EXTENSIONS:
-            icon_name = secure_filename(icon_name)
-            icon_name = icon_name[0:-4] + '__' + str(current_user.id) + '__' + icon_name[-4:]
-            file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
-            icon.save(file_path)
+            if item != '' and stu_id is not None:
+                # Add the information of the found item into the Found table
+                path = 'upload/found'
+
+                if detail == '':
+                    new_found = Found(item=item, place=place, found_time=found_time)
+
+                else:
+                    new_found = Found(item=item, place=place, found_time=found_time, detail=detail)
+
+                icon_name = secure_filename(icon_name)
+                icon_name = icon_name[0:-4] + '__' + str(new_found.id) + '__' + icon_name[-4:]
+                file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
+                icon.save(file_path)
+
+                pic = os.path.join(path, icon_name).replace('\\', '/')
+                new_found.icon = pic
+
+                db.session.add(new_found)
+                db.session.commit()
 
         else:
-            return redirect(url_for('main.home_stu_found'))
+            return redirect(url_for('student.lost_and_found_found'))
 
-        if item != '' and stu_id is not None:
-            # Add the information of the found item into the Found table
-            path = 'upload/found'
-            pic = os.path.join(path, icon_name).replace('\\', '/')
-
-            if detail == '':
-                new_found = Found(item=item, place=place, found_time=found_time)
-                # pic = pic[0:-4] + '__' + str(new_found.id) + '__' + pic[-4:]
-                new_found.icon = pic
-
-            else:
-                new_found = Found(item=item, place=place, found_time=found_time, detail=detail)
-                # pic = pic[0:-4] + '__' + str(new_found.id) + '__' + pic[-4:]
-                new_found.icon = pic
-
-            db.session.add(new_found)
-            db.session.commit()
-
-    return redirect(url_for('main.home_stu_found'))
+    return redirect(url_for('student.lost_and_found_found'))
 
 
 @student.route("/home_stu_message/repair")
