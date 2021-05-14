@@ -32,6 +32,7 @@ def change_avatar():
     """
     if request.method == 'POST':
         icon = request.files.get('icon')  # able to be blank in the database, but we will not allow this happens
+        print(icon)
         icon_name = icon.filename
         suffix = icon_name.rsplit('.')[-1]
 
@@ -104,7 +105,7 @@ def home_stu():
     stu_number = current_user.stu_wor_id
     stu = Student.query.filter_by(stu_number=stu_number).first()
 
-    return render_template("samples/studentIndex.html", function="index", stu=stu, msg=msg)  # 待核对完善
+    return render_template("samples/studentIndex.html", function="index", stu=stu, msg=msg, user=current_user)  # 待核对完善
 
 
 @main.route('/home_stu_bill', methods=['GET', 'POST'])
