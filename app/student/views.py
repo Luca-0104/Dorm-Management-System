@@ -306,7 +306,7 @@ def lost_and_found_lost():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Lost.query.paginate(page=pagenum, per_page=5)
-    return render_template("samples/studentLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @student.route("/home_stu_lost_and_found/found")
@@ -315,8 +315,8 @@ def lost_and_found_found():
     The function for showing the found information in the lost and found system
     """
     pagenum = int(request.args.get('page', 1))
-    pagination = Found.query.paginate(page=pagenum, per_page=5)
-    return render_template(".html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    pagination = Found.query.paginate(page=pagenum, per_page=6)
+    return render_template("samples/studentFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @student.route("/home_stu_lost_and_found/details")
@@ -361,7 +361,7 @@ def stu_change():
 
 @student.route("home_stu_lost_and_found/lost", methods=['GET', 'POST'])
 def stu_lost():
-    return render_template('samples/studentLost.html', function="lost and found")
+    return render_template('samples/studentFound.html', function="lost and found")
 
 
 @student.route("/home_stu_lost_and_found/lost_detail", methods=['GET', 'POST'])
