@@ -1,0 +1,325 @@
+{% extends "samples/studentBase.html" %}
+{% block add %}
+    <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
+
+<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Found</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form id="myFormAdd" action="{{ url_for('student.add_found') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Item<span style="color: red">*</span></label>
+            <input type="text" class="form-control" name="item" id="item">
+          </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Place</label>
+            <input type="text" class="form-control" name="gue_name" id="place">
+          </div>
+
+          <div class="form-row">
+                 <label>Found time</label>
+        </div>
+              <div class="form-row">
+    <div class="form-group col-md-3">
+
+      <label for="inputState">Year</label>
+      <select id="inputState" class="form-control" name="year">
+        <option value="2020" selected>2020</option>
+        <option value="2021">2021</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+        <option value="2028">2028</option>
+        <option value="2029">2029</option>
+        <option value="2030">2030</option>
+        <option value="2031">2031</option>
+
+
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputState">Month</label>
+      <select id="inputState" class="form-control" name="month">
+        <option value="01" selected>1</option>
+        <option value="02">2</option>
+        <option value="03">3</option>
+        <option value="04">4</option>
+        <option value="05">5</option>
+        <option value="06">6</option>
+        <option value="07">7</option>
+        <option value="08">8</option>
+        <option value="09">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputState">Day</label>
+      <select id="inputState" class="form-control" name="day">
+         <option value="01" selected>1</option>
+        <option value="02">2</option>
+        <option value="03">3</option>
+        <option value="04">4</option>
+        <option value="05">5</option>
+        <option value="06">6</option>
+        <option value="07">7</option>
+        <option value="08">8</option>
+        <option value="09">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+         <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+        <option value="25">25</option>
+        <option value="26">26</option>
+        <option value="27">27</option>
+        <option value="28">28</option>
+        <option value="29">29</option>
+        <option value="30">30</option>
+        <option value="31">31</option>
+
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="inputState">Hour</label>
+      <select id="inputState" class="form-control" name="hour">
+<option value="01" selected>1</option>
+        <option value="02">2</option>
+        <option value="03">3</option>
+        <option value="04">4</option>
+        <option value="05">5</option>
+        <option value="06">6</option>
+        <option value="07">7</option>
+        <option value="08">8</option>
+        <option value="09">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+         <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15">15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+        <option value="21">21</option>
+        <option value="22">22</option>
+        <option value="23">23</option>
+        <option value="24">24</option>
+      </select>
+    </div>
+  </div>
+            <div class="form-group">
+    <label for="exampleFormControlTextarea1">Detail</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="detail"></textarea>
+  </div>
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Pictures<span style="color: red">*</span></label>
+             <div class="custom-file">
+  <input type="file" class="form-control" id="customFile" name="found_icon" >
+  <label class="custom-file-label" for="customFile"></label>
+</div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"   id="sendMessage"
+{#                {% if isSuccessful==True %}#}
+{#         data-toggle="modal" data-target="#alert"#}
+{#        {% endif %}#}
+        >Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block mainContent %}
+<div class="album py-5 bg-light">
+    <div class="container">
+        {% for found in pagination.items %}
+         <div class="row">
+        <div class="col-md-4">
+          <div class="card mb-4 shadow-sm">
+              <img class=" align-content-lg-center"  height="225" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">{% if found.is_done %}
+                    Has been gotten back to owner
+                {% else %}
+                    Still waiting for owner
+                {% endif %}</small>
+
+                </div>
+              <p class="card-text">{{ found.detail }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{{ url_for('student.lost_detail') }}" class="card-link">More</a>
+                </div>
+                <small class="text-muted">{{found.found_time.strftime("%Y-%m-%d %H")}}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{##}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{##}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="card mb-4 shadow-sm">#}
+{#            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#            <div class="card-body">#}
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+{#              <div class="d-flex justify-content-between align-items-center">#}
+{#                <div class="btn-group">#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>#}
+{#                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>#}
+{#                </div>#}
+{#                <small class="text-muted">9 mins</small>#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
