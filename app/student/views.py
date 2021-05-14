@@ -176,8 +176,14 @@ def add_found():
                 else:
                     new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
 
+                found_list = Found.query.all()
+                if len(found_list) == 0:
+                    num = 1
+                else:
+                    num = found_list[-1].id + 1
+
                 icon_name = secure_filename(icon_name)
-                icon_name = icon_name[0:-4] + '__' + str(new_found.id) + '__' + icon_name[-4:]
+                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
                 file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
                 icon.save(file_path)
 
