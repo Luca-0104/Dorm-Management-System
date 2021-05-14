@@ -31,7 +31,7 @@ def change_avatar():
     The function for users to change their avatars
     """
     if request.method == 'POST':
-        icon = request.files.get('icon')        # able to be blank in the database, but we will not allow this happens
+        icon = request.files.get('icon')  # able to be blank in the database, but we will not allow this happens
         icon_name = icon.filename
         suffix = icon_name.rsplit('.')[-1]
 
@@ -49,7 +49,6 @@ def change_avatar():
             db.commit()
 
         else:
-
             msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'
             if current_user.role_id == 1:
                 return redirect(url_for('main.home_stu', msg=msg))
@@ -57,6 +56,39 @@ def change_avatar():
                 return redirect(url_for('main.home_dorm_admin_index', msg=msg))
             elif current_user.role_id == 3:
                 return redirect(url_for('main.home_sys_admin', msg=msg))
+
+
+# ----------------------------------------------- profiles for the users with different role  -----------------------------------------------
+# @main.route('/stu_profile', methods=['GET', 'POST'])
+# def stu_profile():
+#     pass
+#
+#
+# @main.route('/da_profile', methods=['GET', 'POST'])
+# def da_profile():
+#     pass
+#
+#
+# @main.route('/sa_profile', methods=['GET', 'POST'])
+# def sa_profile():
+#     pass
+
+
+@main.route('/profile')
+def profile():
+    role_id = current_user.role_id
+    stu_wor_id = current_user.stu_wor_id
+
+    if role_id == 1:
+        stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+        return render_template('.html', user=current_user, stu=stu)
+
+    elif role_id == 2:
+        da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+        return render_template('.html', user=current_user, da=da)
+
+    elif role_id == 3:
+        return render_template('.html', user=current_user)
 
 
 # ----------------------------------------------- main pages of students  -----------------------------------------------
@@ -68,10 +100,11 @@ def home_stu():
     The index page for student users, which is the first page shown after login
     (Some basic information)
     """
+    msg = request.args.get('msg')
     stu_number = current_user.stu_wor_id
     stu = Student.query.filter_by(stu_number=stu_number).first()
 
-    return render_template("samples/studentIndex.html", function="index", stu=stu)  # 待核对完善
+    return render_template("samples/studentIndex.html", function="index", stu=stu, msg=msg)  # 待核对完善
 
 
 @main.route('/home_stu_bill', methods=['GET', 'POST'])
@@ -174,7 +207,7 @@ def home_dorm_admin_gue():
 
 @main.route('/home_da_lost_and_found', methods=['GET', 'POST'])
 def home_da_lost_and_found():
-    return render_template('', function="lostAndFound")   # 待核对
+    return render_template('', function="lostAndFound")  # 待核对
 
 
 @main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
@@ -208,6 +241,7 @@ def home_dorm_admin_index():
     Only the data about the building that this dorm administrator takes charge of
     (The index function of dorm administrators)
     """
+    msg = request.args.get('msg')
     work_num = current_user.stu_wor_id
     da = DAdmin.query.filter_by(da_number=work_num).first()
     building = da.building
@@ -375,7 +409,6 @@ def home_dorm_admin_index():
         elif (datetime.utcnow() - gue.arrive_time).days == 6:
             gue7 += 1
 
-
     d1 = datetime.now()
     d2 = d1 + timedelta(days=-1)
     d3 = d2 + timedelta(days=-1)
@@ -395,12 +428,12 @@ def home_dorm_admin_index():
     # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
     gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
-    return render_template('samples/dormIndex.html', function="index",
-                           basic_number_dict=basic_number_dict,     # graph1
-                           floor_stu_num_list=floor_stu_num_list,   # graph2
-                           college_dict=college_dict,               # graph3
-                           stage_list=stage_list,                   # graph4
-                           gue_num_list=gue_num_list                # graph5
+    return render_template('samples/dormIndex.html', function="index", msg=msg,
+                           basic_number_dict=basic_number_dict,  # graph1
+                           floor_stu_num_list=floor_stu_num_list,  # graph2
+                           college_dict=college_dict,  # graph3
+                           stage_list=stage_list,  # graph4
+                           gue_num_list=gue_num_list  # graph5
                            )
 
 
@@ -412,6 +445,8 @@ def home_sys_admin():
     A function for showing the data graphs in the initial page of system administrator
     (The index function of system administrators)
     """
+    msg = request.args.get('msg')
+
     building_id = request.args.get('building_id', '0')
 
     # building_id == 0 means this is the initial login status (before selecting a specific dorm building),
@@ -430,7 +465,6 @@ def home_sys_admin():
             for gue in gues:
                 if gue not in gue_list:
                     gue_list.append(gue)
-
 
     # ******************** for graph 1 ********************
     # a dict stores the number of students, dorm administrators and guests
@@ -496,11 +530,12 @@ def home_sys_admin():
             fhc += 1
 
     # a dict for storing the number of students of each college in this building
-    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem, 'CAD': cad, 'FHC': fhc}
+    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem,
+                    'CAD': cad, 'FHC': fhc}
 
     # ******************** for graph 4 ********************
-    year_now = time.localtime().tm_year % 1000 % 100    # for today, year_now should be 21
-    month_now = time.localtime().tm_mon                 # for today, month_now should be 5
+    year_now = time.localtime().tm_year % 1000 % 100  # for today, year_now should be 21
+    month_now = time.localtime().tm_mon  # for today, month_now should be 5
 
     stage1 = 0
     stage2 = 0
@@ -511,7 +546,7 @@ def home_sys_admin():
         stu_number = stu.stu_number
         year = int(stu_number[0:2])
 
-        if 9 <= month_now <= 12:    # the first semester of the year
+        if 9 <= month_now <= 12:  # the first semester of the year
             diff = year_now - year
             if diff == 0:
                 stage1 += 1
@@ -522,7 +557,7 @@ def home_sys_admin():
             elif diff == 3:
                 stage4 += 1
 
-        else:                       # the second semester of the year
+        else:  # the second semester of the year
             diff = year_now - year
             if diff == 1:
                 stage1 += 1
@@ -580,12 +615,12 @@ def home_sys_admin():
     # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
     gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
-    return render_template("samples/systemIndex.html", function="index", building_id=building_id,
-                           basic_number_dict=basic_number_dict,     # graph1
-                           floor_stu_num_list=floor_stu_num_list,   # graph2
-                           college_dict=college_dict,               # graph3
-                           stage_list=stage_list,                   # graph4
-                           gue_num_list=gue_num_list                # graph5
+    return render_template("samples/systemIndex.html", function="index", building_id=building_id, msg=msg,
+                           basic_number_dict=basic_number_dict,  # graph1
+                           floor_stu_num_list=floor_stu_num_list,  # graph2
+                           college_dict=college_dict,  # graph3
+                           stage_list=stage_list,  # graph4
+                           gue_num_list=gue_num_list  # graph5
                            )  # 待核对完善
 
 
@@ -596,9 +631,11 @@ def home_sys_gue():
     if building_id == '0':
         pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Guest.query.join(Student).filter(and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        pagination = Guest.query.join(Student).filter(
+            and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home',
+                           pagination=pagination)
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
@@ -610,9 +647,11 @@ def home_sys_stu():
     if building_id == '0':
         pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
+        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum,
+                                                                                                 per_page=5)
 
-    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students', building_id=building_id)
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
+                           isSuccessful=isSuccessful, function='students', building_id=building_id)
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
@@ -620,7 +659,6 @@ def home_sys_dorm():
     pagenum = int(request.args.get('page', 1))
     pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination)  # 待核对完善
-
 
 # The profile page ----------------------------------------------------------------------------------------------
 # @main.route('/user/<username>')
