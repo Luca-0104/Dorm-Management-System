@@ -420,6 +420,7 @@ class User(UserMixin, db.Model):
     user_name = db.Column(db.String(64), unique=False, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))  # 在数据库模型中定义关系
     password_hash = db.Column(db.String(128))
+    icon = db.Column(db.String(256), default='upload/avatar/default__0__.jpg')    # The avatar
 
     # about profiles
     about_me = db.Column(db.Text())

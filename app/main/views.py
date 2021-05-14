@@ -1,14 +1,19 @@
+import os
 import time
 from datetime import datetime, timedelta
 
 from flask import request, redirect, render_template, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import and_
+from werkzeug.utils import secure_filename
 
+from app import db
 from app.main import main
 from app.auth.views import get_role_true
 
 from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin, Lost, Found
+from app.student.views import ALLOWED_EXTENSIONS
+from config import Config
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -18,6 +23,40 @@ def index():
     """
     get_role_true()  # if we are in the index page, we should get ready for getting the role_id
     return render_template("samples/myindex.html")
+
+
+@main.route('/change_avatar', methods=['GET', 'POST'])
+def change_avatar():
+    """
+    The function for users to change their avatars
+    """
+    if request.method == 'POST':
+        icon = request.files.get('icon')        # able to be blank in the database, but we will not allow this happens
+        icon_name = icon.filename
+        suffix = icon_name.rsplit('.')[-1]
+
+        if suffix in ALLOWED_EXTENSIONS:
+            # save the photo into the dir: static/upload/avatar
+            icon_name = secure_filename(icon_name)
+            file_path = os.path.join(Config.avatar_dir, icon_name).replace('\\', '/')
+            icon.save(file_path)
+
+            # update the attribute in database that refers to the directory of the photo
+            path = 'upload/avatar'
+            pic = os.path.join(path, icon_name).replace('\\', '/')
+            pic = pic[0:-4] + '__' + str(current_user.id) + '__' + pic[-4:]
+            current_user.icon = pic
+            db.commit()
+
+        else:
+
+            msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'
+            if current_user.role_id == 1:
+                return redirect(url_for('main.home_stu', msg=msg))
+            elif current_user.role_id == 2:
+                return redirect(url_for('main.home_dorm_admin_index', msg=msg))
+            elif current_user.role_id == 3:
+                return redirect(url_for('main.home_sys_admin', msg=msg))
 
 
 # ----------------------------------------------- main pages of students  -----------------------------------------------
