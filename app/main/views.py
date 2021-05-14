@@ -134,6 +134,13 @@ def home_stu_repair():
                            function="repair")  # 待核对
 
 
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
+def home_stu_LAF():
+    return render_template("samples/studentLF.html",function="lost and found")
+
+
+# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
     stu_number = current_user.stu_wor_id
@@ -530,12 +537,11 @@ def home_sys_admin():
             fhc += 1
 
     # a dict for storing the number of students of each college in this building
-    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem,
-                    'CAD': cad, 'FHC': fhc}
+    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem, 'CAD': cad, 'FHC': fhc}
 
     # ******************** for graph 4 ********************
-    year_now = time.localtime().tm_year % 1000 % 100  # for today, year_now should be 21
-    month_now = time.localtime().tm_mon  # for today, month_now should be 5
+    year_now = time.localtime().tm_year % 1000 % 100    # for today, year_now should be 21
+    month_now = time.localtime().tm_mon                 # for today, month_now should be 5
 
     stage1 = 0
     stage2 = 0
@@ -557,7 +563,7 @@ def home_sys_admin():
             elif diff == 3:
                 stage4 += 1
 
-        else:  # the second semester of the year
+        else:                       # the second semester of the year
             diff = year_now - year
             if diff == 1:
                 stage1 += 1
@@ -631,11 +637,9 @@ def home_sys_gue():
     if building_id == '0':
         pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Guest.query.join(Student).filter(
-            and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        pagination = Guest.query.join(Student).filter(and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home',
-                           pagination=pagination)
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
@@ -647,11 +651,9 @@ def home_sys_stu():
     if building_id == '0':
         pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum,
-                                                                                                 per_page=5)
+        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
 
-    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
-                           isSuccessful=isSuccessful, function='students', building_id=building_id)
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students', building_id=building_id)
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
