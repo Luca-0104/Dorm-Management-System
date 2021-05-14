@@ -159,6 +159,7 @@ def add_found():
         suffix = icon_name.rsplit('.')[-1]
         if suffix in ALLOWED_EXTENSIONS:
             icon_name = secure_filename(icon_name)
+            icon_name = icon_name[0:-4] + '__' + str(current_user.id) + '__' + icon_name[-4:]
             file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
             icon.save(file_path)
 
@@ -172,12 +173,12 @@ def add_found():
 
             if detail == '':
                 new_found = Found(item=item, place=place, found_time=found_time)
-                pic = pic[0:-4] + '__' + str(new_found.id) + '__' + pic[-4:]
+                # pic = pic[0:-4] + '__' + str(new_found.id) + '__' + pic[-4:]
                 new_found.icon = pic
 
             else:
                 new_found = Found(item=item, place=place, found_time=found_time, detail=detail)
-                pic = pic[0:-4] + '__' + str(new_found.id) + '__' + pic[-4:]
+                # pic = pic[0:-4] + '__' + str(new_found.id) + '__' + pic[-4:]
                 new_found.icon = pic
 
             db.session.add(new_found)

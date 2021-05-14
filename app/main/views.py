@@ -32,22 +32,28 @@ def change_avatar():
     """
     if request.method == 'POST':
         icon = request.files.get('icon')  # able to be blank in the database, but we will not allow this happens
-        print(icon)
         icon_name = icon.filename
         suffix = icon_name.rsplit('.')[-1]
 
         if suffix in ALLOWED_EXTENSIONS:
             # save the photo into the dir: static/upload/avatar
             icon_name = secure_filename(icon_name)
+            icon_name = icon_name[0:-4] + '__' + str(current_user.id) + '__' + icon_name[-4:]
             file_path = os.path.join(Config.avatar_dir, icon_name).replace('\\', '/')
             icon.save(file_path)
 
             # update the attribute in database that refers to the directory of the photo
             path = 'upload/avatar'
             pic = os.path.join(path, icon_name).replace('\\', '/')
-            pic = pic[0:-4] + '__' + str(current_user.id) + '__' + pic[-4:]
             current_user.icon = pic
-            db.commit()
+            db.session.commit()
+
+            if current_user.role_id == 1:
+                return redirect(url_for('main.home_stu'))
+            elif current_user.role_id == 2:
+                return redirect(url_for('main.home_dorm_admin_index'))
+            elif current_user.role_id == 3:
+                return redirect(url_for('main.home_sys_admin'))
 
         else:
             msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'
