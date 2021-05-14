@@ -171,10 +171,10 @@ def add_found():
                 path = 'upload/found'
 
                 if detail == '':
-                    new_found = Found(item=item, place=place, found_time=found_time)
+                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id)
 
                 else:
-                    new_found = Found(item=item, place=place, found_time=found_time, detail=detail)
+                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
 
                 icon_name = secure_filename(icon_name)
                 icon_name = icon_name[0:-4] + '__' + str(new_found.id) + '__' + icon_name[-4:]
