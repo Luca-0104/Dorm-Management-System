@@ -323,3 +323,12 @@
   </div>
 
 {% endblock %}
+
+{% block js %}
+    <script>
+    $('#sendMessage').click(function(){
+
+	document.getElementById("myFormAdd").submit();
+});
+</script>
+{% endblock %}
