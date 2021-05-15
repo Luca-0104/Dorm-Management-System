@@ -6,14 +6,14 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Found</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Lost</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
 
-        <form id="myFormAdd" action="{{ url_for('student.add_found') }}" method="post" enctype="multipart/form-data">
+        <form id="myFormAdd" action="{{ url_for('student.add_lost') }}" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Item<span style="color: red">*</span></label>
             <input type="text" class="form-control" name="item" id="item">
@@ -22,9 +22,12 @@
                 <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Place</label>
             <input type="text" class="form-control" name="place" id="place">
           </div>
-
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Price</label>
+            <input type="text" class="form-control" name="price" id="price">
+          </div>
           <div class="form-row">
-                 <label>Found time</label>
+                 <label>Lost time</label>
         </div>
               <div class="form-row">
     <div class="form-group col-md-3">
@@ -139,7 +142,7 @@
             <div class="form-group">
                 <label for="recipient-name" class="col-form-label" aria-label="Amount (to the nearest dollar)">Pictures<span style="color: red">*</span></label>
              <div class="custom-file">
-  <input type="file" class="form-control" id="customFile" name="found_icon" >
+  <input type="file" class="form-control" id="customFile" name="lost_icon" >
   <label class="custom-file-label" for="customFile"></label>
 </div>
           </div>
@@ -162,30 +165,30 @@
 <div class="album py-5 bg-light">
     <div class="container">
      <div class="row">
-        {% for found in pagination.items %}
+        {% for lost in pagination.items %}
 
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if found.icon %}
-                    {{ url_for('static',filename =found.icon) }}
+              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if lost.icon %}
+                    {{ url_for('static',filename =lost.icon) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
                     {% endif %}" alt="icon"/>
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                <small class="text-muted">{% if found.is_done %}
+                <small class="text-muted">{% if lost.is_done %}
                     Has been gotten back to owner
                 {% else %}
                     Still waiting for owner
                 {% endif %}</small>
 
                 </div>
-              <p class="card-text">{{ found.detail }}</p>
+              <p class="card-text">{{ lost.detail }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="{{ url_for('student.lost_detail') }}" class="card-link">More</a>
+                  <a href="{{ url_for('student.lost_and_found_details') }}?lnf_type=lost&lost_id={{ lost.id }}" class="card-link">More</a>
                 </div>
-                <small class="text-muted">{{found.found_time.strftime("%Y-%m-%d %H")}}</small>
+                <small class="text-muted">{{lost.lost_time.strftime("%Y-%m-%d %H")}}</small>
               </div>
             </div>
           </div>
