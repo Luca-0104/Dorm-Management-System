@@ -183,7 +183,7 @@
               <p class="card-text">{{ found.detail }}</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <a href="{{ url_for('student.lost_detail') }}" class="card-link">More</a>
+                  <a href="{{ url_for('student.lost_and_found_details') }}?lnf_type=found&found_id={{ found.id }}" class="card-link">More</a>
                 </div>
                 <small class="text-muted">{{found.found_time.strftime("%Y-%m-%d %H")}}</small>
               </div>

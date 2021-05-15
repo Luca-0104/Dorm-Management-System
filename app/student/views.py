@@ -338,7 +338,6 @@ def lost_and_found_details():
     """
     # get the type of lost and found
     lnf_type = request.args.get('lnf_type')
-
     # according to the type of lost and found, get the according id
     if lnf_type == 'lost':
         lost_id = request.args.get('lost_id')
@@ -347,7 +346,7 @@ def lost_and_found_details():
         lost = Lost.query.filter_by(id=lost_id).first()
         reply_list = lost.replies
 
-        return render_template("samples/lostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
+        return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
                                reply_list=reply_list)       # 待核对
 
     elif lnf_type == 'found':
@@ -357,7 +356,7 @@ def lost_and_found_details():
         found = Found.query.filter_by(id=found_id).first()
         reply_list = found.replies
 
-        return render_template("", function="lost and found", lnf_type=lnf_type, found=found,
+        return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
                                reply_list=reply_list)       # 待核对
 
     return render_template(".html", function="lostAndFound")      # 待核对
@@ -378,4 +377,4 @@ def stu_lost():
 
 @student.route("/home_stu_lost_and_found/lost_detail", methods=['GET', 'POST'])
 def lost_detail():
-    return render_template('samples/lostDetail.html', function="lost and found")
+    return render_template('samples/foundDetail.html', function="lost and found")
