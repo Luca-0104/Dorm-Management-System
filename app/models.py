@@ -459,6 +459,9 @@ class User(UserMixin, db.Model):
     complain_replies = db.relationship('ReplyComplain', backref='user')
     lost_replies = db.relationship('ReplyLost', backref='user')
     found_replies = db.relationship('ReplyFound', backref='user')
+    lost_reply_replies = db.relationship('ReplyReplyLost', backref='user')
+    found_reply_replies = db.relationship('ReplyReplyFound', backref='user')
+
 
     def __repr__(self):
         return '<User %r>' % self.user_name

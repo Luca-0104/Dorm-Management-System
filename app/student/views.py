@@ -70,6 +70,7 @@ def stu_reply():
     elif reply_type == 'nested_found':
         return redirect(url_for('student.lost_and_found_details', lnf_type='found', found_id=found_id))
 
+
 @student.route('/add_complain', methods=['GET', 'POST'])
 def add_complain():
     """
@@ -401,10 +402,10 @@ def lost_and_found_details():
         found = Found.query.filter_by(id=found_id).first()
         reply_list = found.replies
 
-        return render_template("", function="lost and found", lnf_type=lnf_type, found=found,
+        return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
                                reply_list=reply_list)       # 待核对
 
-    return render_template(".html", function="lost and found")      # 待核对
+    # return render_template(".html", function="lost and found")      # 待核对
 
 
 @student.route("/home_stu_change", methods=['GET', 'POST'])
