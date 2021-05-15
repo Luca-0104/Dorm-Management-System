@@ -121,7 +121,7 @@ def add_lost():
     if request.method == 'POST':
 
         item = request.form.get('item')
-        price = request.form.get('price')
+        price = int(request.form.get('price'))
         place = request.form.get('place')           # able to be blank
         # lost_time = request.form.get('lost_time')   # able to be blank
         detail = request.form.get('detail')         # able to be blank
@@ -363,7 +363,7 @@ def lost_and_found_lost():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Lost.query.paginate(page=pagenum, per_page=5)
-    return render_template("", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("samples/studentLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @student.route("/home_stu_lost_and_found/found")
@@ -391,7 +391,7 @@ def lost_and_found_details():
         lost = Lost.query.filter_by(id=lost_id).first()
         reply_list = lost.replies
 
-        return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
+        return render_template("samples/lostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
                                reply_list=reply_list)       # 待核对
 
     elif lnf_type == 'found':
