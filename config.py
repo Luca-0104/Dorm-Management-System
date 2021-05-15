@@ -12,6 +12,7 @@ class Config:
     static_dir = os.path.join(app_dir, 'static')
     upload_dir = os.path.join(static_dir, 'upload')
     found_dir = os.path.join(upload_dir, 'found')       # The directory for storing the photos of found items
+    lost_dir = os.path.join(upload_dir, 'lost')       # The directory for storing the photos of lost items
     avatar_dir = os.path.join(upload_dir, 'avatar')     # The directory for storing the avatars of users
 
     @staticmethod

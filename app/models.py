@@ -98,6 +98,7 @@ class Lost(db.Model):
     price = db.Column(db.Integer, nullable=False)
     place = db.Column(db.String(64), default='unknown')
     lost_time = db.Column(db.DateTime(), default=datetime.utcnow)
+    icon = db.Column(db.String(256), default='upload/lost/default__0__.jpg')
     detail = db.Column(db.Text, default='nothing')
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
     post_time = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -155,6 +156,19 @@ class ReplyLost(db.Model):
     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
     lost_id = db.Column(db.Integer, db.ForeignKey('lost_items.id'), nullable=False)
     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    replies = db.relationship('ReplyReplyLost', backref='lost_reply')
+
+
+class ReplyReplyLost(db.Model):
+    """
+    A table of nested replies of lost_reply
+    """
+    __tablename__ = 'lost_reply_replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    lost_reply_id = db.Column(db.Integer, db.ForeignKey('lost_replies.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 class ReplyFound(db.Model):
@@ -163,6 +177,19 @@ class ReplyFound(db.Model):
     content = db.Column(db.Text)
     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
     found_id = db.Column(db.Integer, db.ForeignKey('found_items.id'), nullable=False)
+    auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    replies = db.relationship('ReplyReplyFound', backref='found_reply')
+
+
+class ReplyReplyFound(db.Model):
+    """
+    a table of nested replies of found_reply
+    """
+    __tablename__ = 'found_reply_replies'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
+    found_reply_id = db.Column(db.Integer, db.ForeignKey('found_replies.id'), nullable=False)
     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 

@@ -7,7 +7,7 @@ from wtforms import ValidationError
 from . import dormAdmin
 from .. import db
 from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair, Notification, ReplyLost, \
-    ReplyFound, Lost, Found
+    ReplyFound, Lost, Found, ReplyReplyLost, ReplyReplyFound
 
 
 # students CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -675,6 +675,12 @@ def da_reply():
         lost_id = request.args.get('lost_id')
     elif reply_type == 'found':
         found_id = request.args.get('found_id')
+    elif reply_type == 'nested_lost':
+        lost_reply_id = request.args.get('lost_reply_id')
+        lost_id = ReplyLost.query.get(lost_reply_id).lost.id
+    elif reply_type == 'nested_found':
+        found_reply_id = request.args.get('found_reply_id')
+        found_id = ReplyFound.query.get(found_reply_id).found.id
 
     if request.method == 'POST':
         content = request.form.get('content')
@@ -687,6 +693,10 @@ def da_reply():
             new_reply = ReplyLost(content=content, lost_id=lost_id, auth_id=author_id)
         elif reply_type == 'found':
             new_reply = ReplyFound(content=content, found_id=found_id, auth_id=author_id)
+        elif reply_type == 'nested_lost':
+            new_reply = ReplyReplyLost(content=content, lost_reply_id=lost_reply_id, auth_id=author_id)
+        elif reply_type == 'nested_found':
+            new_reply = ReplyReplyFound(content=content, found_reply_id=found_reply_id, auth_id=author_id)
 
         db.session.add(new_reply)
         db.session.commit()
@@ -698,6 +708,10 @@ def da_reply():
     elif reply_type == 'lost':
         return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
     elif reply_type == 'found':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=found_id))
+    elif reply_type == 'nested_lost':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+    elif reply_type == 'nested_found':
         return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=found_id))
 
 
