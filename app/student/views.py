@@ -9,7 +9,7 @@ from config import Config
 from . import student
 from .. import db
 from ..models import Student, Repair, ReplyComplain, ReplyRepair, Complain, DAdmin, Notification, Lost, Found, \
-    ReplyFound, ReplyLost
+    ReplyFound, ReplyLost, ReplyReplyLost, ReplyReplyFound
 
 # The allowed extension type of the picture that is uploaded
 ALLOWED_EXTENSIONS = ['jpg', 'png', 'gif', 'bmp']
@@ -31,6 +31,12 @@ def stu_reply():
         lost_id = request.args.get('lost_id')
     elif reply_type == 'found':
         found_id = request.args.get('found_id')
+    elif reply_type == 'nested_lost':
+        lost_reply_id = request.args.get('lost_reply_id')
+        lost_id = ReplyLost.query.get(lost_reply_id).lost.id
+    elif reply_type == 'nested_found':
+        found_reply_id = request.args.get('found_reply_id')
+        found_id = ReplyFound.query.get(found_reply_id).found.id
 
     if request.method == 'POST':
         content = request.form.get('content')
@@ -43,6 +49,10 @@ def stu_reply():
             new_reply = ReplyLost(content=content, lost_id=lost_id, auth_id=author_id)
         elif reply_type == 'found':
             new_reply = ReplyFound(content=content, found_id=found_id, auth_id=author_id)
+        elif reply_type == 'nested_lost':
+            new_reply = ReplyReplyLost(content=content, lost_reply_id=lost_reply_id, auth_id=author_id)
+        elif reply_type == 'nested_found':
+            new_reply = ReplyReplyFound(content=content, found_reply_id=found_reply_id, auth_id=author_id)
 
         db.session.add(new_reply)
         db.session.commit()
@@ -55,7 +65,10 @@ def stu_reply():
         return redirect(url_for('student.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
     elif reply_type == 'found':
         return redirect(url_for('student.lost_and_found_details', lnf_type='found', found_id=found_id))
-
+    elif reply_type == 'nested_lost':
+        return redirect(url_for('student.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+    elif reply_type == 'nested_found':
+        return redirect(url_for('student.lost_and_found_details', lnf_type='found', found_id=found_id))
 
 @student.route('/add_complain', methods=['GET', 'POST'])
 def add_complain():
@@ -109,34 +122,65 @@ def add_lost():
         item = request.form.get('item')
         price = request.form.get('price')
         place = request.form.get('place')           # able to be blank
-        lost_time = request.form.get('lost_time')   # able to be blank
+        # lost_time = request.form.get('lost_time')   # able to be blank
         detail = request.form.get('detail')         # able to be blank
+
+        year = request.form.get('year')
+        month = request.form.get('month')
+        day = request.form.get('day')
+        hour = request.form.get('hour')
+        lost_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
+        lost_time = datetime.datetime.strptime(lost_time, "%Y-%m-%d %H:%M:%S")
+
+        icon = request.files.get('lost_icon')        # able to be blank in the database, but we will not allow this happens
 
         stu_num = current_user.stu_wor_id
         stu = Student.query.filter_by(stu_number=stu_num).first()
         stu_id = stu.id
 
-        if item != '' and stu_id is not None:
-            # Add the information of the lost item into the Lost table
-            if place == '' and lost_time == '' and detail == '':
-                new_lost = Lost(item=item, price=price, stu_id=stu_id)
+        icon_name = icon.filename
+        suffix = icon_name.rsplit('.')[-1]
+        if suffix in ALLOWED_EXTENSIONS:
+            path = 'upload/lost'
 
-            elif place == '' and lost_time == '':
-                new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
+            if item != '' and stu_id is not None:
+                # Add the information of the lost item into the Lost table
+                if place == '' and lost_time == '' and detail == '':
+                    new_lost = Lost(item=item, price=price, stu_id=stu_id)
 
-            elif place == '' and detail == '':
-                new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
+                elif place == '' and lost_time == '':
+                    new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
 
-            elif lost_time == '' and detail == '':
-                new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
+                elif place == '' and detail == '':
+                    new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
 
-            else:
-                new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
+                elif lost_time == '' and detail == '':
+                    new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
 
-            db.session.add(new_lost)
-            db.session.commit()
+                else:
+                    new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
 
-    return redirect(url_for('main.home_stu_lost'))
+                lost_list = Lost.query.all()
+                if len(lost_list) == 0:
+                    num = 1
+                else:
+                    num = lost_list[-1].id + 1
+
+                icon_name = secure_filename(icon_name)
+                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
+                icon.save(file_path)
+
+                pic = os.path.join(path, icon_name).replace('\\', '/')
+                new_lost.icon = pic
+
+                db.session.add(new_lost)
+                db.session.commit()
+
+        else:
+            return redirect(url_for('student.lost_and_found_lost'))
+
+    return redirect(url_for('student.lost_and_found_lost'))
 
 
 @student.route('/add_found', methods=['GET', 'POST'])
@@ -359,7 +403,7 @@ def lost_and_found_details():
         return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
                                reply_list=reply_list)       # 待核对
 
-    return render_template(".html", function="lostAndFound")      # 待核对
+    return render_template(".html", function="lost and found")      # 待核对
 
 
 @student.route("/home_stu_change", methods=['GET', 'POST'])
