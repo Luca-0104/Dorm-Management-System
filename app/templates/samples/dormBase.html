@@ -73,6 +73,12 @@
             class="nav-link"
 		{% endif %}  onclick="location.href='{{ url_for('main.home_dorm_admin_message') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-messages" aria-selected="false"><em class="bi bi-chat-square-dots icon-margin"></em>Messages</a>
 
+        <a {% if function=="lost and found" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_da_lost_and_found') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-bag icon-margin"></i><span>Lost and Found</span></a>
+
 
 	  </div>
     </div>
