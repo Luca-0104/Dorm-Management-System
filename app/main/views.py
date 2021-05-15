@@ -221,7 +221,7 @@ def home_dorm_admin_gue():
 
 @main.route('/home_da_lost_and_found', methods=['GET', 'POST'])
 def home_da_lost_and_found():
-    return render_template('', function="lostAndFound")  # 待核对
+    return render_template('samples/dormLF.html', function="lost and found")  # 待核对
 
 
 @main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
