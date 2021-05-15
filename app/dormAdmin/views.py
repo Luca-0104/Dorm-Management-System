@@ -886,7 +886,7 @@ def lost_and_found_details():
         lost = Lost.query.filter_by(id=lost_id).first()
         reply_list = lost.replies
 
-        return render_template(".html", function="lostAndFound", lnf_type=lnf_type, lost=lost,
+        return render_template("samples/dormLostDetail.html", function="lostAndFound", lnf_type=lnf_type, lost=lost,
                                reply_list=reply_list)       # 待核对
 
     elif lnf_type == 'found':
@@ -896,7 +896,7 @@ def lost_and_found_details():
         found = Found.query.filter_by(id=found_id).first()
         reply_list = found.replies
 
-        return render_template(".html", function="lostAndFound", lnf_type=lnf_type, found=found,
+        return render_template("samples/dormFoundDetail.html", function="lostAndFound", lnf_type=lnf_type, found=found,
                                reply_list=reply_list)       # 待核对
 
     return render_template(".html", function="lostAndFound")      # 待核对
