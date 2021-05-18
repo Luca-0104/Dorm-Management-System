@@ -36,10 +36,7 @@
   <label class="custom-file-label" for="customFile"></label>
 
 </div>
-            <div class="form-group">
-    <label for="exampleFormControlTextarea1">Detail</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="detail"></textarea>
-  </div>
+            
         </form>
       </div>
       <div class="modal-footer">
@@ -63,43 +60,32 @@
   <div class="form-group row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
     <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_name}}">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{da.da_name}}">
     </div>
   </div>
   <div class="form-group row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Student Number</label>
     <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_number}}">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{da.da_number}}">
     </div>
   </div>
-  <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">College</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.college }}">
-    </div>
-  </div>
-<div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Room</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.room_number }}">
-    </div>
-  </div>
+
                     <div class="form-group row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Building</label>
     <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.building_id }}">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ da.building_id }}">
     </div>
   </div>
                     <div class="form-group row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Phone</label>
     <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.phone }}">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ da.phone }}">
     </div>
   </div>
    <div class="form-group row">
     <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
     <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.email }}">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ da.email }}">
     </div>
   </div>
 </form>
@@ -202,5 +188,4 @@
 	document.getElementById("iconForm").submit();
 });
 </script>
-{% endblock %}
 {% endblock %}

@@ -95,7 +95,7 @@ def profile():
         return render_template('samples/dormProfile.html', user=current_user, da=da)
 
     elif role_id == 3:
-        return render_template('.html', user=current_user)
+        return render_template('samples/systemProfile.html', user=current_user)
 
 
 # ----------------------------------------------- main pages of students  -----------------------------------------------
