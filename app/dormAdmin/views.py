@@ -826,27 +826,25 @@ def message_details():
 @dormAdmin.route('/mark_done_lost')
 def mark_done_lost():
     id = request.args.get('id')
-    page = request.args.get('page')
 
     lost = Lost.query.get(id)
     lost.is_done = True
     db.session.add(lost)
     db.session.commit()
 
-    return redirect(url_for('dormAdmin.lost_and_found_lost', page=page))
+    return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=id))
 
 
 @dormAdmin.route('/mark_done_found')
 def mark_done_found():
     id = request.args.get('id')
-    page = request.args.get('page')
 
     found = Found.query.get(id)
     found.is_done = True
     db.session.add(found)
     db.session.commit()
 
-    return redirect(url_for('dormAdmin.lost_and_found_found', page=page))
+    return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=id))
 
 
 @dormAdmin.route("/home_da_lost_and_found/lost")
