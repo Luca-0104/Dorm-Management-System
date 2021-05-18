@@ -1,0 +1,16 @@
+{% extends 'samples/studentBase.html' %}
+
+{% block topLeft %}
+<ul class="nav nav-pills">
+        <li class="nav-item"><a href="{{url_for('student.my_lost_and_found')}}?lnf_type=lost" {% if lnf_type=="lost" %}
+        class="nav-link active" aria-current="page"
+         {% else %}
+         class="nav-link" aria-current="page"
+        {% endif %}>Lost</a></li>
+        <li class="nav-item"><a href="{{url_for('student.my_lost_and_found')}}?lnf_type=found" {% if lnf_type=="lost" %}
+        class="nav-link active" aria-current="page"
+         {% else %}
+         class="nav-link" aria-current="page"
+        {% endif %}>Found</a></li>
+      </ul>
+{% endblock %}
