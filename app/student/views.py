@@ -330,6 +330,20 @@ def message_details():
 # lost and found system -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+@student.route('/my_lost_and_found')
+def my_lost_and_found():
+    """
+    Showing the about me page (lost&found)
+    """
+    lnf_type = request.args.get('lnf_type')
+
+    if lnf_type == 'lost':
+        return redirect(url_for('main.home_stu_lost'))
+
+    elif lnf_type == 'found':
+        return redirect(url_for('main.home_stu_found'))
+
+
 @student.route('/mark_done_lost')
 def mark_done_lost():
     id = request.args.get('id')
@@ -391,7 +405,7 @@ def lost_and_found_details():
 
         # get the uid of the author
         stu_number = lost.student.stu_number
-        user = User.filter_by(stu_wor_id=stu_number).first()
+        user = User.query.filter_by(stu_wor_id=stu_number).first()
         uid = user.id
 
         return render_template("samples/lostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
@@ -406,7 +420,7 @@ def lost_and_found_details():
 
         # get the uid of the author
         stu_number = found.student.stu_number
-        user = User.filter_by(stu_wor_id=stu_number).first()
+        user = User.query.filter_by(stu_wor_id=stu_number).first()
         uid = user.id
 
         return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
