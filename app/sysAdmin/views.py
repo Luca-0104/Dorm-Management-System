@@ -727,7 +727,7 @@ def lost_and_found_lost():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template(".html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("samples/systemLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @sysAdmin.route("/lost_and_found_found/found")
@@ -737,7 +737,7 @@ def lost_and_found_found():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=6)
-    return render_template(".html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("samples/systemFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @sysAdmin.route("/lost_and_found/details")

@@ -129,6 +129,12 @@
 		{% else %}
             class="nav-link"
 		{% endif %}  onclick="location.href='{{ url_for('main.home_sys_dorm') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Dorm Administrators</span></a>
+        <a {% if function=="lost and found" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_sys_lost_and_found') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Lost and Found</span></a>
+
 	  </div>
     </div>
     <div class="col-10">
