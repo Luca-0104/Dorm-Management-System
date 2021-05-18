@@ -28,7 +28,7 @@
                 {% endif %}</dd>
               <dd class="col-sm-4">{% if found.is_done %}
                 {% else %}
-                     <button type="button" class="btn btn-outline-primary btn-sm " >Get Back</button>
+                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('student.mark_done_found') }}">Get Back</a>
                 {% endif %}
               </dd>
               </dl>

@@ -21,11 +21,16 @@
               <dt class="col-sm-3">Contact with</dt>
               <dd class="col-sm-9">{{ found.student.phone }}</dd>
               <dt class="col-sm-3">Status</dt>
-              <dd class="col-sm-9">{% if found.is_done %}
+             <dd class="col-sm-5">{% if found.is_done %}
                     Has been gotten back to owner
                 {% else %}
                     Still waiting for owner
                 {% endif %}</dd>
+              <dd class="col-sm-4">{% if found.is_done %}
+                {% else %}
+                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('dormAdmin.mark_done_found') }}">Get Back</a>
+                {% endif %}
+              </dd>
         </dl>
     </div>
 
