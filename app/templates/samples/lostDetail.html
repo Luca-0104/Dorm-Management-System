@@ -24,14 +24,17 @@
               <dd class="col-sm-5">{% if lost.is_done %}
                     Has been Founded
                 {% else %}
-                    Hasn't been Founded
+                    Hasn't been Found
                 {% endif %}
               </dd>
               <dd class="col-sm-4">
-                  {% if lost.is_done %}
+              {% if uid == current_user.id %}
+              {% if lost.is_done %}
                 {% else %}
                      <a class="btn btn-outline-primary btn-sm " href="{{ url_for('student.mark_done_lost') }}?id={{ lost.id }}">Get Back</a>
                 {% endif %}
+              {% endif %}
+
               </dd>
         </dl>
     </div>

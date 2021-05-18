@@ -391,7 +391,7 @@ def lost_and_found_details():
 
         # get the uid of the author
         stu_number = lost.student.stu_number
-        user = User.filter_by(stu_wor_id=stu_number).first()
+        user = User.query.filter_by(stu_wor_id=stu_number).first()
         uid = user.id
 
         return render_template("samples/lostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
@@ -406,7 +406,7 @@ def lost_and_found_details():
 
         # get the uid of the author
         stu_number = found.student.stu_number
-        user = User.filter_by(stu_wor_id=stu_number).first()
+        user = User.query.filter_by(stu_wor_id=stu_number).first()
         uid = user.id
 
         return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
