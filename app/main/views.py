@@ -92,7 +92,7 @@ def profile():
 
     elif role_id == 2:
         da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
-        return render_template('.html', user=current_user, da=da)
+        return render_template('samples/dormProfile.html', user=current_user, da=da)
 
     elif role_id == 3:
         return render_template('.html', user=current_user)

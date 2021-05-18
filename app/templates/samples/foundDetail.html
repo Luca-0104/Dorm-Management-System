@@ -21,12 +21,17 @@
               <dt class="col-sm-3">Contact with</dt>
               <dd class="col-sm-9">{{ found.student.phone }}</dd>
               <dt class="col-sm-3">Status</dt>
-              <dd class="col-sm-9">{% if found.is_done %}
+              <dd class="col-sm-5">{% if found.is_done %}
                     Has been gotten back to owner
                 {% else %}
                     Still waiting for owner
                 {% endif %}</dd>
-        </dl>
+              <dd class="col-sm-4">{% if found.is_done %}
+                {% else %}
+                     <button type="button" class="btn btn-outline-primary btn-sm " >Get Back</button>
+                {% endif %}
+              </dd>
+              </dl>
     </div>
 
 
