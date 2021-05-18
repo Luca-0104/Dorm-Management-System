@@ -178,7 +178,7 @@ def home_stu_lost():
     stu = Student.query.filter_by(stu_number=stu_num).first()
     stu_id = stu.id
     pagination = Lost.query.filter_by(stu_id=stu_id, is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template(".html", pagination=pagination, enterType='home',
+    return render_template("samples/aboutMe.html", pagination=pagination, enterType='home',
                            function="lost and found")  # 待核对
 
 
@@ -192,7 +192,7 @@ def home_stu_found():
     stu = Student.query.filter_by(stu_number=stu_num).first()
     stu_id = stu.id
     pagination = Found.query.filter_by(stu_id=stu_id, is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template(".html", pagination=pagination, enterType='home',
+    return render_template("samples/aboutMe.html", pagination=pagination, enterType='home',
                            function="lost and found")  # 待核对
 
 
