@@ -28,7 +28,7 @@
                 {% endif %}</dd>
               <dd class="col-sm-4">{% if found.is_done %}
                 {% else %}
-                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('student.mark_done_found') }}">Get Back</a>
+                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('student.mark_done_found') }}?id={{ found.id }}">Get Back</a>
                 {% endif %}
               </dd>
               </dl>
@@ -42,12 +42,10 @@
 
     <div class="row g-5">
       <div class="col-md-6">
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
+         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = found.icon) }}" alt="icon"/>
       </div>
 
-      <div class="col-md-6">
-                <img class=" align-content-lg-center"  height="100%" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
-      </div>
+
     </div>
   </main>
   <footer class="pt-5 my-5 text-muted border-top">

@@ -30,7 +30,7 @@
               <dd class="col-sm-4">
                   {% if lost.is_done %}
                 {% else %}
-                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('dormAdmin.mark_done_lost') }}">Get Back</a>
+                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('dormAdmin.mark_done_lost') }}?id={{lost.id}}">Get Back</a>
                 {% endif %}
               </dd>
         </dl>
@@ -44,12 +44,9 @@
 
     <div class="row g-5">
       <div class="col-md-6">
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
+         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
       </div>
 
-      <div class="col-md-6">
-                <img class=" align-content-lg-center"  height="100%" width="100%"   src="../../static/images/auth/logo.jpg" alt="icon"/>
-      </div>
     </div>
   </main>
   <footer class="pt-5 my-5 text-muted border-top">
