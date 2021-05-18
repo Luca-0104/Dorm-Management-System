@@ -9,7 +9,7 @@ from config import Config
 from . import student
 from .. import db
 from ..models import Student, Repair, ReplyComplain, ReplyRepair, Complain, DAdmin, Notification, Lost, Found, \
-    ReplyFound, ReplyLost, ReplyReplyLost, ReplyReplyFound
+    ReplyFound, ReplyLost, ReplyReplyLost, ReplyReplyFound, User
 
 # The allowed extension type of the picture that is uploaded
 ALLOWED_EXTENSIONS = ['jpg', 'png', 'gif', 'bmp']
@@ -360,7 +360,7 @@ def lost_and_found_lost():
     The function for showing the lost information in the lost and found system
     """
     pagenum = int(request.args.get('page', 1))
-    pagination = Lost.query.paginate(page=pagenum, per_page=5)
+    pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template("samples/studentLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
@@ -370,7 +370,7 @@ def lost_and_found_found():
     The function for showing the found information in the lost and found system
     """
     pagenum = int(request.args.get('page', 1))
-    pagination = Found.query.paginate(page=pagenum, per_page=6)
+    pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=6)
     return render_template("samples/studentFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
@@ -389,8 +389,13 @@ def lost_and_found_details():
         lost = Lost.query.filter_by(id=lost_id).first()
         reply_list = lost.replies
 
+        # get the uid of the author
+        stu_number = lost.student.stu_number
+        user = User.filter_by(stu_wor_id=stu_number).first()
+        uid = user.id
+
         return render_template("samples/lostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
-                               reply_list=reply_list)       # 待核对
+                               reply_list=reply_list, uid=uid)       # 待核对
 
     elif lnf_type == 'found':
         found_id = request.args.get('found_id')
@@ -399,8 +404,13 @@ def lost_and_found_details():
         found = Found.query.filter_by(id=found_id).first()
         reply_list = found.replies
 
+        # get the uid of the author
+        stu_number = found.student.stu_number
+        user = User.filter_by(stu_wor_id=stu_number).first()
+        uid = user.id
+
         return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
-                               reply_list=reply_list)       # 待核对
+                               reply_list=reply_list, uid=uid)       # 待核对
 
     # return render_template(".html", function="lost and found")      # 待核对
 
