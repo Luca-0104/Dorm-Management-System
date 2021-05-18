@@ -330,6 +330,20 @@ def message_details():
 # lost and found system -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+@student.route('/my_lost_and_found')
+def my_lost_and_found():
+    """
+    Showing the about me page (lost&found)
+    """
+    lnf_type = request.args.get('lnf_type')
+
+    if lnf_type == 'lost':
+        return redirect(url_for('main.home_stu_lost'))
+
+    elif lnf_type == 'found':
+        return redirect(url_for('main.home_stu_found'))
+
+
 @student.route('/mark_done_lost')
 def mark_done_lost():
     id = request.args.get('id')

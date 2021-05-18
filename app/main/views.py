@@ -673,7 +673,7 @@ def home_sys_stu():
 def home_sys_dorm():
     pagenum = int(request.args.get('page', 1))
     pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination,enterType='home')  # 待核对完善
+    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination, enterType='home')  # 待核对完善
 
 # The profile page ----------------------------------------------------------------------------------------------
 # @main.route('/user/<username>')
