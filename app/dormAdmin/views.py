@@ -869,7 +869,6 @@ def lost_and_found_found():
     return render_template("samples/dormFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
-
 @dormAdmin.route("/home_da_lost_and_found/details")
 def lost_and_found_details():
     """

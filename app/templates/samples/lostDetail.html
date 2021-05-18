@@ -21,11 +21,18 @@
               <dt class="col-sm-3">Contact with</dt>
               <dd class="col-sm-9">{{ lost.student.phone }}</dd>
               <dt class="col-sm-3">Status</dt>
-              <dd class="col-sm-9">{% if lost.is_done %}
+              <dd class="col-sm-5">{% if lost.is_done %}
                     Has been Founded
                 {% else %}
                     Hasn't been Founded
-                {% endif %}</dd>
+                {% endif %}
+              </dd>
+              <dd class="col-sm-4">
+                  {% if lost.is_done %}
+                {% else %}
+             <button type="button" class="btn btn-outline-primary btn-sm " >Founded</button>
+                {% endif %}
+              </dd>
         </dl>
     </div>
 
