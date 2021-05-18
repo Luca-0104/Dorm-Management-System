@@ -726,8 +726,8 @@ def lost_and_found_lost():
     The function for showing the lost information in the lost and found system
     """
     pagenum = int(request.args.get('page', 1))
-    pagination = Lost.query.paginate(page=pagenum, per_page=5)
-    return render_template("samples/studentLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template(".html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @sysAdmin.route("/lost_and_found_found/found")
@@ -736,8 +736,8 @@ def lost_and_found_found():
     The function for showing the found information in the lost and found system
     """
     pagenum = int(request.args.get('page', 1))
-    pagination = Found.query.paginate(page=pagenum, per_page=6)
-    return render_template("samples/studentFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=6)
+    return render_template(".html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
 
 
 @sysAdmin.route("/lost_and_found/details")
@@ -767,3 +767,30 @@ def lost_and_found_details():
 
         return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
                                reply_list=reply_list)       # 待核对
+
+
+@sysAdmin.route('/delete_lost')
+def delete_lost():
+    id = request.args.get('id')
+
+    lost = Lost.query.get(id)
+    lost.is_deleted = True
+
+    db.session.add(lost)
+    db.session.commit()
+
+    return redirect(url_for('sysAdmin.lost_and_found_lost'))
+
+
+@sysAdmin.route('/delete_found')
+def delete_found():
+    id = request.args.get('id')
+
+    found = Found.query.get(id)
+    found.is_deleted = True
+
+    db.session.add(found)
+    db.session.commit()
+
+    return redirect(url_for('sysAdmin.lost_and_found_found'))
+

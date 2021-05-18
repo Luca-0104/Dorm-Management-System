@@ -60,9 +60,9 @@ def change_avatar():
             if current_user.role_id == 1:
                 return redirect(url_for('main.home_stu', msg=msg))
             elif current_user.role_id == 2:
-                return redirect(url_for('main.home_dorm_admin_index', msg=msg))
+                return redirect(url_for('main.profile', msg=msg))
             elif current_user.role_id == 3:
-                return redirect(url_for('main.home_sys_admin', msg=msg))
+                return redirect(url_for('main.profile', msg=msg))
 
 
 # ----------------------------------------------- profiles for the users with different role  -----------------------------------------------
@@ -170,22 +170,28 @@ def home_stu_message():
 
 @main.route('/home_stu_lost', methods=['GET', 'POST'])
 def home_stu_lost():
+    """
+    Shows only the lost information of this student himself
+    """
     pagenum = int(request.args.get('page', 1))
     stu_num = current_user.stu_wor_id
     stu = Student.query.filter_by(stu_number=stu_num).first()
     stu_id = stu.id
-    pagination = Lost.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
+    pagination = Lost.query.filter_by(stu_id=stu_id, is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template(".html", pagination=pagination, enterType='home',
                            function="lost and found")  # 待核对
 
 
 @main.route('/home_stu_found', methods=['GET', 'POST'])
 def home_stu_found():
+    """
+    Shows only the found information of this student himself
+    """
     pagenum = int(request.args.get('page', 1))
     stu_num = current_user.stu_wor_id
     stu = Student.query.filter_by(stu_number=stu_num).first()
     stu_id = stu.id
-    pagination = Found.query.filter_by(stu_id=stu_id).paginate(page=pagenum, per_page=5)
+    pagination = Found.query.filter_by(stu_id=stu_id, is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template(".html", pagination=pagination, enterType='home',
                            function="lost and found")  # 待核对
 

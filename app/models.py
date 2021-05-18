@@ -104,6 +104,7 @@ class Lost(db.Model):
     post_time = db.Column(db.DateTime(), default=datetime.utcnow)
     replies = db.relationship('ReplyLost', backref='lost')
     is_done = db.Column(db.Boolean, default=False)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Lost %r>' % self.item
@@ -121,6 +122,7 @@ class Found(db.Model):
     post_time = db.Column(db.DateTime(), default=datetime.utcnow)
     replies = db.relationship('ReplyFound', backref='found')
     is_done = db.Column(db.Boolean, default=False)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Found %r>' % self.item
