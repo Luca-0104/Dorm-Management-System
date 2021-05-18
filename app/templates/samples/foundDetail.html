@@ -26,10 +26,14 @@
                 {% else %}
                     Still waiting for owner
                 {% endif %}</dd>
-              <dd class="col-sm-4">{% if found.is_done %}
+              <dd class="col-sm-4">
+                    {% if current_user.id == uid %}
+                    {% if found.is_done %}
                 {% else %}
                      <a class="btn btn-outline-primary btn-sm " href="{{ url_for('student.mark_done_found') }}?id={{ found.id }}">Get Back</a>
                 {% endif %}
+                    {% endif %}
+
               </dd>
               </dl>
     </div>
