@@ -431,7 +431,8 @@ stu_list = [['stu1', '17371101', '13500000001', 'stu1@emails.bjut.edu.cn', 'Beij
             ['stu398', '18411116', '135000000398', 'stu398@emails.bjut.edu.cn', 'Faculty of Urban Construction', 2, 608],
             ['stu399', '18411117', '135000000399', 'stu399@emails.bjut.edu.cn', 'Faculty of Urban Construction', 2, 608],
             ['stu400', '18411118', '135000000400', 'stu400@emails.bjut.edu.cn', 'Faculty of Urban Construction', 2, 608],
-
+            ['stu900', '18411119', '135000000900', 'stu900@emails.bjut.edu.cn', 'Faculty of Urban Construction', 2, 609],
+            ['stu901', '18411120', '135000000901', 'stu901@emails.bjut.edu.cn', 'Faculty of Urban Construction', 2, 609],
 
             # ['stu1', '17371101', '13500000000', 'stu1@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 101],
             # ['stu1', '17371101', '13500000000', 'stu1@emails.bjut.edu.cn', 'Beijing Dublin International College', 1, 101],
