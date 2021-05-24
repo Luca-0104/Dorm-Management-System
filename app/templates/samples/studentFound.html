@@ -337,7 +337,7 @@
        <a class="page-link" href="{{url_for('student.lost_and_found_found')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
 
     </li>
-      {% for pagenum in range(1,pagination.pages + 1) %}
+      {% for pagenum in range(page,pagination.pages + 1) %}
     <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">
     <a class="page-link"
            href="{{url_for('student.lost_and_found_found')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"

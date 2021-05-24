@@ -326,7 +326,7 @@
         {% endif %}
 
     </li>
-      {% for pagenum in range(1,pagination.pages + 1) %}
+      {% for pagenum in range(pagination.page,pagination.page + 10) %}
     <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">
     <a class="page-link" {% if enterType == "home" %}
          href="{{url_for('main.home_dorm_admin')}}?page={{ pagenum }}"
