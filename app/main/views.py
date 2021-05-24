@@ -88,7 +88,7 @@ def profile():
 
     if role_id == 1:
         stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-        return render_template('.html', user=current_user, stu=stu)
+        return render_template('samples/studentIndex.html', user=current_user, stu=stu)
 
     elif role_id == 2:
         da = DAdmin.query.filter_by(da_number=stu_wor_id).first()

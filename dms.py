@@ -5,7 +5,7 @@ import os
 from app import create_app, db
 from flask_migrate import Migrate
 
-from app.models import Role, User, Student, DormBuilding, Guest, DAdmin, Tools, Repair
+from app.models import Role, User, Student, DormBuilding, Guest, DAdmin, Tools, Repair, Lost
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')  # FLASK_CONFIG is a environment variable that should be configured. For details, those can be found in the dictionary config in the file config.py
 migrate = Migrate(app, db)
@@ -24,7 +24,8 @@ def make_shell_context():
                 DormBuilding=DormBuilding,
                 Guest=Guest,
                 DAdmin=DAdmin,
-                Repair=Repair)
+                Repair=Repair,
+                Lost=Lost)
 
 
 @app.cli.command()

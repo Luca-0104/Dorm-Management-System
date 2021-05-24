@@ -139,11 +139,53 @@ def add_lost():
         stu = Student.query.filter_by(stu_number=stu_num).first()
         stu_id = stu.id
 
-        icon_name = icon.filename
-        suffix = icon_name.rsplit('.')[-1]
-        if suffix in ALLOWED_EXTENSIONS:
-            path = 'upload/lost'
+        if icon:
 
+            icon_name = icon.filename
+            suffix = icon_name.rsplit('.')[-1]
+            if suffix in ALLOWED_EXTENSIONS:
+                path = 'upload/lost'
+
+                if item != '' and stu_id is not None:
+                    # Add the information of the lost item into the Lost table
+                    if place == '' and lost_time == '' and detail == '':
+                        new_lost = Lost(item=item, price=price, stu_id=stu_id)
+
+                    elif place == '' and lost_time == '':
+                        new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
+
+                    elif place == '' and detail == '':
+                        new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
+
+                    elif lost_time == '' and detail == '':
+                        new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
+
+                    else:
+                        new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
+
+                    lost_list = Lost.query.all()
+                    if len(lost_list) == 0:
+                        num = 1
+                    else:
+                        num = lost_list[-1].id + 1
+
+
+                    icon_name = secure_filename(icon_name)
+                    icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                    file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
+                    icon.save(file_path)
+
+                    pic = os.path.join(path, icon_name).replace('\\', '/')
+                    new_lost.icon = pic
+
+                    db.session.add(new_lost)
+                    db.session.commit()
+
+            else:
+                return redirect(url_for('student.lost_and_found_lost'))
+
+        # if there are no picture uploaded
+        else:
             if item != '' and stu_id is not None:
                 # Add the information of the lost item into the Lost table
                 if place == '' and lost_time == '' and detail == '':
@@ -159,27 +201,14 @@ def add_lost():
                     new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
 
                 else:
-                    new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
-
-                lost_list = Lost.query.all()
-                if len(lost_list) == 0:
-                    num = 1
-                else:
-                    num = lost_list[-1].id + 1
-
-                icon_name = secure_filename(icon_name)
-                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
-                file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
-                icon.save(file_path)
-
-                pic = os.path.join(path, icon_name).replace('\\', '/')
-                new_lost.icon = pic
+                    new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place,
+                                    lost_time=lost_time)
 
                 db.session.add(new_lost)
                 db.session.commit()
 
-        else:
-            return redirect(url_for('student.lost_and_found_lost'))
+            else:
+                return redirect(url_for('student.lost_and_found_lost'))
 
     return redirect(url_for('student.lost_and_found_lost'))
 

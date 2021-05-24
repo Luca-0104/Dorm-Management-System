@@ -6,7 +6,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import login_manager
-from .tableInfo import stu_list, gue_list, da_list
+from .tableInfo import stu_list, gue_list, da_list, user_list
 
 
 @login_manager.user_loader
@@ -26,6 +26,12 @@ class Tools:
     """
 
     @staticmethod
+    def update_db():
+        db.drop_all()
+        db.create_all()
+        Tools.fill_all_tables()
+
+    @staticmethod
     def fill_all_tables():
         """
         Fill all the tables in an specific order.
@@ -36,6 +42,7 @@ class Tools:
         Student.insert_students()
         Guest.insert_guests()
         DAdmin.insert_das()
+        User.insert_users()
 
 
 # 权限常量（2^n, 所以组合求和不会冲突）
@@ -467,6 +474,26 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.user_name
+
+    @staticmethod
+    def insert_users():
+        """
+        This is a method for inserting the testing user information, which means fulling the User table.
+        This should be used in the console only a single time.
+        """
+        for user_info in user_list:
+            email = user_info[0]
+            phone = user_info[1]
+            stu_wor_id = user_info[2]
+            user_name = user_info[3]
+            role_id = user_info[4]
+            password = user_info[5]
+
+            new_user = User(user_name=user_name, stu_wor_id=stu_wor_id, role_id=role_id, password=password,
+                            email=email, phone=phone)
+
+            db.session.add(new_user)
+            db.session.commit()
 
     # 添加密码散列功能
     @property
