@@ -160,5 +160,29 @@ def message_details():
 
 
 
+@student.route('/add_lost_found', methods=['GET', 'POST'])
+def add_lost_found():
+    """
+    The function for adding new lost and found reformation
+    """
+    if request.method == 'POST':
+        item = request.form.get('item')
+        detail = request.form.get('detail')
+        stu_num = current_user.stu_wor_id
+        stu = Student.query.filter_by(stu_number=stu_num).first()
+        stu_id = stu.id
+
+        if item != '' and detail != '' and stu_id is not None:
+            # Add lost and found information into the Repair table
+            new_lost_found = LostFound(item=item, detail=detail, stu_id=stu_id)
+            db.session.add(new_lost_found)
+            db.session.commit()
+
+    return redirect(url_for('main.home_stu_repair'))
+
+
+
+
+
 
 
