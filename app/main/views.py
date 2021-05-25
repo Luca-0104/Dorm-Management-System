@@ -600,6 +600,7 @@ def edit_profile():
 def update_profile():
     id = request.args.get('id')
     student = Student.query.get(id)
+
     is_changed = False
     is_stop = False  # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
 
