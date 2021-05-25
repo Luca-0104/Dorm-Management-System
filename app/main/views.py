@@ -8,7 +8,8 @@ from sqlalchemy import and_
 from app.main import main
 from app.auth.views import get_role_true
 from .. import db
-from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin
+from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin,\
+from . import sysAdmin
 
 # The index page ----------------------------------------------------------------------------------------------
 
@@ -600,59 +601,132 @@ def edit_profile():
 def update_profile():
     id = request.args.get('id')
     student = Student.query.get(id)
-
+    dorm = DAdmin.query.get(id)
+    sys = sysAdmin.query.get(id)
+    role_id = current_user.role_id
     is_changed = False
     is_stop = False  # 判断是否要停止当前修改，防止一部分信息被改，一部分没改
+    if role_id == 1:
+        if request.method == 'POST':
+            user_name = request.form.get('user_name')
+            stu_wor_id = request.form.get('stu_wor_id')
+            print("stu_number length: " + str(len(stu_wor_id)))
+            phone = request.form.get('phone')
+            email = request.form.get('email')
+            college = request.form.get('college')
+            building_id = request.form.get('building_id')
+            room_number = request.form.get('room_number')
 
-    if request.method == 'POST':
-        user_name = request.form.get('user_name')
-        stu_wor_id = request.form.get('stu_wor_id')
-        print("stu_number length: " + str(len(stu_wor_id)))
-        phone = request.form.get('phone')
-        email = request.form.get('email')
-        college = request.form.get('college')
-        building_id = request.form.get('building_id')
-        room_number = request.form.get('room_number')
+            if room_number != '':
+               room_number = int(room_number)
+               is_changed = True
 
-        if room_number != '':
-            room_number = int(room_number)
-            is_changed = True
+            if user_name != '':
+                 student.user_name = user_name
+                 is_changed = True
 
-        if user_name != '':
-            student.user_name = user_name
-            is_changed = True
+            if stu_wor_id != '':
+                student.stu_number = stu_wor_id
+                is_changed = True
 
-        if stu_wor_id != '':
-            student.stu_number = stu_wor_id
-            is_changed = True
-
-        if phone != '':
-            student.phone = phone
-            is_changed = True
-
-
-        if email != '':
-            student.email = email
-            is_changed = True
+            if phone != '':
+                student.phone = phone
+                is_changed = True
 
 
-        if college != '':
-            student.college = college
-            is_changed = True
+            if email != '':
+                student.email = email
+                is_changed = True
 
-        if room_number != '':
-            student.room_number = room_number
-            is_changed = True
 
-        if building_id != '':
-            student.building_id = building_id
-            is_changed = True
+            if college != '':
+                student.college = college
+                is_changed = True
 
-        # 检查信息是否修改成功
-        if is_changed and not is_stop:
-            db.session.add(student)
-            db.session.commit()
-        return render_template('student.html', function='students')
+            if room_number != '':
+                student.room_number = room_number
+                is_changed = True
+
+            if building_id != '':
+                student.building_id = building_id
+                is_changed = True
+
+            # 检查信息是否修改成功
+            if is_changed and not is_stop:
+                db.session.add(student)
+                db.session.commit()
+            return render_template('student.html', function='students')
+
+    elif role_id == 2:
+        if request.method == 'POST':
+            user_name = request.form.get('user_name')
+            dorm_wor_id = request.form.get('dorm_wor_id')
+            print("dorm_number length: " + str(len(dorm_wor_id)))
+            phone = request.form.get('phone')
+            email = request.form.get('email')
+            building_id = request.form.get('building_id')
+
+            if user_name != '':
+                dorm.user_name = user_name
+                is_changed = True
+
+
+
+            if dorm_wor_id != '':
+                dorm.stu_number = dorm_wor_id
+                is_changed = True
+
+            if phone != '':
+                dorm.phone = phone
+                is_changed = True
+
+            if email != '':
+                dorm.email = email
+                is_changed = True
+
+            if building_id != '':
+                dorm.building_id = building_id
+                is_changed = True
+
+                # 检查信息是否修改成功
+            if is_changed and not is_stop:
+                db.session.add(student)
+                db.session.commit()
+            return render_template('dormAdmin.html', function='students')
+
+    elif role_id == 3:
+        if request.method == 'POST':
+            user_name = request.form.get('user_name')
+            sys_wor_id = request.form.get('sys_wor_id')
+            print("sys_number length: " + str(len(sys_wor_id)))
+            phone = request.form.get('phone')
+            email = request.form.get('email')
+
+            if user_name != '':
+                sys.user_name = user_name
+                is_changed = True
+
+            if sys_wor_id != '':
+                sys.stu_number = sys_wor_id
+                is_changed = True
+
+            if phone != '':
+                sys.phone = phone
+                is_changed = True
+
+            if email != '':
+                sys.email = email
+                is_changed = True
+
+
+                # 检查信息是否修改成功
+            if is_changed and not is_stop:
+                db.session.add(student)
+                db.session.commit()
+            return render_template('sysAdmin.html', function='students')
+
+
+
 # -------------------以下部分应该后面写到student蓝本和dormAdmin蓝本中----------------------
 
 # @main.route("/home_stu_message/repair")
