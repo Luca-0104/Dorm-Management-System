@@ -1,5 +1,6 @@
 import datetime
 import os
+import random
 
 from flask import request, render_template, redirect, url_for
 from flask_login import current_user
@@ -9,10 +10,13 @@ from config import Config
 from . import student
 from .. import db
 from ..models import Student, Repair, ReplyComplain, ReplyRepair, Complain, DAdmin, Notification, Lost, Found, \
-    ReplyFound, ReplyLost, ReplyReplyLost, ReplyReplyFound, User
+    ReplyFound, ReplyLost, ReplyReplyLost, ReplyReplyFound, User, LostPic, FoundPic
 
 # The allowed extension type of the picture that is uploaded
 ALLOWED_EXTENSIONS = ['jpg', 'png', 'gif', 'bmp']
+
+# A list of random integers that are already used for the picture name
+num_list = []
 
 
 @student.route('/stu_reply', methods=['GET', 'POST'])
@@ -111,166 +115,6 @@ def add_repair():
 
     return redirect(url_for('main.home_stu_repair'))
     # return render_template("samples/studentRepair.html", function="repair")
-
-
-@student.route('/add_lost', methods=['GET', 'POST'])
-def add_lost():
-    """
-    The function for adding new lost things' information
-    """
-    if request.method == 'POST':
-
-        item = request.form.get('item')
-        price = int(request.form.get('price'))
-        place = request.form.get('place')           # able to be blank
-        # lost_time = request.form.get('lost_time')   # able to be blank
-        detail = request.form.get('detail')         # able to be blank
-
-        year = request.form.get('year')
-        month = request.form.get('month')
-        day = request.form.get('day')
-        hour = request.form.get('hour')
-        lost_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
-        lost_time = datetime.datetime.strptime(lost_time, "%Y-%m-%d %H:%M:%S")
-
-        icon = request.files.get('lost_icon')        # able to be blank in the database, but we will not allow this happens
-
-        stu_num = current_user.stu_wor_id
-        stu = Student.query.filter_by(stu_number=stu_num).first()
-        stu_id = stu.id
-
-        if icon:
-
-            icon_name = icon.filename
-            suffix = icon_name.rsplit('.')[-1]
-            if suffix in ALLOWED_EXTENSIONS:
-                path = 'upload/lost'
-
-                if item != '' and stu_id is not None:
-                    # Add the information of the lost item into the Lost table
-                    if place == '' and lost_time == '' and detail == '':
-                        new_lost = Lost(item=item, price=price, stu_id=stu_id)
-
-                    elif place == '' and lost_time == '':
-                        new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
-
-                    elif place == '' and detail == '':
-                        new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
-
-                    elif lost_time == '' and detail == '':
-                        new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
-
-                    else:
-                        new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
-
-                    lost_list = Lost.query.all()
-                    if len(lost_list) == 0:
-                        num = 1
-                    else:
-                        num = lost_list[-1].id + 1
-
-
-                    icon_name = secure_filename(icon_name)
-                    icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
-                    file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
-                    icon.save(file_path)
-
-                    pic = os.path.join(path, icon_name).replace('\\', '/')
-                    new_lost.icon = pic
-
-                    db.session.add(new_lost)
-                    db.session.commit()
-
-            else:
-                return redirect(url_for('student.lost_and_found_lost'))
-
-        # if there are no picture uploaded
-        else:
-            if item != '' and stu_id is not None:
-                # Add the information of the lost item into the Lost table
-                if place == '' and lost_time == '' and detail == '':
-                    new_lost = Lost(item=item, price=price, stu_id=stu_id)
-
-                elif place == '' and lost_time == '':
-                    new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
-
-                elif place == '' and detail == '':
-                    new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
-
-                elif lost_time == '' and detail == '':
-                    new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
-
-                else:
-                    new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place,
-                                    lost_time=lost_time)
-
-                db.session.add(new_lost)
-                db.session.commit()
-
-            else:
-                return redirect(url_for('student.lost_and_found_lost'))
-
-    return redirect(url_for('student.lost_and_found_lost'))
-
-
-@student.route('/add_found', methods=['GET', 'POST'])
-def add_found():
-    """
-    The function for adding new found things' information
-    """
-    if request.method == 'POST':
-
-        item = request.form.get('item')
-        place = request.form.get('place')
-
-        year = request.form.get('year')
-        month = request.form.get('month')
-        day = request.form.get('day')
-        hour = request.form.get('hour')
-        found_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
-        found_time = datetime.datetime.strptime(found_time, "%Y-%m-%d %H:%M:%S")
-
-        detail = request.form.get('detail')     # able to be blank
-        icon = request.files.get('found_icon')        # able to be blank in the database, but we will not allow this happens
-
-        stu_num = current_user.stu_wor_id
-        stu = Student.query.filter_by(stu_number=stu_num).first()
-        stu_id = stu.id
-
-        icon_name = icon.filename
-        suffix = icon_name.rsplit('.')[-1]
-        if suffix in ALLOWED_EXTENSIONS:
-            if item != '' and stu_id is not None:
-                # Add the information of the found item into the Found table
-                path = 'upload/found'
-
-                if detail == '':
-                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id)
-
-                else:
-                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
-
-                found_list = Found.query.all()
-                if len(found_list) == 0:
-                    num = 1
-                else:
-                    num = found_list[-1].id + 1
-
-                icon_name = secure_filename(icon_name)
-                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
-                file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
-                icon.save(file_path)
-
-                pic = os.path.join(path, icon_name).replace('\\', '/')
-                new_found.icon = pic
-
-                db.session.add(new_found)
-                db.session.commit()
-
-        else:
-            return redirect(url_for('student.lost_and_found_found'))
-
-    return redirect(url_for('student.lost_and_found_found'))
 
 
 @student.route("/home_stu_message/repair")
@@ -455,22 +299,343 @@ def lost_and_found_details():
         return render_template("samples/foundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
                                reply_list=reply_list, uid=uid)       # 待核对
 
-    # return render_template(".html", function="lost and found")      # 待核对
+
+"""
+    The old version of add_lost and add_found, which can only upload a single picture 
+"""
 
 
-@student.route("/home_stu_change", methods=['GET', 'POST'])
-def stu_change():
-    if request.method == "post":
-        icon = request.files.get('icon')
-        print(icon)
-    return render_template('samples/studentIndex.html', function="index")
+# @student.route('/add_lost', methods=['GET', 'POST'])
+# def add_lost():
+#     """
+#     The function for adding new lost things' information
+#     """
+#     if request.method == 'POST':
+#
+#         item = request.form.get('item')
+#         price = int(request.form.get('price'))
+#         place = request.form.get('place')           # able to be blank
+#         # lost_time = request.form.get('lost_time')   # able to be blank
+#         detail = request.form.get('detail')         # able to be blank
+#
+#         year = request.form.get('year')
+#         month = request.form.get('month')
+#         day = request.form.get('day')
+#         hour = request.form.get('hour')
+#         lost_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
+#         lost_time = datetime.datetime.strptime(lost_time, "%Y-%m-%d %H:%M:%S")
+#
+#         icon = request.files.get('lost_icon')        # able to be blank in the database, but we will not allow this happens
+#
+#         stu_num = current_user.stu_wor_id
+#         stu = Student.query.filter_by(stu_number=stu_num).first()
+#         stu_id = stu.id
+#
+#         if icon:
+#
+#             icon_name = icon.filename
+#             suffix = icon_name.rsplit('.')[-1]
+#             if suffix in ALLOWED_EXTENSIONS:
+#                 path = 'upload/lost'
+#
+#                 if item != '' and stu_id is not None:
+#                     # Add the information of the lost item into the Lost table
+#                     if place == '' and lost_time == '' and detail == '':
+#                         new_lost = Lost(item=item, price=price, stu_id=stu_id)
+#
+#                     elif place == '' and lost_time == '':
+#                         new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
+#
+#                     elif place == '' and detail == '':
+#                         new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
+#
+#                     elif lost_time == '' and detail == '':
+#                         new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
+#
+#                     else:
+#                         new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
+#
+#                     lost_list = Lost.query.all()
+#                     if len(lost_list) == 0:
+#                         num = 1
+#                     else:
+#                         num = lost_list[-1].id + 1
+#
+#
+#                     icon_name = secure_filename(icon_name)
+#                     icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+#                     file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
+#                     icon.save(file_path)
+#
+#                     pic = os.path.join(path, icon_name).replace('\\', '/')
+#                     new_lost.icon = pic
+#
+#                     db.session.add(new_lost)
+#                     db.session.commit()
+#
+#             else:
+#                 return redirect(url_for('student.lost_and_found_lost'))
+#
+#         # if there are no picture uploaded
+#         else:
+#             if item != '' and stu_id is not None:
+#                 # Add the information of the lost item into the Lost table
+#                 if place == '' and lost_time == '' and detail == '':
+#                     new_lost = Lost(item=item, price=price, stu_id=stu_id)
+#
+#                 elif place == '' and lost_time == '':
+#                     new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
+#
+#                 elif place == '' and detail == '':
+#                     new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
+#
+#                 elif lost_time == '' and detail == '':
+#                     new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
+#
+#                 else:
+#                     new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place,
+#                                     lost_time=lost_time)
+#
+#                 db.session.add(new_lost)
+#                 db.session.commit()
+#
+#             else:
+#                 return redirect(url_for('student.lost_and_found_lost'))
+#
+#     return redirect(url_for('student.lost_and_found_lost'))
+#
+#
+# @student.route('/add_found', methods=['GET', 'POST'])
+# def add_found():
+#     """
+#     The function for adding new found things' information
+#     """
+#     if request.method == 'POST':
+#
+#         item = request.form.get('item')
+#         place = request.form.get('place')
+#
+#         year = request.form.get('year')
+#         month = request.form.get('month')
+#         day = request.form.get('day')
+#         hour = request.form.get('hour')
+#         found_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
+#         found_time = datetime.datetime.strptime(found_time, "%Y-%m-%d %H:%M:%S")
+#
+#         detail = request.form.get('detail')     # able to be blank
+#         icon = request.files.get('found_icon')        # able to be blank in the database, but we will not allow this happens
+#
+#         stu_num = current_user.stu_wor_id
+#         stu = Student.query.filter_by(stu_number=stu_num).first()
+#         stu_id = stu.id
+#
+#         icon_name = icon.filename
+#         suffix = icon_name.rsplit('.')[-1]
+#         if suffix in ALLOWED_EXTENSIONS:
+#             if item != '' and stu_id is not None:
+#                 # Add the information of the found item into the Found table
+#                 path = 'upload/found'
+#
+#                 if detail == '':
+#                     new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id)
+#
+#                 else:
+#                     new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
+#
+#                 found_list = Found.query.all()
+#                 if len(found_list) == 0:
+#                     num = 1
+#                 else:
+#                     num = found_list[-1].id + 1
+#
+#                 icon_name = secure_filename(icon_name)
+#                 icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+#                 file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
+#                 icon.save(file_path)
+#
+#                 pic = os.path.join(path, icon_name).replace('\\', '/')
+#                 new_found.icon = pic
+#
+#                 db.session.add(new_found)
+#                 db.session.commit()
+#
+#         else:
+#             return redirect(url_for('student.lost_and_found_found'))
+#
+#     return redirect(url_for('student.lost_and_found_found'))
 
 
-@student.route("home_stu_lost_and_found/lost", methods=['GET', 'POST'])
-def stu_lost():
-    return render_template('samples/studentFound.html', function="lost and found")
+"""
+    The latest version of add_lost and add_found, which can upload multiple pictures of each piece of information
+"""
 
 
-@student.route("/home_stu_lost_and_found/lost_detail", methods=['GET', 'POST'])
-def lost_detail():
-    return render_template('samples/foundDetail.html', function="lost and found")
+@student.route('/add_lost', methods=['GET', 'POST'])
+def add_lost():
+    """
+    The function for adding new lost things' information
+    """
+    if request.method == 'POST':
+
+        item = request.form.get('item')
+        price = int(request.form.get('price'))
+        place = request.form.get('place')           # able to be blank
+        # lost_time = request.form.get('lost_time')   # able to be blank
+        detail = request.form.get('detail')         # able to be blank
+
+        year = request.form.get('year')
+        month = request.form.get('month')
+        day = request.form.get('day')
+        hour = request.form.get('hour')
+        lost_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
+        lost_time = datetime.datetime.strptime(lost_time, "%Y-%m-%d %H:%M:%S")
+
+        icon = request.files.get('lost_icon')        # able to be blank in the database, but we will not allow this happens
+
+        stu_num = current_user.stu_wor_id
+        stu = Student.query.filter_by(stu_number=stu_num).first()
+        stu_id = stu.id
+
+        if item != '' and stu_id is not None:
+            # Add the information of the lost item into the Lost table
+            if place == '' and lost_time == '' and detail == '':
+                new_lost = Lost(item=item, price=price, stu_id=stu_id)
+
+            elif place == '' and lost_time == '':
+                new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id)
+
+            elif place == '' and detail == '':
+                new_lost = Lost(item=item, price=price, stu_id=stu_id, lost_time=lost_time)
+
+            elif lost_time == '' and detail == '':
+                new_lost = Lost(item=item, price=price, stu_id=stu_id, place=place)
+
+            else:
+                new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
+
+        else:
+            return redirect(url_for('student.lost_and_found_lost'))
+
+        # if there is a picture uploaded
+        if icon:
+
+            icon_name = icon.filename
+            suffix = icon_name.rsplit('.')[-1]
+            if suffix in ALLOWED_EXTENSIONS:
+                path = 'upload/lost'
+
+                # Ensure the distinct name of each picture by inserting a random int into the icon_name
+                num = random.randint(0, 99999)
+                while num in num_list:
+                    num = random.randint(0, 99999)
+                num_list.append(num)
+
+                icon_name = secure_filename(icon_name)
+                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
+                icon.save(file_path)
+
+                pic = os.path.join(path, icon_name).replace('\\', '/')
+                new_pic = LostPic(address=pic, lost_id=new_lost.id)
+                # new_lost.icon = pic
+
+                db.session.add(new_lost)
+                db.session.add(new_pic)
+                db.session.commit()
+
+            else:
+                return redirect(url_for('student.lost_and_found_lost'))
+
+        # if there are no picture uploaded
+        else:
+
+            db.session.add(new_lost)
+            db.session.commit()
+
+    return redirect(url_for('student.lost_and_found_lost'))
+
+
+@student.route('/add_found', methods=['GET', 'POST'])
+def add_found():
+    """
+    The function for adding new found things' information
+    """
+    if request.method == 'POST':
+
+        item = request.form.get('item')
+        place = request.form.get('place')
+
+        year = request.form.get('year')
+        month = request.form.get('month')
+        day = request.form.get('day')
+        hour = request.form.get('hour')
+        found_time = year + '-' + month + '-' + day + ' ' + hour + ':00:00'
+        found_time = datetime.datetime.strptime(found_time, "%Y-%m-%d %H:%M:%S")
+
+        detail = request.form.get('detail')     # able to be blank
+        icon = request.files.get('found_icon')        # able to be blank in the database, but we will not allow this happens
+
+        stu_num = current_user.stu_wor_id
+        stu = Student.query.filter_by(stu_number=stu_num).first()
+        stu_id = stu.id
+
+        icon_name = icon.filename
+        suffix = icon_name.rsplit('.')[-1]
+        if suffix in ALLOWED_EXTENSIONS:
+            if item != '' and stu_id is not None:
+                # Add the information of the found item into the Found table
+                path = 'upload/found'
+
+                if detail == '':
+                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id)
+
+                else:
+                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
+
+                # Ensure the distinct name of each picture by inserting a random int into the icon_name
+                num = random.randint(0, 99999)
+                while num in num_list:
+                    num = random.randint(0, 99999)
+                num_list.append(num)
+
+                icon_name = secure_filename(icon_name)
+                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
+                icon.save(file_path)
+
+                pic = os.path.join(path, icon_name).replace('\\', '/')
+                # new_found.icon = pic
+                new_pic = FoundPic(address=pic, found_id=new_found.id)
+
+                db.session.add(new_found)
+                db.session.add(new_pic)
+                db.session.commit()
+
+        else:
+            return redirect(url_for('student.lost_and_found_found'))
+
+    return redirect(url_for('student.lost_and_found_found'))
+
+
+
+
+
+
+
+
+# @student.route("/home_stu_change", methods=['GET', 'POST'])
+# def stu_change():
+#     if request.method == "post":
+#         icon = request.files.get('icon')
+#         print(icon)
+#     return render_template('samples/studentIndex.html', function="index")
+#
+#
+# @student.route("home_stu_lost_and_found/lost", methods=['GET', 'POST'])
+# def stu_lost():
+#     return render_template('samples/studentFound.html', function="lost and found")
+#
+#
+# @student.route("/home_stu_lost_and_found/lost_detail", methods=['GET', 'POST'])
+# def lost_detail():
+#     return render_template('samples/foundDetail.html', function="lost and found")

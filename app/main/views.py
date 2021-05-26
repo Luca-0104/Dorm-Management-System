@@ -66,19 +66,6 @@ def change_avatar():
 
 
 # ----------------------------------------------- profiles for the users with different role  -----------------------------------------------
-# @main.route('/stu_profile', methods=['GET', 'POST'])
-# def stu_profile():
-#     pass
-#
-#
-# @main.route('/da_profile', methods=['GET', 'POST'])
-# def da_profile():
-#     pass
-#
-#
-# @main.route('/sa_profile', methods=['GET', 'POST'])
-# def sa_profile():
-#     pass
 
 
 @main.route('/profile')
@@ -141,13 +128,11 @@ def home_stu_repair():
                            function="repair")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
 def home_stu_LAF():
-    return render_template("samples/studentLF.html",function="lost and found")
+    return render_template("samples/studentLF.html", function="lost and found")
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
     stu_number = current_user.stu_wor_id
