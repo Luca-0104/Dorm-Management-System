@@ -717,6 +717,55 @@ def search_da():
                            tag=tag, isSuccessful=is_successful, function='das')
 
 
+@sysAdmin.route('/add_da', methods=['GET', 'POST'])
+def add_da():
+    if request.method == 'POST':
+        da_name = request.form.get('name')
+        da_number = request.form.get('da_ID')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+
+        building_id = request.args.get('building_id', '0')
+
+        if da_name != '' and da_number != '' and phone != '' and email != '' and building_id is not None:
+            if validate_da_number(da_number) and validate_phone(phone) and validate_email(email):
+                new_da = DAdmin(da_name=da_name,
+                                da_number=da_number,
+                                phone=phone,
+                                email=email,
+                                building_id=building_id,
+                                )
+                db.session.add(new_da)
+                db.session.commit()
+                return redirect(url_for('main.home_sys_admin', isSuccessful=True))
+            else:
+                return redirect(url_for('main.home_sys_admin', isSuccessful=False))
+        else:
+            return redirect(url_for('main.home_sys_admin', isSuccessful=False))
+
+    return render_template('samples/sysDAdmin.html', function='dorm')
+
+@sysAdmin.route('/delete_da', endpoint='delete')
+def delete_da():
+    id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
+    dorm = DAdmin.query.get(id)
+    dorm.is_deleted = True
+    db.session.add(dorm)
+    db.session.commit()
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_sys_admin', page=page))
+    elif enter_type == "search":
+        return redirect(url_for('sysAdmin.search_da', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_sys_admin', page=page))
+
+
 # lost & found ---------------------------------------------------------------------------------------------------------------------
 
 
@@ -727,7 +776,8 @@ def lost_and_found_lost():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template("samples/systemLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("samples/systemLost.html", function="lost and found", pagination=pagination,
+                           pagenum=pagenum)  # 待核对
 
 
 @sysAdmin.route("/lost_and_found_found/found")
@@ -737,7 +787,8 @@ def lost_and_found_found():
     """
     pagenum = int(request.args.get('page', 1))
     pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=6)
-    return render_template("samples/systemFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+    return render_template("samples/systemFound.html", function="lost and found", pagination=pagination,
+                           pagenum=pagenum)  # 待核对
 
 
 @sysAdmin.route("/lost_and_found/details")
@@ -755,8 +806,9 @@ def lost_and_found_details():
         lost = Lost.query.filter_by(id=lost_id).first()
         reply_list = lost.replies
 
-        return render_template("samples/systemLostDetailed.html", function="lost and found", lnf_type=lnf_type, lost=lost,
-                               reply_list=reply_list)       # 待核对
+        return render_template("samples/systemLostDetailed.html", function="lost and found", lnf_type=lnf_type,
+                               lost=lost,
+                               reply_list=reply_list)  # 待核对
 
     elif lnf_type == 'found':
         found_id = request.args.get('found_id')
@@ -765,8 +817,9 @@ def lost_and_found_details():
         found = Found.query.filter_by(id=found_id).first()
         reply_list = found.replies
 
-        return render_template("samples/systemFoundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
-                               reply_list=reply_list)       # 待核对
+        return render_template("samples/systemFoundDetail.html", function="lost and found", lnf_type=lnf_type,
+                               found=found,
+                               reply_list=reply_list)  # 待核对
 
 
 @sysAdmin.route('/delete_lost')
@@ -793,4 +846,3 @@ def delete_found():
     db.session.commit()
 
     return redirect(url_for('sysAdmin.lost_and_found_found'))
-
