@@ -144,7 +144,7 @@ def home_stu_repair():
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
 def home_stu_LAF():
-    return render_template("samples/studentLF.html",function="lost and found")
+    return render_template("samples/studentLF.html", function="lost and found")
 
 
 # Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
@@ -550,11 +550,12 @@ def home_sys_admin():
             fhc += 1
 
     # a dict for storing the number of students of each college in this building
-    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem, 'CAD': cad, 'FHC': fhc}
+    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem,
+                    'CAD': cad, 'FHC': fhc}
 
     # ******************** for graph 4 ********************
-    year_now = time.localtime().tm_year % 1000 % 100    # for today, year_now should be 21
-    month_now = time.localtime().tm_mon                 # for today, month_now should be 5
+    year_now = time.localtime().tm_year % 1000 % 100  # for today, year_now should be 21
+    month_now = time.localtime().tm_mon  # for today, month_now should be 5
 
     stage1 = 0
     stage2 = 0
@@ -576,7 +577,7 @@ def home_sys_admin():
             elif diff == 3:
                 stage4 += 1
 
-        else:                       # the second semester of the year
+        else:  # the second semester of the year
             diff = year_now - year
             if diff == 1:
                 stage1 += 1
@@ -650,9 +651,11 @@ def home_sys_gue():
     if building_id == '0':
         pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Guest.query.join(Student).filter(and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        pagination = Guest.query.join(Student).filter(
+            and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home',
+                           pagination=pagination)
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
@@ -664,18 +667,40 @@ def home_sys_stu():
     if building_id == '0':
         pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
+        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum,
+                                                                                                 per_page=5)
 
-    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students', building_id=building_id)
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
+                           isSuccessful=isSuccessful, function='students', building_id=building_id)
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
 def home_sys_dorm():
     pagenum = int(request.args.get('page', 1))
     pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination, enterType='home')  # 待核对完善
+    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination,
+                           enterType='home')  # 待核对完善
 
 
 @main.route('/home_sys_lost_and_found')
 def home_sys_lost_and_found():
     return render_template('samples/sysLF.html', function="lost and found")  # 待核对
+
+
+# ------------------------------ 点击查看对应用户的个人主页 ---------------------------------------------------
+@main.route('/home_check_profile', methods=['GET', 'POST'])
+def home_check_profile():
+    role_id = request.args.get('role_id')
+    stu_wor_id = request.args.get('stu_wor_id')
+    user = request.args.get('user')
+
+    if role_id == 1:
+        stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+        return render_template('samples/studentIndex.html', user=user, stu=stu)
+
+    elif role_id == 2:
+        da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+        return render_template('samples/dormProfile.html', user=user, da=da)
+
+    elif role_id == 3:
+        return render_template('samples/systemProfile.html', user=user)
