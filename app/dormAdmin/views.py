@@ -6,7 +6,8 @@ from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import dormAdmin
 from .. import db
-from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair, Notification
+from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair, Notification, ReplyLost, \
+    ReplyFound, Lost, Found, ReplyReplyLost, ReplyReplyFound
 
 
 # students CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -195,14 +196,12 @@ def update_stu():
             if enter_type == "home":
                 return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="True"))
             elif enter_type == "search":
-                return redirect(
-                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
+                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="True"))
         else:
             if enter_type == "home":
                 return redirect(url_for('main.home_dorm_admin', page=page, isSuccessful="False"))
             elif enter_type == "search":
-                return redirect(
-                    url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
+                return redirect(url_for('dormAdmin.search_stu', content=content, tag=tag, page=page, isSuccessful="False"))
 
     return render_template('samples/dormStudents.html', function='students')
 
@@ -348,13 +347,11 @@ def search_gue():
                                                    ), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'gue_name':
-        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(
-            page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'stu_number':
 
-        gue_list = Guest.query.join(Student).filter(
-            and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        gue_list = Guest.query.join(Student).filter(and_(Student.stu_number == key_word, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
         # ref_stu_list = Student.query.filter(Student.stu_number.contains(key_word)).all()
         # gue_list = []
         # for stu in ref_stu_list:
@@ -363,16 +360,13 @@ def search_gue():
         #         gue_list.append(gue)
 
     elif tag == 'phone':
-        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(
-            page=pagenum, per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'has_left':
-        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum,
-                                                                                                        per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     elif tag == 'has_not_left':
-        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum,
-                                                                                                         per_page=5)
+        gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
     # elif tag == 'arrive_time':
     #     gue_list = Guest.query.filter(and_(Guest.arrive_time.contains(key_word), Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
@@ -430,8 +424,6 @@ def leave_gue():
 """
 旧版：按学生学号关联所访问学生
 """
-
-
 @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
 def add_gue():
     if request.method == 'POST':
@@ -463,8 +455,6 @@ def add_gue():
 """
 新版：按学生姓名关联所访问的学生，然后再筛选重名学生
 """
-
-
 #
 #
 # @dormAdmin.route('/add_gue', methods=['GET', 'POST'])
@@ -525,6 +515,7 @@ def add_gue():
 #
 #     return render_template('samples/choose_stu.html', students=students, gue_name=gue_name, phone=phone, note=note)
 #
+
 
 
 @dormAdmin.route('/update_gue', methods=['GET', 'POST'])
@@ -633,7 +624,6 @@ def check_Gue_Stu_ID_Add():
 
 # message system --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# 待写 宿管发布notification
 @dormAdmin.route('/release_notice', methods=['GET', 'POST'])
 def release_notice():
     """
@@ -676,17 +666,38 @@ def da_reply():
     """
     author_id = current_user.id
     reply_type = request.args.get('reply_type')
+
     if reply_type == 'complain':
         complain_id = request.args.get('complain_id')
     elif reply_type == 'repair':
         repair_id = request.args.get('repair_id')
+    elif reply_type == 'lost':
+        lost_id = request.args.get('lost_id')
+    elif reply_type == 'found':
+        found_id = request.args.get('found_id')
+    elif reply_type == 'nested_lost':
+        lost_reply_id = request.args.get('lost_reply_id')
+        lost_id = ReplyLost.query.get(lost_reply_id).lost.id
+    elif reply_type == 'nested_found':
+        found_reply_id = request.args.get('found_reply_id')
+        found_id = ReplyFound.query.get(found_reply_id).found.id
 
     if request.method == 'POST':
         content = request.form.get('content')
+
         if reply_type == 'complain':
             new_reply = ReplyComplain(content=content, complain_id=complain_id, auth_id=author_id)
         elif reply_type == 'repair':
             new_reply = ReplyRepair(content=content, repair_id=repair_id, auth_id=author_id)
+        elif reply_type == 'lost':
+            new_reply = ReplyLost(content=content, lost_id=lost_id, auth_id=author_id)
+        elif reply_type == 'found':
+            new_reply = ReplyFound(content=content, found_id=found_id, auth_id=author_id)
+        elif reply_type == 'nested_lost':
+            new_reply = ReplyReplyLost(content=content, lost_reply_id=lost_reply_id, auth_id=author_id)
+        elif reply_type == 'nested_found':
+            new_reply = ReplyReplyFound(content=content, found_reply_id=found_reply_id, auth_id=author_id)
+
         db.session.add(new_reply)
         db.session.commit()
 
@@ -694,9 +705,17 @@ def da_reply():
         return redirect(url_for('dormAdmin.message_details', message_type='complain', complain_id=complain_id))
     elif reply_type == 'repair':
         return redirect(url_for('dormAdmin.message_details', message_type='repair', repair_id=repair_id))
+    elif reply_type == 'lost':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+    elif reply_type == 'found':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=found_id))
+    elif reply_type == 'nested_lost':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+    elif reply_type == 'nested_found':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=found_id))
 
 
-@dormAdmin.route("/home_dormAdmin_message/repair")  # 待核对
+@dormAdmin.route("/home_dormAdmin_message/repair")    # 待核对
 def message_repair():
     """
     The function for showing the repair information in the message system
@@ -707,7 +726,7 @@ def message_repair():
     da_num = current_user.stu_wor_id
     da = DAdmin.query.filter_by(da_number=da_num).first()
     building_id = da.building_id
-    stu_list = Student.query.filter_by(building_id=building_id).all()  # 待优化
+    stu_list = Student.query.filter_by(building_id=building_id).all()           # 待优化
 
     # create a list, which contains repair objects of each student in this building
     repair_list = []
@@ -716,7 +735,7 @@ def message_repair():
         for r in repairs:
             repair_list.append(r)
 
-    return render_template("samples/dormMessageRepair.html", function="message", repair_list=repair_list)  # 待核对
+    return render_template("samples/dormMessageRepair.html", function="message", repair_list=repair_list)   # 待核对
 
 
 @dormAdmin.route("/home_dormAdmin_message/complain")  # 待核对
@@ -739,10 +758,10 @@ def message_complain():
         for c in complains:
             complain_list.append(c)
 
-    return render_template("samples/dormMessageComplainsa.html", function="message", complain_list=complain_list)  # 待核对
+    return render_template("samples/dormMessageComplainsa.html", function="message", complain_list=complain_list)     # 待核对
 
 
-@dormAdmin.route("/home_dormAdmin_message/notification")  # 待核对
+@dormAdmin.route("/home_dormAdmin_message/notification")       # 待核对
 def message_notification():
     """
     The function for showing the notification information in the message system
@@ -762,11 +781,10 @@ def message_notification():
         for n in notifications:
             notification_list.append(n)
 
-    return render_template("samples/dormMessageNotification.html", function="message",
-                           notification_list=notification_list)  # 待核对
+    return render_template("samples/dormMessageNotification.html", function="message", notification_list=notification_list) # 待核对
 
 
-@dormAdmin.route("/home_dormAdmin_message/details")  # 待核对
+@dormAdmin.route("/home_dormAdmin_message/details")   # 待核对
 def message_details():
     """
     The function for showing the detail page
@@ -782,8 +800,7 @@ def message_details():
         repair = Repair.query.filter_by(id=repair_id).first()
         reply_list = repair.replies
         # 待核对
-        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type,
-                               repair=repair, reply_list=reply_list)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, repair=repair, reply_list=reply_list)
 
     elif message_type == 'complain':
         complain_id = request.args.get('complain_id')
@@ -792,34 +809,92 @@ def message_details():
         complain = Complain.query.filter_by(id=complain_id).first()
         reply_list = complain.replies
         # 待核对
-        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type,
-                               complain=complain, reply_list=reply_list)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, complain=complain, reply_list=reply_list)
 
     elif message_type == 'notification':
         notification_id = request.args.get('notification_id')
         notification = Notification.query.filter_by(id=notification_id).first()
         # 待核对
-        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type,
-                               notification=notification)
+        return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification=notification)
 
     # return render_template("samples/dormMessageDetails.html", function="message")
 
-#----------------------------------失物招领---------------------------------------
 
-@dormAdmin.route("/home_dormAdmin_message/lost_and_found")  # 待核对
-def message_lost_and_found():
-    # get a list of students who lives in the building that is being administrated by this dorm administrator
-    da_num = current_user.stu_wor_id
-    da = DAdmin.query.filter_by(da_number=da_num).first()
-    building_id = da.building_id
-    stu_list = Student.query.filter_by(building_id=building_id).all()  # 待优化
+# lost and found system --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    # create a list, which contains lost and found objects of each student in this building
-    lost_and_found_list = []
-    for stu in stu_list:
-        lost_and_find = stu.lost_and_found
-        for l in lost_and_find:
-            lost_and_find_list.append(l)
 
-    return render_template("samples/dormMessageLostFound.html", function="message",
-                           lost_and_found_list=lost_and_found_list)  # 待核对
+@dormAdmin.route('/mark_done_lost')
+def mark_done_lost():
+    id = request.args.get('id')
+
+    lost = Lost.query.get(id)
+    lost.is_done = True
+    db.session.add(lost)
+    db.session.commit()
+
+    return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=id))
+
+
+@dormAdmin.route('/mark_done_found')
+def mark_done_found():
+    id = request.args.get('id')
+
+    found = Found.query.get(id)
+    found.is_done = True
+    db.session.add(found)
+    db.session.commit()
+
+    return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=id))
+
+
+@dormAdmin.route("/home_da_lost_and_found/lost")
+def lost_and_found_lost():
+    """
+    The function for showing the lost information in the lost and found system
+    """
+    pagenum = int(request.args.get('page', 1))
+    pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/dormLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)  # 待核对
+
+
+@dormAdmin.route("/home_da_lost_and_found/found")
+def lost_and_found_found():
+    """
+    The function for showing the found information in the lost and found system
+    """
+    pagenum = int(request.args.get('page', 1))
+    pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/dormFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+
+
+@dormAdmin.route("/home_da_lost_and_found/details")
+def lost_and_found_details():
+    """
+    The function for showing the detail page of the information in the lost and found system
+    """
+    # get the type of lost and found
+    lnf_type = request.args.get('lnf_type')
+
+    # according to the type of lost and found, get the according id
+    if lnf_type == 'lost':
+        lost_id = request.args.get('lost_id')
+
+        # get the list of replies of this piece of information
+        lost = Lost.query.filter_by(id=lost_id).first()
+        reply_list = lost.replies
+
+        return render_template("samples/dormLostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
+                               reply_list=reply_list)       # 待核对
+
+    elif lnf_type == 'found':
+        found_id = request.args.get('found_id')
+
+        # get the list of replies of this piece of information
+        found = Found.query.filter_by(id=found_id).first()
+        reply_list = found.replies
+
+        return render_template("samples/dormFoundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
+                               reply_list=reply_list)       # 待核对
+
+    # return render_template(".html", function="lostAndFound")      # 待核对
+

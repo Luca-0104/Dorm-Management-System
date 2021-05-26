@@ -1,0 +1,254 @@
+{% extends 'samples/studentBase.html' %}
+{% block mainContent %}
+<div class="col-lg-8 mx-auto p-3 py-md-5 bg-light rounded shadow-sm">
+  <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <h1>lost Detail</h1>
+  </header>
+
+  <main>
+    <div class=" border-bottom margin-bottom">
+        <dl class="row">
+              <dt class="col-sm-3">Item</dt>
+              <dd class="col-sm-9">{{lost.item}}</dd>
+              <dt class="col-sm-3">Date</dt>
+              <dd class="col-sm-9">{{ lost.lost_time }}</dd>
+              <dt class="col-sm-3">Detail</dt>
+              <dd class="col-sm-9">{{ lost.detail }}</dd>
+              <dt class="col-sm-3">lost at</dt>
+              <dd class="col-sm-9">{{ lost.place }}</dd>
+              <dt class="col-sm-3">Posted by</dt>
+              <dd class="col-sm-9">{{ lost.student.stu_name}}</dd>
+              <dt class="col-sm-3">Contact with</dt>
+              <dd class="col-sm-9">{{ lost.student.phone }}</dd>
+              <dt class="col-sm-3">Status</dt>
+              <dd class="col-sm-5">{% if lost.is_done %}
+                    Has been Founded
+                {% else %}
+                    Hasn't been Found
+                {% endif %}
+              </dd>
+              <dd class="col-sm-4">
+              {% if uid == current_user.id %}
+              {% if lost.is_done %}
+                {% else %}
+                     <a class="btn btn-outline-primary btn-sm " href="{{ url_for('student.mark_done_lost') }}?id={{ lost.id }}">Get Back</a>
+                {% endif %}
+              {% endif %}
+
+              </dd>
+        </dl>
+    </div>
+
+
+
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <h1>Pictures</h1>
+  </header>
+
+    <div class="row g-5">
+      <div class="col-md-6">
+         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
+      </div>
+    </div>
+  </main>
+  <footer class="pt-5 my-5 text-muted border-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <a class="card-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">show all replies</a>
+             <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Comment</button>
+        </div>
+  </footer>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('student.stu_reply') }}?reply_type=lost&lost_id={{ lost.id }}" method="post" id="commentForm">
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Comment:</label>
+            <textarea class="form-control" id="message-text" name="content"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="comment">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="collapse" id="collapseExample">
+  <div class="my-3 p-3 bg-white rounded shadow-sm">
+    <h6 class="border-bottom border-gray pb-2 mb-0">All Replies</h6>
+      {% for reply in reply_list %}
+             <div class="media text-muted pt-3  border-bottom border-gray">
+                    <img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
+                    {{ url_for('static',filename = reply.user.icon) }}
+                    {% else %}
+                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
+                    {% endif %}" alt="icon"/>
+
+      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <strong class="d-block text-gray-dark">{{reply.user.user_name}}</strong>
+        {{ reply.content }}
+      </p>
+       </div>
+    <small class="d-block text-right mt-3">
+      <a class="card-link" data-toggle="collapse" href="#collapseExampleReply{{ reply.id }}" role="button" aria-expanded="false" aria-controls="collapseExampleReply{{ reply.id }}">
+    Show all replies
+  </a>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModalReply{{ reply.id }}" data-whatever="@mdo">Reply</button>
+    </small>
+
+<div class="modal fade" id="exampleModalReply{{ reply.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reply</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('student.stu_reply') }}?reply_type=nested_lost&lost_reply_id={{ reply.id }}" method="post" id="replyForm{{ reply.id }}">
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Reply:</label>
+            <textarea class="form-control" id="message-text" name="content"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="reply{{ reply.id }}">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="collapse" id="collapseExampleReply{{ reply.id }}">
+  <div class="card card-body">
+      {% for myReply in reply.replies %}
+            <div class="media text-muted pt-3">
+      <img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if myReply.user.icon %}
+                    {{ url_for('static',filename = myReply.user.icon) }}
+                    {% else %}
+                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
+                    {% endif %}" alt="icon"/>
+      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <strong class="d-block text-gray-dark">{{ myReply.user.user_name }}</strong>
+          {{ myReply.content }}
+      </p>
+    </div>
+      {% endfor %}
+  </div>
+    </div>
+      {% endfor %}
+
+{#    <div class="media text-muted pt-3  border-bottom border-gray">#}
+{#                    <img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="../../static/images/auth/login.jpg" alt="icon"/>#}
+{##}
+{#      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">#}
+{#        <strong class="d-block text-gray-dark">@username</strong>#}
+{#        Playing ping pong all night long, everything's all neon and hazy. Yeah, she's so in demand. She's sweet as pie but if you break her heart. But down to earth. It's time to face the music I'm no longer your muse. I guess that I forgot I had a choice.#}
+{##}
+{#      </p>#}
+{#       </div>#}
+{#    <small class="d-block text-right mt-3">#}
+{#      <a class="card-link" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">#}
+{#    Show all replies#}
+{#  </a>#}
+{#        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal1" data-whatever="@mdo">Reply</button>#}
+{#    </small>#}
+{##}
+{#<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#  <div class="modal-dialog">#}
+{#    <div class="modal-content">#}
+{#      <div class="modal-header">#}
+{#        <h5 class="modal-title" id="exampleModalLabel">New message</h5>#}
+{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#          <span aria-hidden="true">&times;</span>#}
+{#        </button>#}
+{#      </div>#}
+{#      <div class="modal-body">#}
+{#        <form>#}
+{#          <div class="form-group">#}
+{#            <label for="recipient-name" class="col-form-label">Recipient:</label>#}
+{#            <input type="text" class="form-control" id="recipient-name">#}
+{#          </div>#}
+{#          <div class="form-group">#}
+{#            <label for="message-text" class="col-form-label">Message:</label>#}
+{#            <textarea class="form-control" id="message-text"></textarea>#}
+{#          </div>#}
+{#        </form>#}
+{#      </div>#}
+{#      <div class="modal-footer">#}
+{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+{#        <button type="button" class="btn btn-primary">Send message</button>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+{#    <div class="collapse" id="collapseExample1">#}
+{#  <div class="card card-body">#}
+{#   <div class="media text-muted pt-3">#}
+{#      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>#}
+{##}
+{#      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">#}
+{#        <strong class="d-block text-gray-dark">@username</strong>#}
+{#        Standing on the frontline when the bombs start to fall. Heaven is jealous of our love, angels are crying from up above. Can't replace you with a million rings. Boy, when you're with me I'll give you a taste. There’s no going back. Before you met me I was alright but things were kinda heavy. Heavy is the head that wears the crown.#}
+{#      </p>#}
+{#    </div>#}
+{#    <div class="media text-muted pt-3">#}
+{#      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>#}
+{##}
+{#      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">#}
+{#        <strong class="d-block text-gray-dark">@username</strong>#}
+{#        Will you do the same for me? It's time to face the music I'm no longer your muse. Heard it's beautiful, be the judge and my girls gonna take a vote. I can feel a phoenix inside of me. Heaven is jealous of our love, angels are crying from up above. Yeah, you take me to utopia.#}
+{#      </p>#}
+{#    </div>  </div>#}
+{#    </div>#}
+
+
+{#    <div class="media text-muted pt-3">#}
+{#      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>#}
+{##}
+{#      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">#}
+{#        <strong class="d-block text-gray-dark">@username</strong>#}
+{#        Standing on the frontline when the bombs start to fall. Heaven is jealous of our love, angels are crying from up above. Can't replace you with a million rings. Boy, when you're with me I'll give you a taste. There’s no going back. Before you met me I was alright but things were kinda heavy. Heavy is the head that wears the crown.#}
+{#      </p>#}
+{#    </div>#}
+{#    <div class="media text-muted pt-3">#}
+{#      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>#}
+{##}
+{#      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">#}
+{#        <strong class="d-block text-gray-dark">@username</strong>#}
+{#        Will you do the same for me? It's time to face the music I'm no longer your muse. Heard it's beautiful, be the judge and my girls gonna take a vote. I can feel a phoenix inside of me. Heaven is jealous of our love, angels are crying from up above. Yeah, you take me to utopia.#}
+{#      </p>#}
+{#    </div>#}
+{#    <small class="d-block text-right mt-3">#}
+{#      <a href="#">All updates</a>#}
+{#    </small>#}
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('#comment').click(function(){
+
+	document.getElementById("commentForm").submit();
+});
+</script>
+
+<script>
+    {% for reply in reply_list %}
+     $('#reply{{ reply.id }}').click(function(){
+	document.getElementById("replyForm{{ reply.id }}").submit();
+});
+    {% endfor %}
+</script>
+{% endblock %}

@@ -1,8 +1,7 @@
-{% extends "samples/studentBase.html" %}
-{% block mainContent %}
+{% extends 'samples/systemBase.html' %}
+
+{% block mainContent%}
 <div class="container">
-<div class="album py-5 bg-light">
-    <div class="container">
 
       <div class="row">
         <div class="col-md-2">
@@ -57,45 +56,29 @@
                 <form>
 
   <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_name}}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Name</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{user.user_name}}">
     </div>
   </div>
   <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Student Number</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_number}}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Working Number</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{user.stu_wor_id}}">
     </div>
   </div>
-  <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">College</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.college }}">
-    </div>
-  </div>
-<div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Room</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.room_number }}">
-    </div>
-  </div>
+
+
                     <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Building</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.building_id }}">
-    </div>
-  </div>
-                    <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Phone</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.phone }}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Phone</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ user.phone }}">
     </div>
   </div>
    <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.email }}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Email</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ user.email }}">
     </div>
   </div>
 </form>

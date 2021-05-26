@@ -6,7 +6,7 @@ from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import sysAdmin
 from .. import db
-from ..models import Student, Guest
+from ..models import Student, Guest, DAdmin, Lost, Found
 
 
 @sysAdmin.route('/search_stu', methods=['GET', 'POST'])
@@ -64,43 +64,48 @@ def search_stu():
 
     else:
         if tag == 'all':
-            stu_list = Student.query.filter(and_(Student.building_id == building_id, or_(Student.stu_name.contains(key_word),
-                                                     Student.stu_number.contains(key_word),
-                                                     Student.phone.contains(key_word),
-                                                     Student.college.contains(key_word),
-                                                     Student.room_number.contains(key_word),
-                                                     # Student.enroll_date.contains(key_word)
-                                                     ), Student.is_deleted == False)).order_by(
+            stu_list = Student.query.filter(
+                and_(Student.building_id == building_id, or_(Student.stu_name.contains(key_word),
+                                                             Student.stu_number.contains(key_word),
+                                                             Student.phone.contains(key_word),
+                                                             Student.college.contains(key_word),
+                                                             Student.room_number.contains(key_word),
+                                                             # Student.enroll_date.contains(key_word)
+                                                             ), Student.is_deleted == False)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
         elif tag == 'stu_name':
             stu_list = Student.query.filter(
-                and_(Student.stu_name.contains(key_word), Student.is_deleted == False, Student.building_id == building_id)).order_by(
+                and_(Student.stu_name.contains(key_word), Student.is_deleted == False,
+                     Student.building_id == building_id)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
         elif tag == 'stu_number':
             stu_list = Student.query.filter(
-                and_(Student.stu_number.contains(key_word), Student.is_deleted == False, Student.building_id == building_id)).order_by(
+                and_(Student.stu_number.contains(key_word), Student.is_deleted == False,
+                     Student.building_id == building_id)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
         elif tag == 'phone':
             stu_list = Student.query.filter(
-                and_(Student.phone.contains(key_word), Student.is_deleted == False, Student.building_id == building_id)).order_by(
+                and_(Student.phone.contains(key_word), Student.is_deleted == False,
+                     Student.building_id == building_id)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
         elif tag == 'college':
             stu_list = Student.query.filter(
-                and_(Student.college.contains(key_word), Student.is_deleted == False, Student.building_id == building_id)).order_by(
+                and_(Student.college.contains(key_word), Student.is_deleted == False,
+                     Student.building_id == building_id)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
         elif tag == 'room_number':
             stu_list = Student.query.filter(
-                and_(Student.room_number.contains(key_word), Student.is_deleted == False, Student.building_id == building_id)).order_by(
+                and_(Student.room_number.contains(key_word), Student.is_deleted == False,
+                     Student.building_id == building_id)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
     return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='students')
-
 
 
 # @sysAdmin.route('/delete_stu', endpoint='delete')
@@ -414,37 +419,47 @@ def search_gue():
                                                        Guest.stu_id == stu.id,
                                                        Guest.arrive_time.contains(key_word),
                                                        Guest.leave_time.contains(key_word),
-                                                       ), Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(page=pagenum, per_page=5)
+                                                       ), Guest.is_deleted == False,
+                                                   Guest.student.building_id == building_id)).paginate(page=pagenum,
+                                                                                                       per_page=5)
             else:
                 gue_list = Guest.query.filter(and_(or_(Guest.gue_name.contains(key_word),
                                                        Guest.phone.contains(key_word),
                                                        Guest.arrive_time.contains(key_word),
                                                        Guest.leave_time.contains(key_word),
-                                                       ), Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(page=pagenum, per_page=5)
+                                                       ), Guest.is_deleted == False,
+                                                   Guest.student.building_id == building_id)).paginate(page=pagenum,
+                                                                                                       per_page=5)
 
         elif tag == 'gue_name':
-            gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(
+            gue_list = Guest.query.filter(and_(Guest.gue_name.contains(key_word), Guest.is_deleted == False,
+                                               Guest.student.building_id == building_id)).paginate(
                 page=pagenum, per_page=5)
 
         elif tag == 'stu_number':
 
             gue_list = Guest.query.join(Student).filter(
-                and_(Student.stu_number == key_word, Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(page=pagenum, per_page=5)
+                and_(Student.stu_number == key_word, Guest.is_deleted == False,
+                     Guest.student.building_id == building_id)).paginate(page=pagenum, per_page=5)
 
         elif tag == 'phone':
-            gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(
+            gue_list = Guest.query.filter(and_(Guest.phone.contains(key_word), Guest.is_deleted == False,
+                                               Guest.student.building_id == building_id)).paginate(
                 page=pagenum, per_page=5)
 
         elif tag == 'has_left':
-            gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(
+            gue_list = Guest.query.filter(and_(Guest.has_left == True, Guest.is_deleted == False,
+                                               Guest.student.building_id == building_id)).paginate(
                 page=pagenum, per_page=5)
 
         elif tag == 'has_not_left':
-            gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False, Guest.student.building_id == building_id)).paginate(
+            gue_list = Guest.query.filter(and_(Guest.has_left == False, Guest.is_deleted == False,
+                                               Guest.student.building_id == building_id)).paginate(
                 page=pagenum, per_page=5)
 
     return render_template('samples/systemGuests.html', pagination=gue_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='guests')  # 待完善核对
+
 
 #
 # @sysAdmin.route('/delete_gue', endpoint='delete_gue')
@@ -596,7 +611,7 @@ def validate_gue_phone(p):
 def check_Gue_Stu_ID():
     stu_id = request.args.get('id')
     user = Student.query.filter(Student.stu_number == stu_id).all()
-    if stu_id=="":
+    if stu_id == "":
         return jsonify(code=200, msg="this phone number is available")
     print(len(user))
     if len(user) == 0:
@@ -612,7 +627,7 @@ def check_Gue_Stu_ID_Add():
     phone = request.args.get('phone')
     gue_name = request.args.get('gue_name')
     user = Student.query.filter(Student.stu_number == stu_id).all()
-    if stu_id=="" or gue_name=="" or phone=="":
+    if stu_id == "" or gue_name == "" or phone == "":
         return jsonify(code=400, msg="Please fill the required information")
     print(len(user))
     if len(user) == 0:
@@ -620,3 +635,162 @@ def check_Gue_Stu_ID_Add():
         return jsonify(code=400, msg="This ID doesn't Exist")
     else:
         return jsonify(code=200, msg="this phone number is available")
+
+
+# dormitory administrator CRUD ------------------------------------------------------------------------------------------------------------
+
+
+@sysAdmin.route('/search_da', methods=['GET', 'POST'])
+def search_da():
+    """
+    fuzzy querying was used
+    get a da_list that is a list of dormAdmin objects that meet the filter requirement
+    """
+    building_id = request.args.get('building_id', '0')
+
+    key_word = request.args.get('content')
+    tag = request.args.get('tag')
+    pagenum = int(request.args.get('page', 1))
+    enter_type = 'search'
+    is_successful = request.args.get('isSuccessful', "True")  # The default value is True
+
+    if building_id == '0':
+        if tag == 'all':
+            da_list = DAdmin.query.filter(and_(or_(DAdmin.da_name.contains(key_word),
+                                                   DAdmin.da_number.contains(key_word),
+                                                   DAdmin.phone.contains(key_word),
+                                                   DAdmin.email.contains(key_word),
+                                                   ), DAdmin.is_deleted == False)).order_by(
+                DAdmin.building_id).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'da_name':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.da_name.contains(key_word), DAdmin.is_deleted == False)).order_by(
+                DAdmin.building_id).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'da_number':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.da_number.contains(key_word), DAdmin.is_deleted == False)).order_by(
+                DAdmin.building_id).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'phone':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.phone.contains(key_word), DAdmin.is_deleted == False)).order_by(
+                DAdmin.building_id).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'email':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.email.contains(key_word), DAdmin.is_deleted == False)).order_by(
+                DAdmin.building_id).paginate(page=pagenum, per_page=5)
+
+    else:
+        if tag == 'all':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.building_id == building_id, or_(DAdmin.da_name.contains(key_word),
+                                                            DAdmin.da_number.contains(key_word),
+                                                            DAdmin.phone.contains(key_word),
+                                                            DAdmin.email.contains(key_word),
+                                                            ), DAdmin.is_deleted == False)).order_by(
+                DAdmin.building_id).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'da_name':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.da_name.contains(key_word), DAdmin.is_deleted == False,
+                     DAdmin.building_id == building_id)).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'da_number':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.da_number.contains(key_word), DAdmin.is_deleted == False,
+                     DAdmin.building_id == building_id)).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'phone':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.phone.contains(key_word), DAdmin.is_deleted == False,
+                     DAdmin.building_id == building_id)).paginate(page=pagenum, per_page=5)
+
+        elif tag == 'email':
+            da_list = DAdmin.query.filter(
+                and_(DAdmin.email.contains(key_word), DAdmin.is_deleted == False,
+                     DAdmin.building_id == building_id)).paginate(page=pagenum, per_page=5)
+
+    return render_template('.html', pagination=da_list, enterType=enter_type, content=key_word,
+                           tag=tag, isSuccessful=is_successful, function='das')
+
+
+# lost & found ---------------------------------------------------------------------------------------------------------------------
+
+
+@sysAdmin.route("/lost_and_found_lost/lost")
+def lost_and_found_lost():
+    """
+    The function for showing the lost information in the lost and found system
+    """
+    pagenum = int(request.args.get('page', 1))
+    pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/systemLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+
+
+@sysAdmin.route("/lost_and_found_found/found")
+def lost_and_found_found():
+    """
+    The function for showing the found information in the lost and found system
+    """
+    pagenum = int(request.args.get('page', 1))
+    pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=6)
+    return render_template("samples/systemFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+
+
+@sysAdmin.route("/lost_and_found/details")
+def lost_and_found_details():
+    """
+    The function for showing the detail page of the information in the lost and found system
+    """
+    # get the type of lost and found
+    lnf_type = request.args.get('lnf_type')
+    # according to the type of lost and found, get the according id
+    if lnf_type == 'lost':
+        lost_id = request.args.get('lost_id')
+
+        # get the list of replies of this piece of information
+        lost = Lost.query.filter_by(id=lost_id).first()
+        reply_list = lost.replies
+
+        return render_template("samples/systemLostDetailed.html", function="lost and found", lnf_type=lnf_type, lost=lost,
+                               reply_list=reply_list)       # 待核对
+
+    elif lnf_type == 'found':
+        found_id = request.args.get('found_id')
+
+        # get the list of replies of this piece of information
+        found = Found.query.filter_by(id=found_id).first()
+        reply_list = found.replies
+
+        return render_template("samples/systemFoundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
+                               reply_list=reply_list)       # 待核对
+
+
+@sysAdmin.route('/delete_lost')
+def delete_lost():
+    id = request.args.get('id')
+
+    lost = Lost.query.get(id)
+    lost.is_deleted = True
+
+    db.session.add(lost)
+    db.session.commit()
+
+    return redirect(url_for('sysAdmin.lost_and_found_lost'))
+
+
+@sysAdmin.route('/delete_found')
+def delete_found():
+    id = request.args.get('id')
+
+    found = Found.query.get(id)
+    found.is_deleted = True
+
+    db.session.add(found)
+    db.session.commit()
+
+    return redirect(url_for('sysAdmin.lost_and_found_found'))
+

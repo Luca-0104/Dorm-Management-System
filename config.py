@@ -3,10 +3,17 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
+
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess key'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    app_dir = os.path.join(basedir, 'app')
+    static_dir = os.path.join(app_dir, 'static')
+    upload_dir = os.path.join(static_dir, 'upload')
+    found_dir = os.path.join(upload_dir, 'found')       # The directory for storing the photos of found items
+    lost_dir = os.path.join(upload_dir, 'lost')       # The directory for storing the photos of lost items
+    avatar_dir = os.path.join(upload_dir, 'avatar')     # The directory for storing the avatars of users
 
     @staticmethod
     def init_app(app):
@@ -33,3 +40,12 @@ config = {
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
+
+
+# if __name__ == '__main__':
+#     print(basedir)
+#     print(Config.app_dir)
+#     print(Config.static_dir)
+#     print(Config.upload_dir)
+#     print(Config.found_dir)
+#     print(Config.avatar_dir)
