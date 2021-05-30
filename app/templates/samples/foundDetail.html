@@ -56,7 +56,7 @@
       <div class="modal-body">
         <form action="{{ url_for('student.add_found_pic') }}?found_id={{ found.id }}" method="post" id="iconForm" enctype="multipart/form-data">
           <div class="custom-file">
-  <input type="file" class="form-control" id="customFile" name="icon" >
+  <input type="file" class="form-control" id="customFile" name="found_icon" >
   <label class="custom-file-label" for="customFile"></label>
 
 </div>
@@ -65,7 +65,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="submitIcon">Save</button>
+        <button type="button" class="btn btn-primary" id="submitIcon">Upload</button>
       </div>
     </div>
   </div>
@@ -75,9 +75,18 @@
 
     <div class="row g-5">
       <div class="col-md-6">
-          <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = found.icon) }}" alt="icon" onclick="{{ url_for('student.my_lost_and_found') }}"/>
-      </div>
+  {% if found.pics %}
+      {% for i in found.pics %}
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                    {{ url_for('static',filename = i.address ) }}
+                    " alt="icon"/>
+                {% else %}
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
+                     " alt="icon"/>
 
+        {% endfor %}
+                    {% endif %}
 
     </div>
   </main>
@@ -116,7 +125,7 @@
     <h6 class="border-bottom border-gray pb-2 mb-0">All Replies</h6>
       {% for reply in reply_list %}
              <div class="media text-muted pt-3  border-bottom border-gray">
-                    <a href="{{ url_for('student.my_lost_and_found') }}"><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
+                    <a href="{{ url_for('main.check_profile') }}?uid={{ reply.user.id }}"><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
                     {{ url_for('static',filename = reply.user.icon) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
@@ -280,5 +289,11 @@
 	document.getElementById("replyForm{{ reply.id }}").submit();
 });
     {% endfor %}
+</script>
+<script>
+    $('#submitIcon').click(function(){
+
+	document.getElementById("iconForm").submit();
+});
 </script>
 {% endblock %}
