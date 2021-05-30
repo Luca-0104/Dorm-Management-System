@@ -106,7 +106,7 @@ def search_stu():
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
     return render_template('samples/systemStudents.html', pagination=stu_list, enterType=enter_type, content=key_word,
-                           tag=tag, isSuccessful=is_successful, function='students')
+                           tag=tag, isSuccessful=is_successful, function='students', building_id=building_id)
 
 
 # @sysAdmin.route('/delete_stu', endpoint='delete')
@@ -459,7 +459,7 @@ def search_gue():
                 page=pagenum, per_page=5)
 
     return render_template('samples/systemGuests.html', pagination=gue_list, enterType=enter_type, content=key_word,
-                           tag=tag, isSuccessful=is_successful, function='guests')  # 待完善核对
+                           tag=tag, isSuccessful=is_successful, function='guests', building_id=building_id)  # 待完善核对
 
 
 #
@@ -715,7 +715,7 @@ def search_da():
                      DAdmin.building_id == building_id)).paginate(page=pagenum, per_page=5)
 
     return render_template('samples/systemDorm.html', pagination=da_list, enterType=enter_type, content=key_word,
-                           tag=tag, isSuccessful=is_successful, function='dormAdmin')
+                           tag=tag, isSuccessful=is_successful, function='dormAdmin', building_id=building_id)
 
 
 @sysAdmin.route('/delete_da')
