@@ -105,7 +105,7 @@ def search_stu():
                      Student.building_id == building_id)).order_by(
                 Student.room_number).paginate(page=pagenum, per_page=5)
 
-    return render_template('samples/testindex.html', pagination=stu_list, enterType=enter_type, content=key_word,
+    return render_template('samples/systemStudents.html', pagination=stu_list, enterType=enter_type, content=key_word,
                            tag=tag, isSuccessful=is_successful, function='students')
 
 
