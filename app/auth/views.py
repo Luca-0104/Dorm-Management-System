@@ -120,6 +120,7 @@ def register():
             if validate_email(email) and validate_phone(phone) and validate_id(stu_wor_id):
                 new_user = User(user_name=username, stu_wor_id=stu_wor_id, role_id=role_id, password=password,
                                 email=email, phone=phone)
+
                 flash('Registered successfully! You can login now.')
                 db.session.add(new_user)
                 db.session.commit()
