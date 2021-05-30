@@ -6,6 +6,7 @@ from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import sysAdmin
 from .. import db
+from ..main.views import validate_da_phone, validate_da_email
 from ..models import Student, Guest, DAdmin, Lost, Found
 
 
@@ -713,8 +714,81 @@ def search_da():
                 and_(DAdmin.email.contains(key_word), DAdmin.is_deleted == False,
                      DAdmin.building_id == building_id)).paginate(page=pagenum, per_page=5)
 
-    return render_template('.html', pagination=da_list, enterType=enter_type, content=key_word,
-                           tag=tag, isSuccessful=is_successful, function='das')
+    return render_template('samples/systemDorm.html', pagination=da_list, enterType=enter_type, content=key_word,
+                           tag=tag, isSuccessful=is_successful, function='dormAdmin')
+
+
+@sysAdmin.route('/delete_da')
+def delete_da():
+    """
+        The function for system admin to delete the dorm admin
+    """
+    id = request.args.get('id')
+    content = request.args.get('content')
+    tag = request.args.get('tag')
+    enter_type = request.args.get('enterType')
+    page = request.args.get('page')
+
+    da = DAdmin.query.get(id)
+    da.is_deleted = True
+    db.session.add(da)
+    db.session.commit()
+
+    if enter_type == "home":
+        return redirect(url_for('main.home_sys_dorm', page=page))
+    elif enter_type == "search":
+        return redirect(url_for('sysAdmin.search_da', content=content, tag=tag, page=page))
+
+    return redirect(url_for('main.home_sys_dorm', page=page))
+
+
+@sysAdmin.route('/add_da', methods=['GET', 'POST'])
+def add_da():
+    """
+        A function for system admin to insert the information of new dorm admin into the database
+    """
+    if request.method == 'POST':
+        da_name = request.form.get('name')
+        da_number = request.form.get('da_number')
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+        building_id_str = request.form.get('building_id')
+
+        if building_id_str != '':
+            building_id = int(building_id_str)
+
+        if da_name != '' and da_number != '' and phone != '' and email != '' and building_id is not None:
+            if validate_da_number(da_number) and validate_da_phone(phone) and validate_da_email(email):
+                new_da = DAdmin(da_name=da_name,
+                                da_number=da_number,
+                                phone=phone,
+                                email=email,
+                                building_id=building_id)
+                db.session.add(new_da)
+                db.session.commit()
+                return redirect(url_for('main.home_sys_dorm', isSuccessful=True))
+            else:
+                return redirect(url_for('main.home_sys_dorm', isSuccessful=False))
+        else:
+            return redirect(url_for('main.home_sys_dorm', isSuccessful=False))
+
+    return render_template('samples/systemDorm.html', function='dormAdmin')
+
+
+def validate_da_number(n):
+    """
+    Verify if the dormAdmin number has not been used and in the correct format.
+    :param n:   da number
+    """
+    if len(n) == 8 and n[0] == 'A':
+        print('da_number ok')
+        da = DAdmin.query.filter_by(da_number=n).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
 
 
 # lost & found ---------------------------------------------------------------------------------------------------------------------

@@ -85,6 +85,168 @@ def profile():
         return render_template('samples/systemProfile.html', user=current_user)
 
 
+@main.route('/check_profile')
+def check_profile():
+    """
+        When clicking on the avatar of a user, the profile of this user can be checked
+    """
+    role_id = request.args.get('role_id')
+    uid = request.args.get('uid')
+    user = User.quer.get(uid)
+    stu_wor_id = user.stu_wor_id
+
+    if role_id == 1:
+        stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+        return render_template('samples/.html', user=user, stu=stu)     # 待核对
+
+    elif role_id == 2:
+        da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+        return render_template('samples/.html', user=user, da=da)       # 待核对
+
+    elif role_id == 3:
+        return render_template('samples/.html', user=user)              # 待核对
+
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    """
+        A method for editing the profile
+    """
+    role_id = current_user.role_id
+    stu_wor_id = current_user.stu_wor_id
+
+    if request.method == 'POST':
+
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+
+        # update the stu, da, sa tables
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            if validate_stu_phone(phone):
+                stu.phone = phone
+            if validate_stu_email(email):
+                stu.email = email
+            db.session.add(stu)
+
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            if validate_da_phone(phone):
+                da.phone = phone
+            if validate_da_email(email):
+                da.email = email
+            db.session.add(da)
+
+        elif role_id == 3:
+            pass
+
+        # update the user table
+        if validate_user_phone(phone):
+            current_user.phone = phone
+        if validate_user_email(email):
+            current_user.email = email
+
+        db.session.commit()
+
+
+
+
+def validate_stu_phone(p):
+    """
+    Verify if the phone number has not been used in student table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        stu = Student.query.filter_by(phone=p).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_da_phone(p):
+    """
+    Verify if the phone number has not been used in dorm admin table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        da = DAdmin.query.filter_by(phone=p).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_user_phone(p):
+    """
+    Verify if the phone number has not been used in user table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        user = User.query.filter_by(phone=p).first()
+        if user:
+            if not user.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_stu_email(e):
+    """
+    Verify if the email has not been used in student table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        stu = Student.query.filter_by(email=e).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_da_email(e):
+    """
+    Verify if the email has not been used in dorm admin table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        da = DAdmin.query.filter_by(email=e).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_user_email(e):
+    """
+    Verify if the email has not been used in user table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        user = User.query.filter_by(email=e).first()
+        if user:
+            if not user.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
 # ----------------------------------------------- main pages of students  -----------------------------------------------
 
 
@@ -156,7 +318,7 @@ def home_stu_message():
 @main.route('/home_stu_lost', methods=['GET', 'POST'])
 def home_stu_lost():
     """
-    Shows only the lost information of this student himself
+    Shows only the lost information of this student himself (about me)
     """
     pagenum = int(request.args.get('page', 1))
     stu_num = current_user.stu_wor_id
@@ -170,7 +332,7 @@ def home_stu_lost():
 @main.route('/home_stu_found', methods=['GET', 'POST'])
 def home_stu_found():
     """
-    Shows only the found information of this student himself
+    Shows only the found information of this student himself (about me)
     """
     pagenum = int(request.args.get('page', 1))
     stu_num = current_user.stu_wor_id
