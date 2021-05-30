@@ -14,6 +14,6 @@ $('#search2').click(function(){
 $('#search3').click(function(){
 	let content = $("input[name='search_da']").val();
 	var tag = document.getElementById("inputGroupSelect03").value;
-	location.href="/dormAdmin/search_gue?content="+content+"&tag="+tag;
+	location.href="/sysAdmin/search_da?content="+content+"&tag="+tag;
 });
 
