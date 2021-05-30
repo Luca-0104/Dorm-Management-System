@@ -174,8 +174,6 @@ def edit_profile():
         db.session.commit()
 
 
-
-
 def validate_stu_phone(p):
     """
     Verify if the phone number has not been used in student table.
@@ -843,9 +841,16 @@ def home_sys_stu():
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
 def home_sys_dorm():
+    building_id = request.args.get('building_id', '0')
     pagenum = int(request.args.get('page', 1))
-    pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination, enterType='home')  # 待核对完善
+    isSuccessful = request.args.get('isSuccessful', "True")
+
+    if building_id == '0':
+        pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    else:
+        pagination = DAdmin.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
+
+    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination, enterType='home', isSuccessful=isSuccessful, building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_lost_and_found')
