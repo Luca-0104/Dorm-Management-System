@@ -516,6 +516,9 @@ def add_lost():
         else:
             return redirect(url_for('student.lost_and_found_lost'))
 
+        db.session.add(new_lost)
+        db.session.commit()
+
         # if there is a picture uploaded
         if icon:
 
@@ -539,7 +542,6 @@ def add_lost():
                 new_pic = LostPic(address=pic, lost_id=new_lost.id)
                 # new_lost.icon = pic
 
-                db.session.add(new_lost)
                 db.session.add(new_pic)
                 db.session.commit()
 
@@ -548,9 +550,7 @@ def add_lost():
 
         # if there are no picture uploaded
         else:
-
-            db.session.add(new_lost)
-            db.session.commit()
+            pass
 
     return redirect(url_for('student.lost_and_found_lost'))
 
@@ -592,6 +592,9 @@ def add_found():
                 else:
                     new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
 
+                db.session.add(new_found)
+                db.session.commit()
+
                 # Ensure the distinct name of each picture by inserting a random int into the icon_name
                 num = random.randint(0, 99999)
                 while num in num_list:
@@ -607,7 +610,6 @@ def add_found():
                 # new_found.icon = pic
                 new_pic = FoundPic(address=pic, found_id=new_found.id)
 
-                db.session.add(new_found)
                 db.session.add(new_pic)
                 db.session.commit()
 
