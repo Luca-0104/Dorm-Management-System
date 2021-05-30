@@ -91,7 +91,7 @@ def check_profile():
         When clicking on the avatar of a user, the profile of this user can be checked
     """
     uid = request.args.get('uid')
-    user = User.quer.get(uid)
+    user = User.query.get(uid)
     role_id = user.role_id
     stu_wor_id = user.stu_wor_id
 
@@ -100,24 +100,36 @@ def check_profile():
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-            return render_template('samples/.html', user=user, stu=stu)  # 待核对
+            return render_template('samples/showProfile.html', user=user, stu=stu)  # 待核对
 
         # click on the avatar of a dorm admin
         elif role_id == 2:
             da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
-            return render_template('samples/.html', user=user, da=da)  # 待核对
+            return render_template('samples/showProfile.html', user=user, da=da)  # 待核对
 
     # the current user is a dorm admin
     elif current_user.id == 2:
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-            return render_template('samples/.html', user=user, stu=stu)  # 待核对
+            return render_template('samples/dormShowProfile.html', user=user, stu=stu)  # 待核对
 
         # click on the avatar of a dorm admin
         elif role_id == 2:
             da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
-            return render_template('samples/.html', user=user, da=da)  # 待核对
+            return render_template('samples/dormShowProfile.html', user=user, da=da)  # 待核对
+
+    # the current user is a system admin
+    elif current_user.id == 3:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/systemShowProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/systemShowProfile.html', user=user, da=da)  # 待核对
 
 
 @main.route('/edit_profile', methods=['GET', 'POST'])
