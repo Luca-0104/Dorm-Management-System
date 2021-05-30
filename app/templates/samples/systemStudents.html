@@ -456,7 +456,7 @@ $('#phone{{ student.id }}').blur(function () {
 $('#search1').click(function(){
 	let content = $("input[name='search']").val();
 	var tag = document.getElementById("inputGroupSelect01").value;
-	location.href="{{ url_for('sysAdmin.search_stu') }}?content="+content+"&tag="+tag;
+	location.href="{{ url_for('sysAdmin.search_stu') }}?content="+content+"&tag="+tag+"&building_id="+{{ building_id }};
 });
 
 </script>
