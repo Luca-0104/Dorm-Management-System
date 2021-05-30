@@ -169,11 +169,18 @@
 
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if found.icon %}
-                    {{ url_for('static',filename =found.icon) }}
-                    {% else %}
+          {% if found.pics %}
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                    {{ url_for('static',filename = found.pics[0].address ) }}
+                    " alt="icon"/>
+                {% else %}
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
-                    {% endif %}" alt="icon"/>
+                     " alt="icon"/>
+
+                    {% endif %}
+
+
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                 <small class="text-muted">{% if found.is_done %}
