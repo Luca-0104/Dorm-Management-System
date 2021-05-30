@@ -90,21 +90,34 @@ def check_profile():
     """
         When clicking on the avatar of a user, the profile of this user can be checked
     """
-    role_id = request.args.get('role_id')
     uid = request.args.get('uid')
     user = User.quer.get(uid)
+    role_id = user.role_id
     stu_wor_id = user.stu_wor_id
 
-    if role_id == 1:
-        stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-        return render_template('samples/.html', user=user, stu=stu)     # 待核对
+    # the current user is a student
+    if current_user.id == 1:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/.html', user=user, stu=stu)  # 待核对
 
-    elif role_id == 2:
-        da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
-        return render_template('samples/.html', user=user, da=da)       # 待核对
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/.html', user=user, da=da)  # 待核对
 
-    elif role_id == 3:
-        return render_template('samples/.html', user=user)              # 待核对
+    # the current user is a dorm admin
+    elif current_user.id == 2:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/.html', user=user, da=da)  # 待核对
 
 
 @main.route('/edit_profile', methods=['GET', 'POST'])

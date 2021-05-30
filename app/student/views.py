@@ -617,7 +617,80 @@ def add_found():
     return redirect(url_for('student.lost_and_found_found'))
 
 
+@student.route('/add_lost_pic', methods=['GET', 'POST'])
+def add_lost_pic():
+    """
+    The function for adding more pictures of lost item
+    """
+    lost_id = request.args.get('lost_id')
 
+    if request.method == 'POST':
+        icon = request.files.get('lost_icon')
+
+        # if there is a picture uploaded
+        if icon:
+
+            icon_name = icon.filename
+            suffix = icon_name.rsplit('.')[-1]
+            if suffix in ALLOWED_EXTENSIONS:
+                path = 'upload/lost'
+
+                # Ensure the distinct name of each picture by inserting a random int into the icon_name
+                num = random.randint(0, 99999)
+                while num in num_list:
+                    num = random.randint(0, 99999)
+                num_list.append(num)
+
+                icon_name = secure_filename(icon_name)
+                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                file_path = os.path.join(Config.lost_dir, icon_name).replace('\\', '/')
+                icon.save(file_path)
+
+                pic = os.path.join(path, icon_name).replace('\\', '/')
+                new_pic = LostPic(address=pic, lost_id=lost_id)
+
+                db.session.add(new_pic)
+                db.session.commit()
+
+    return redirect(url_for('student.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+
+
+@student.route('/add_found_pic', methods=['GET', 'POST'])
+def add_found_pic():
+    """
+    The function for adding more pictures of found item
+    """
+    found_id = request.args.get('found_id')
+
+    if request.method == 'POST':
+        icon = request.files.get('found_icon')
+
+        # if there is a picture uploaded
+        if icon:
+
+            icon_name = icon.filename
+            suffix = icon_name.rsplit('.')[-1]
+            if suffix in ALLOWED_EXTENSIONS:
+                path = 'upload/found'
+
+                # Ensure the distinct name of each picture by inserting a random int into the icon_name
+                num = random.randint(0, 99999)
+                while num in num_list:
+                    num = random.randint(0, 99999)
+                num_list.append(num)
+
+                icon_name = secure_filename(icon_name)
+                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
+                icon.save(file_path)
+
+                pic = os.path.join(path, icon_name).replace('\\', '/')
+                new_pic = FoundPic(address=pic, found_id=found_id)
+
+                db.session.add(new_pic)
+                db.session.commit()
+
+    return redirect(url_for('student.lost_and_found_details', lnf_type='found', found_id=found_id))
 
 
 
