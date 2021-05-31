@@ -173,6 +173,8 @@ def edit_profile():
 
         db.session.commit()
 
+    return redirect(url_for('main.profile'))
+
 
 def validate_stu_phone(p):
     """
