@@ -142,11 +142,9 @@
       {% for reply in reply_list %}
       <div class="media text-muted pt-3">
           {% if reply.user.role_id == 1 %}
-<a href="{{ url_for('main.check_profile') }}?uid={{ reply.user.id }}"><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
-                    {{ url_for('static',filename = reply.user.icon) }}
-                    {% else %}
+<img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
-                    {% endif %}" alt="icon"/></a>                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    " alt="icon"/>             <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 
         <strong class="d-block text-gray-dark">@Anonymous</strong>
           {{ reply.content }}
