@@ -46,11 +46,16 @@
   </header>
 
     <div class="row g-5">
-      <div class="col-md-6">
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
+      {% if lost.pics %}
+      {% for i in lost.pics %}
+              <div class="col-md-6">
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                    {{ url_for('static',filename = i.address ) }}
+                    " alt="icon"/>
+              </div>
+        {% endfor %}
+                    {% endif %}
 
-      </div>
     </div>
   </main>
   <footer class="pt-5 my-5 text-muted border-top">

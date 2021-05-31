@@ -74,17 +74,22 @@
     </header>
 
     <div class="row g-5">
-      <div class="col-md-6">
+{#    <div class="col-md-6">#}
+{#         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = found.pics[0].address) }}" alt="icon"/>#}
+{#      </div>#}
+{#         <div class="col-md-6">#}
+{#         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = found.pics[0].address) }}" alt="icon"/>#}
+{#      </div>#}
+{#         <div class="col-md-6">#}
+{#         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = found.pics[0].address) }}" alt="icon"/>#}
+{#      </div>#}
   {% if found.pics %}
       {% for i in found.pics %}
+              <div class="col-md-6">
                 <img class=" align-content-lg-center"  height="225" width="100%"   src="
                     {{ url_for('static',filename = i.address ) }}
                     " alt="icon"/>
-                {% else %}
-                <img class=" align-content-lg-center"  height="225" width="100%"   src="
-                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
-                     " alt="icon"/>
-
+              </div>
         {% endfor %}
                     {% endif %}
 
