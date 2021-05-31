@@ -96,7 +96,8 @@ def check_profile():
     stu_wor_id = user.stu_wor_id
 
     # the current user is a student
-    if current_user.id == 1:
+
+    if current_user.role_id == 1:
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
@@ -108,7 +109,8 @@ def check_profile():
             return render_template('samples/showProfile.html', user=user, da=da)  # 待核对
 
     # the current user is a dorm admin
-    elif current_user.id == 2:
+    elif current_user.role_id == 2:
+        print("enter")
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
@@ -120,7 +122,7 @@ def check_profile():
             return render_template('samples/dormShowProfile.html', user=user, da=da)  # 待核对
 
     # the current user is a system admin
-    elif current_user.id == 3:
+    elif current_user.role_id == 3:
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
@@ -148,7 +150,8 @@ def edit_profile():
 
         phone = request.form.get('phone')
         email = request.form.get('email')
-
+        print("phone:",type(phone),phone)
+        print("email:",type(email),email)
         # update the stu, da, sa tables
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()

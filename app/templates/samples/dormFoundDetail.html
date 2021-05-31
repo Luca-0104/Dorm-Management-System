@@ -90,11 +90,11 @@
     <h6 class="border-bottom border-gray pb-2 mb-0">All Replies</h6>
       {% for reply in reply_list %}
              <div class="media text-muted pt-3  border-bottom border-gray">
-                    <img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
+                    <a href="{{ url_for('main.check_profile') }}?uid={{ reply.user.id }}"><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
                     {{ url_for('static',filename = reply.user.icon) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
-                    {% endif %}" alt="icon"/>
+                    {% endif %}" alt="icon"/></a>
 
       <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
         <strong class="d-block text-gray-dark">{{reply.user.user_name}}</strong>
@@ -136,11 +136,11 @@
   <div class="card card-body">
       {% for myReply in reply.replies %}
             <div class="media text-muted pt-3">
-      <img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if myReply.user.icon %}
-                    {{ url_for('static',filename = myReply.user.icon) }}
+      <a href="{{ url_for('main.check_profile') }}?uid={{ reply.user.id }}"><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if reply.user.icon %}
+                    {{ url_for('static',filename = reply.user.icon) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
-                    {% endif %}" alt="icon"/>
+                    {% endif %}" alt="icon"/></a>
       <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
         <strong class="d-block text-gray-dark">{{ myReply.user.user_name }}</strong>
           {{ myReply.content }}
