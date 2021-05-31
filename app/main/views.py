@@ -139,12 +139,9 @@ def edit_profile():
     """
     role_id = current_user.role_id
     stu_wor_id = current_user.stu_wor_id
-
     if request.method == 'POST':
-
         phone = request.form.get('phone')
         email = request.form.get('email')
-
         # update the stu, da, sa tables
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()

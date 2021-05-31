@@ -102,14 +102,14 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{ url_for('main.edit_profile') }}" id="modifyForm">
+        <form action="{{ url_for('main.edit_profile') }}" id="modifyForm" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Phone:</label>
-            <input type="text" class="form-control" id="phone" placeholder="{{ da.phone }}">
+            <input type="text" class="form-control" name="phone" placeholder="{{ da.phone }}">
           </div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Email:</label>
-            <input type="email" class="form-control" id="email" placeholder="{{ da.email }}">
+            <input type="email" class="form-control" name="email" placeholder="{{ da.email }}">
           </div>
         </form>
       </div>
