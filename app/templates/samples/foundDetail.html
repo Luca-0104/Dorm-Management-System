@@ -176,7 +176,7 @@
   <div class="card card-body">
       {% for myReply in reply.replies %}
             <div class="media text-muted pt-3">
-      <a><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if myReply.user.icon %}
+      <a href="{{ url_for('main.check_profile') }}?uid={{ reply.user.id }}"><img class="rounded-circle align-content-lg-center"  height="32" width="32"   src="{% if myReply.user.icon %}
                     {{ url_for('static',filename = myReply.user.icon) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
