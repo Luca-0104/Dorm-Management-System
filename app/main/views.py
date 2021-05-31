@@ -75,7 +75,7 @@ def profile():
 
     if role_id == 1:
         stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-        return render_template('samples/studentIndex.html', user=current_user, stu=stu)
+        return render_template('samples/studentIndex.html', user=current_user, stu=stu, function='index')
 
     elif role_id == 2:
         da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
@@ -96,7 +96,7 @@ def check_profile():
     stu_wor_id = user.stu_wor_id
 
     # the current user is a student
-    if current_user.id == 1:
+    if current_user.role_id == 1:
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
@@ -108,7 +108,7 @@ def check_profile():
             return render_template('samples/showProfile.html', user=user, da=da)  # 待核对
 
     # the current user is a dorm admin
-    elif current_user.id == 2:
+    elif current_user.role_id == 2:
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
@@ -120,7 +120,7 @@ def check_profile():
             return render_template('samples/dormShowProfile.html', user=user, da=da)  # 待核对
 
     # the current user is a system admin
-    elif current_user.id == 3:
+    elif current_user.role_id == 3:
         # click on the avatar of a student
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
@@ -139,10 +139,12 @@ def edit_profile():
     """
     role_id = current_user.role_id
     stu_wor_id = current_user.stu_wor_id
-    is_changed = False
-    is_stopped = False
-    is_changed_u = False
-    is_stopped_u = False
+    is_changed_p = False
+    is_changed_e = False
+    is_stopped_p = False
+    is_stopped_e = False
+    is_changed_up = False
+    is_stopped_ue = False
 
     if request.method == 'POST':
 
@@ -152,63 +154,109 @@ def edit_profile():
         # update the stu, da, sa tables
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-            if validate_stu_phone(phone):
-                stu.phone = phone
-                is_changed = True
-            else:
-                is_stopped = True
+            do_not_change_p = False
+            do_not_change_e = False
 
-            if validate_stu_email(email):
-                stu.email = email
-                is_changed = True
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_stu_phone(phone):
+                    stu.phone = phone
+                    is_changed_p = True
             else:
-                is_stopped = True
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_stu_email(email):
+                    stu.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
 
         elif role_id == 2:
             da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
-            if validate_da_phone(phone):
-                da.phone = phone
-                is_changed = True
-            else:
-                is_stopped = True
+            do_not_change_p = False
+            do_not_change_e = False
 
-            if validate_da_email(email):
-                da.email = email
-                is_changed = True
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_da_phone(phone):
+                    da.phone = phone
+                    is_changed_p = True
             else:
-                is_stopped = True
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_da_email(email):
+                    da.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
 
         elif role_id == 3:
-            if validate_user_phone(phone):
-                current_user.phone = phone
-                is_changed = True
-            else:
-                is_stopped = True
+            do_not_change_p = False
+            do_not_change_e = False
 
-            if validate_user_email(email):
-                current_user.email = email
-                is_changed = True
-            else:
-                is_stopped = True
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
 
-            if is_changed and not is_stopped:
+            if not do_not_change_p:
+                if validate_user_phone(phone):
+                    current_user.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_user_email(email):
+                    current_user.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
                 db.session.commit()
 
         # update the user table of stu or da
-        if (role_id == 1 or role_id == 2) and is_changed and not is_stopped:
-            if validate_user_phone(phone):
-                current_user.phone = phone
-                is_changed_u = True
-            else:
-                is_stopped_u = True
+        if role_id == 1 or role_id == 2:
+            do_not_change_p = False
+            do_not_change_e = False
 
-            if validate_user_email(email):
-                current_user.email = email
-                is_changed_u = True
-            else:
-                is_stopped_u = True
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
 
-            if is_changed and not is_stopped and is_changed_u and not is_stopped_u:
+            if not do_not_change_p:
+                if validate_user_phone(phone):
+                    current_user.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_user_email(email):
+                    current_user.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
                 db.session.commit()
 
     return redirect(url_for('main.profile'))
