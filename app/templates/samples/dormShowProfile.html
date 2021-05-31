@@ -1,0 +1,260 @@
+{% extends "samples/dormBase.html" %}
+{% block mainContent %}
+
+{% if user.role_id == 2 %}
+
+    <div class="container">
+<div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-2">
+          <div class="card mb-4 shadow-sm">
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="35%" y="50%" fill="#eceeef" dy=".3em">HELLO</text></svg>
+{#            <img class="img-circle img-thumbnail" src="../../static/images/auth/login.jpg" alt="头像"/>#}
+            <div class="card-body">
+                <p class="card-text">
+                    <img class="rounded-circle align-content-lg-center"  height="115" width="115"   src="{% if user.icon %}
+                    {{ url_for('static',filename =user.icon) }}
+                    {% else %}
+                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
+                    {% endif %}" alt="icon"/>
+                </p>
+
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-10">
+          <div class="card mb-4 shadow-sm">
+              <svg class="bd-placeholder-img card-img-top" width="100%" height="100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="30%" y="50%" fill="#eceeef" dy=".3em" class="font-weight-bold">This the profile of {{ da.da_name }}</text></svg>
+
+            <div class="card-body">
+                <form>
+
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Name</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{da.da_name}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Working Number</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{da.da_number}}">
+    </div>
+  </div>
+
+                    <div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Building</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ da.building_id }}">
+    </div>
+  </div>
+                    <div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Phone</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ da.phone }}">
+    </div>
+  </div>
+   <div class="form-group row">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Email</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ da.email }}">
+    </div>
+  </div>
+</form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+
+
+
+{#  <div class="jumbotron p-4 p-md-5 text-white rounded bg-primary">#}
+{#      <div class="row mb-2">#}
+{#        <div class="col-md-6 px-0 col-md-9">#}
+{#      <h1 class="display-4 font-italic">Title of a longer featured blog post</h1>#}
+{#      <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>#}
+{#      <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue reading...</a></p>#}
+{#    </div>#}
+{#          <div class="col-md-3">#}
+{#             <img class="rounded img-fluid img-thumbnail float-right" src="../../static/images/auth/login.jpg" alt="头像"/>#}
+{#             <h3 class="align-content-lg-center">Hello! {{ current_user.user_name }}</h3>#}
+{#          </div>#}
+{#      </div>#}
+{##}
+{#  </div>#}
+{##}
+{#  <div class="row mb-2">#}
+{#    <div class="col-md-6">#}
+{#      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">#}
+{#        <div class="col p-4 d-flex flex-column position-static">#}
+{#          <strong class="d-inline-block mb-2 text-primary">World</strong>#}
+{#          <h3 class="mb-0">Featured post</h3>#}
+{#          <div class="mb-1 text-muted">Nov 12</div>#}
+{#          <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>#}
+{#          <a href="#" class="stretched-link">Continue reading</a>#}
+{#        </div>#}
+{#        <div class="col-auto d-none d-lg-block">#}
+{#          <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#    <div class="col-md-6">#}
+{#      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">#}
+{#        <div class="col p-4 d-flex flex-column position-static">#}
+{#          <strong class="d-inline-block mb-2 text-success">Design</strong>#}
+{#          <h3 class="mb-0">Post title</h3>#}
+{#          <div class="mb-1 text-muted">Nov 11</div>#}
+{#          <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>#}
+{#          <a href="#" class="stretched-link">Continue reading</a>#}
+{#        </div>#}
+{#        <div class="col-auto d-none d-lg-block">#}
+{#          <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+
+{% elif user.role_id == 1 %}
+
+<div class="container">
+<div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-2">
+          <div class="card mb-4 shadow-sm">
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="35%" y="50%" fill="#eceeef" dy=".3em">HELLO</text></svg>
+{#            <img class="img-circle img-thumbnail" src="../../static/images/auth/login.jpg" alt="头像"/>#}
+            <div class="card-body">
+                <p class="card-text">
+                    <img class="rounded-circle align-content-lg-center"  height="115" width="115"   src="{% if user.icon %}
+                    {{ url_for('static',filename =user.icon) }}
+                    {% else %}
+                    {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
+                    {% endif %}" alt="icon"/>
+                </p>
+
+
+{#              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>#}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-10">
+          <div class="card mb-4 shadow-sm">
+              <svg class="bd-placeholder-img card-img-top" width="100%" height="100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="30%" y="50%" fill="#eceeef" dy=".3em" class="font-weight-bold">This is profile of {{ stu.stu_name }}</text></svg>
+
+            <div class="card-body">
+                <form>
+
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_name}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Student Number</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_number}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">College</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.college }}">
+    </div>
+  </div>
+<div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Room</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.room_number }}">
+    </div>
+  </div>
+                    <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Building</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.building_id }}">
+    </div>
+  </div>
+                    <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Phone</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.phone }}">
+    </div>
+  </div>
+   <div class="form-group row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.email }}">
+    </div>
+  </div>
+</form>
+      </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+{#  <div class="jumbotron p-4 p-md-5 text-white rounded bg-primary">#}
+{#      <div class="row mb-2">#}
+{#        <div class="col-md-6 px-0 col-md-9">#}
+{#      <h1 class="display-4 font-italic">Title of a longer featured blog post</h1>#}
+{#      <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>#}
+{#      <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue reading...</a></p>#}
+{#    </div>#}
+{#          <div class="col-md-3">#}
+{#             <img class="rounded img-fluid img-thumbnail float-right" src="../../static/images/auth/login.jpg" alt="头像"/>#}
+{#             <h3 class="align-content-lg-center">Hello! {{ current_user.user_name }}</h3>#}
+{#          </div>#}
+{#      </div>#}
+{##}
+{#  </div>#}
+{##}
+{#  <div class="row mb-2">#}
+{#    <div class="col-md-6">#}
+{#      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">#}
+{#        <div class="col p-4 d-flex flex-column position-static">#}
+{#          <strong class="d-inline-block mb-2 text-primary">World</strong>#}
+{#          <h3 class="mb-0">Featured post</h3>#}
+{#          <div class="mb-1 text-muted">Nov 12</div>#}
+{#          <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>#}
+{#          <a href="#" class="stretched-link">Continue reading</a>#}
+{#        </div>#}
+{#        <div class="col-auto d-none d-lg-block">#}
+{#          <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#    <div class="col-md-6">#}
+{#      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">#}
+{#        <div class="col p-4 d-flex flex-column position-static">#}
+{#          <strong class="d-inline-block mb-2 text-success">Design</strong>#}
+{#          <h3 class="mb-0">Post title</h3>#}
+{#          <div class="mb-1 text-muted">Nov 11</div>#}
+{#          <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>#}
+{#          <a href="#" class="stretched-link">Continue reading</a>#}
+{#        </div>#}
+{#        <div class="col-auto d-none d-lg-block">#}
+{#          <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>#}
+{##}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+{% endif %}
+{% endblock %}
