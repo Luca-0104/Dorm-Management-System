@@ -8,8 +8,8 @@
 
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if found.icon %}
-                    {{ url_for('static',filename =found.icon) }}
+              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if found.pics %}
+                    {{ url_for('static',filename = found.pics[0].address) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
                     {% endif %}" alt="icon"/>

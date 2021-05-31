@@ -157,9 +157,9 @@
     class="page-item disabled"
     {% endif %}>
         {% if enterType=="home" %}
-       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
+       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page={{ pagination.prev_num }}&building_id={{ building_id }}" tabindex="-1" aria-disabled="true">Previous</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page={{ pagination.prev_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
+       <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page={{ pagination.prev_num }}&building_id={{ building_id }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
         {% endif %}
 
     </li>
@@ -168,9 +168,9 @@
     class="page-item disabled"
     {% endif %}>
         {% if enterType=="home" %}
-       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page=1" tabindex="-1" aria-disabled="true">1</a>
+       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page=1&building_id={{ building_id }}" tabindex="-1" aria-disabled="true">1</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page=1&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">1</a>
+       <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page=1&content={{ content }}&building_id={{ building_id }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">1</a>
         {% endif %}
 
     </li>
@@ -187,9 +187,9 @@
     <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">
     {% if pagenum != 0 and pagenum <= pagination.pages %}
       <a class="page-link" {% if enterType == "home" %}
-         href="{{url_for('main.home_sys_gue')}}?page={{ pagenum }}"
+         href="{{url_for('main.home_sys_gue')}}?page={{ pagenum }}&building_id={{ building_id }}"
     {% elif enterType == "search" %}
-           href="{{url_for('sysAdmin.search_gue')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"
+           href="{{url_for('sysAdmin.search_gue')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}&building_id={{ building_id }}"
     {% endif %} >{{pagenum}}</a>
       {% endif %}
 
@@ -208,9 +208,9 @@
     class="page-item disabled"
     {% endif %}>
         {% if enterType=="home" %}
-       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page={{ pagination.pages }}" tabindex="-1" aria-disabled="true">{{pagination.pages}}</a>
+       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page={{ pagination.pages }}&building_id={{ building_id }}" tabindex="-1" aria-disabled="true">{{pagination.pages}}</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page={{ pagination.pages }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">{{pagination.pages}}</a>
+       <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page={{ pagination.pages }}&content={{ content }}&building_id={{ building_id }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">{{pagination.pages}}</a>
         {% endif %}
 
     </li>
@@ -219,7 +219,7 @@
     class="page-item disabled"
     {% endif %}>
         {% if enterType=="home" %}
-       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
+       <a class="page-link" href="{{url_for('main.home_sys_gue')}}?page={{ pagination.next_num }}&building_id={{ building_id }}" tabindex="-1" aria-disabled="true">Next</a>
         {% elif enterType=="search" %}
        <a class="page-link" href="{{url_for('sysAdmin.search_gue')}}?page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>
         {% endif %}
