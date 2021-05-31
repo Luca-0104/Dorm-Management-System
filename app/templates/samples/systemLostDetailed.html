@@ -39,9 +39,15 @@
   </header>
 
     <div class="row g-5">
-      <div class="col-md-6">
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
-      </div>
+      {% if found.pics %}
+      {% for i in found.pics %}
+              <div class="col-md-6">
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                    {{ url_for('static',filename = i.address ) }}
+                    " alt="icon"/>
+              </div>
+        {% endfor %}
+                    {% endif %}
 
     </div>
   </main>

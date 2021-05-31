@@ -43,14 +43,48 @@
 
     <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
       <h1>Pictures</h1>
+      {% if current_user.id == uid %}
+ <button type="button" class="btn btn-dark btn-margin margin-left" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
+<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Icon</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('student.add_lost_pic') }}?lost_id={{ lost.id }}" method="post" id="iconForm" enctype="multipart/form-data">
+          <div class="custom-file">
+  <input type="file" class="form-control" id="customFile" name="lost_icon" >
+  <label class="custom-file-label" for="customFile"></label>
+
+</div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="submitIcon">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+            {% endif %}
   </header>
 
     <div class="row g-5">
-      <div class="col-md-6">
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
-         <img class=" align-content-lg-center"  height="100%" width="100%"   src="{{ url_for('static',filename = lost.icon) }}" alt="icon"/>
+      {% if lost.pics %}
+      {% for i in lost.pics %}
+              <div class="col-md-6">
+                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                    {{ url_for('static',filename = i.address ) }}
+                    " alt="icon"/>
+              </div>
+        {% endfor %}
+                    {% endif %}
 
-      </div>
     </div>
   </main>
   <footer class="pt-5 my-5 text-muted border-top">
@@ -252,5 +286,11 @@
 	document.getElementById("replyForm{{ reply.id }}").submit();
 });
     {% endfor %}
+</script>
+<script>
+    $('#submitIcon').click(function(){
+
+	document.getElementById("iconForm").submit();
+});
 </script>
 {% endblock %}
