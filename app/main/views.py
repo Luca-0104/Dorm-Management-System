@@ -139,36 +139,77 @@ def edit_profile():
     """
     role_id = current_user.role_id
     stu_wor_id = current_user.stu_wor_id
+    is_changed = False
+    is_stopped = False
+    is_changed_u = False
+    is_stopped_u = False
+
     if request.method == 'POST':
+
         phone = request.form.get('phone')
         email = request.form.get('email')
+
         # update the stu, da, sa tables
         if role_id == 1:
             stu = Student.query.filter_by(stu_number=stu_wor_id).first()
             if validate_stu_phone(phone):
                 stu.phone = phone
+                is_changed = True
+            else:
+                is_stopped = True
+
             if validate_stu_email(email):
                 stu.email = email
-            db.session.add(stu)
+                is_changed = True
+            else:
+                is_stopped = True
 
         elif role_id == 2:
             da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
             if validate_da_phone(phone):
                 da.phone = phone
+                is_changed = True
+            else:
+                is_stopped = True
+
             if validate_da_email(email):
                 da.email = email
-            db.session.add(da)
+                is_changed = True
+            else:
+                is_stopped = True
 
         elif role_id == 3:
-            pass
+            if validate_user_phone(phone):
+                current_user.phone = phone
+                is_changed = True
+            else:
+                is_stopped = True
 
-        # update the user table
-        if validate_user_phone(phone):
-            current_user.phone = phone
-        if validate_user_email(email):
-            current_user.email = email
+            if validate_user_email(email):
+                current_user.email = email
+                is_changed = True
+            else:
+                is_stopped = True
 
-        db.session.commit()
+            if is_changed and not is_stopped:
+                db.session.commit()
+
+        # update the user table of stu or da
+        if (role_id == 1 or role_id == 2) and is_changed and not is_stopped:
+            if validate_user_phone(phone):
+                current_user.phone = phone
+                is_changed_u = True
+            else:
+                is_stopped_u = True
+
+            if validate_user_email(email):
+                current_user.email = email
+                is_changed_u = True
+            else:
+                is_stopped_u = True
+
+            if is_changed and not is_stopped and is_changed_u and not is_stopped_u:
+                db.session.commit()
 
     return redirect(url_for('main.profile'))
 
@@ -214,9 +255,7 @@ def validate_user_phone(p):
         print('phone ok')
         user = User.query.filter_by(phone=p).first()
         if user:
-            if not user.is_deleted:
-                return False
-            return True
+            return False
         return True
     return False
 
@@ -262,9 +301,7 @@ def validate_user_email(e):
         print('email ok')
         user = User.query.filter_by(email=e).first()
         if user:
-            if not user.is_deleted:
-                return False
-            return True
+            return False
         return True
     return False
 
