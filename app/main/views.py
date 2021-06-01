@@ -48,12 +48,8 @@ def change_avatar():
             current_user.icon = pic
             db.session.commit()
 
-            if current_user.role_id == 1:
-                return redirect(url_for('main.home_stu'))
-            elif current_user.role_id == 2:
-                return redirect(url_for('main.home_dorm_admin_index'))
-            elif current_user.role_id == 3:
-                return redirect(url_for('main.home_sys_admin'))
+            return redirect(url_for('main.profile'))
+
 
         else:
             msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'
@@ -66,19 +62,6 @@ def change_avatar():
 
 
 # ----------------------------------------------- profiles for the users with different role  -----------------------------------------------
-# @main.route('/stu_profile', methods=['GET', 'POST'])
-# def stu_profile():
-#     pass
-#
-#
-# @main.route('/da_profile', methods=['GET', 'POST'])
-# def da_profile():
-#     pass
-#
-#
-# @main.route('/sa_profile', methods=['GET', 'POST'])
-# def sa_profile():
-#     pass
 
 
 @main.route('/profile')
@@ -88,7 +71,7 @@ def profile():
 
     if role_id == 1:
         stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-        return render_template('samples/studentIndex.html', user=current_user, stu=stu)
+        return render_template('samples/studentIndex.html', user=current_user, stu=stu, function='index')
 
     elif role_id == 2:
         da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
@@ -96,6 +79,275 @@ def profile():
 
     elif role_id == 3:
         return render_template('samples/systemProfile.html', user=current_user)
+
+
+@main.route('/check_profile')
+def check_profile():
+    """
+        When clicking on the avatar of a user, the profile of this user can be checked
+    """
+    uid = request.args.get('uid')
+    user = User.query.get(uid)
+    role_id = user.role_id
+    stu_wor_id = user.stu_wor_id
+
+    # the current user is a student
+    if current_user.role_id == 1:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/showProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/showProfile.html', user=user, da=da)  # 待核对
+
+    # the current user is a dorm admin
+    elif current_user.role_id == 2:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/dormShowProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/dormShowProfile.html', user=user, da=da)  # 待核对
+
+    # the current user is a system admin
+    elif current_user.role_id == 3:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/systemShowProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/systemShowProfile.html', user=user, da=da)  # 待核对
+
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    """
+        A method for editing the profile
+    """
+    role_id = current_user.role_id
+    stu_wor_id = current_user.stu_wor_id
+    is_changed_p = False
+    is_changed_e = False
+    is_stopped_p = False
+    is_stopped_e = False
+    is_changed_up = False
+    is_stopped_ue = False
+
+    if request.method == 'POST':
+
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+
+        # update the stu, da, sa tables
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_stu_phone(phone):
+                    stu.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_stu_email(email):
+                    stu.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_da_phone(phone):
+                    da.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_da_email(email):
+                    da.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+        elif role_id == 3:
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_user_phone(phone):
+                    current_user.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_user_email(email):
+                    current_user.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+        # update the user table of stu or da
+        if role_id == 1 or role_id == 2:
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_user_phone(phone):
+                    current_user.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_user_email(email):
+                    current_user.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+    return redirect(url_for('main.profile'))
+
+
+def validate_stu_phone(p):
+    """
+    Verify if the phone number has not been used in student table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        stu = Student.query.filter_by(phone=p).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_da_phone(p):
+    """
+    Verify if the phone number has not been used in dorm admin table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        da = DAdmin.query.filter_by(phone=p).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_user_phone(p):
+    """
+    Verify if the phone number has not been used in user table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        user = User.query.filter_by(phone=p).first()
+        if user:
+            return False
+        return True
+    return False
+
+
+def validate_stu_email(e):
+    """
+    Verify if the email has not been used in student table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        stu = Student.query.filter_by(email=e).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_da_email(e):
+    """
+    Verify if the email has not been used in dorm admin table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        da = DAdmin.query.filter_by(email=e).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_user_email(e):
+    """
+    Verify if the email has not been used in user table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        user = User.query.filter_by(email=e).first()
+        if user:
+            return False
+        return True
+    return False
 
 
 # ----------------------------------------------- main pages of students  -----------------------------------------------
@@ -141,13 +393,11 @@ def home_stu_repair():
                            function="repair")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
 def home_stu_LAF():
     return render_template("samples/studentLF.html", function="lost and found")
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
     stu_number = current_user.stu_wor_id
@@ -171,7 +421,7 @@ def home_stu_message():
 @main.route('/home_stu_lost', methods=['GET', 'POST'])
 def home_stu_lost():
     """
-    Shows only the lost information of this student himself
+    Shows only the lost information of this student himself (about me)
     """
     pagenum = int(request.args.get('page', 1))
     stu_num = current_user.stu_wor_id
@@ -185,7 +435,7 @@ def home_stu_lost():
 @main.route('/home_stu_found', methods=['GET', 'POST'])
 def home_stu_found():
     """
-    Shows only the found information of this student himself
+    Shows only the found information of this student himself (about me)
     """
     pagenum = int(request.args.get('page', 1))
     stu_num = current_user.stu_wor_id
@@ -550,12 +800,11 @@ def home_sys_admin():
             fhc += 1
 
     # a dict for storing the number of students of each college in this building
-    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem,
-                    'CAD': cad, 'FHC': fhc}
+    college_dict = {'BDIC': bdic, 'FHSS': fhss, 'FIT': fit, 'FMM': fmm, 'FUC': fuc, 'FS': fs, 'FELS': fels, 'CEM': cem, 'CAD': cad, 'FHC': fhc}
 
     # ******************** for graph 4 ********************
-    year_now = time.localtime().tm_year % 1000 % 100  # for today, year_now should be 21
-    month_now = time.localtime().tm_mon  # for today, month_now should be 5
+    year_now = time.localtime().tm_year % 1000 % 100    # for today, year_now should be 21
+    month_now = time.localtime().tm_mon                 # for today, month_now should be 5
 
     stage1 = 0
     stage2 = 0
@@ -577,7 +826,7 @@ def home_sys_admin():
             elif diff == 3:
                 stage4 += 1
 
-        else:  # the second semester of the year
+        else:                       # the second semester of the year
             diff = year_now - year
             if diff == 1:
                 stage1 += 1
@@ -651,11 +900,9 @@ def home_sys_gue():
     if building_id == '0':
         pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Guest.query.join(Student).filter(
-            and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
+        pagination = Guest.query.join(Student).filter(and_(Student.building_id == building_id, Guest.is_deleted == False)).paginate(page=pagenum, per_page=5)
 
-    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home',
-                           pagination=pagination)
+    return render_template("samples/systemGuests.html", function="guests", building_id=building_id, enterType='home', pagination=pagination)
 
 
 @main.route('/home_sys_stu', methods=['GET', 'POST'])
@@ -667,40 +914,25 @@ def home_sys_stu():
     if building_id == '0':
         pagination = Student.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     else:
-        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum,
-                                                                                                 per_page=5)
+        pagination = Student.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
 
-    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home',
-                           isSuccessful=isSuccessful, function='students', building_id=building_id)
+    return render_template('samples/systemStudents.html', pagination=pagination, enterType='home', isSuccessful=isSuccessful, function='students', building_id=building_id)
 
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
 def home_sys_dorm():
+    building_id = request.args.get('building_id', '0')
     pagenum = int(request.args.get('page', 1))
-    pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination,
-                           enterType='home')  # 待核对完善
+    isSuccessful = request.args.get('isSuccessful', "True")
+
+    if building_id == '0':
+        pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    else:
+        pagination = DAdmin.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
+
+    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination, enterType='home', isSuccessful=isSuccessful, building_id=building_id)  # 待核对完善
 
 
 @main.route('/home_sys_lost_and_found')
 def home_sys_lost_and_found():
     return render_template('samples/sysLF.html', function="lost and found")  # 待核对
-
-
-# ------------------------------ 点击查看对应用户的个人主页 ---------------------------------------------------
-@main.route('/home_check_profile', methods=['GET', 'POST'])
-def home_check_profile():
-    role_id = request.args.get('role_id')
-    stu_wor_id = request.args.get('stu_wor_id')
-    user = request.args.get('user')
-
-    if role_id == 1:
-        stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-        return render_template('samples/studentIndex.html', user=user, stu=stu)
-
-    elif role_id == 2:
-        da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
-        return render_template('samples/dormProfile.html', user=user, da=da)
-
-    elif role_id == 3:
-        return render_template('samples/systemProfile.html', user=user)

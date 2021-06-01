@@ -105,7 +105,10 @@ class Lost(db.Model):
     price = db.Column(db.Integer, nullable=False)
     place = db.Column(db.String(64), default='unknown')
     lost_time = db.Column(db.DateTime(), default=datetime.utcnow)
-    icon = db.Column(db.String(256), default='upload/lost/default__0__.jpg')
+
+    # icon = db.Column(db.String(256), default='upload/lost/default__0__.jpg')
+    pics = db.relationship('LostPic', backref='lost')
+
     detail = db.Column(db.Text, default='nothing')
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
     post_time = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -123,7 +126,10 @@ class Found(db.Model):
     item = db.Column(db.String(64), nullable=False)
     place = db.Column(db.String(64), nullable=False)
     found_time = db.Column(db.DateTime(), nullable=False)
-    icon = db.Column(db.String(256), default='upload/found/default__0__.jpg')
+
+    # icon = db.Column(db.String(256), default='upload/found/default__0__.jpg')
+    pics = db.relationship('FoundPic', backref='found')
+
     detail = db.Column(db.Text, default='nothing')
     stu_id = db.Column(db.Integer, db.ForeignKey('students.id'), unique=False)
     post_time = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -200,6 +206,28 @@ class ReplyReplyFound(db.Model):
     timestamp = db.Column(db.DateTime(), index=True, default=datetime.utcnow)
     found_reply_id = db.Column(db.Integer, db.ForeignKey('found_replies.id'), nullable=False)
     auth_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+# ------------------------------------------------------ picture tables ---------------------------------------------------------
+
+
+class LostPic(db.Model):
+    """
+    a table for storing all the pictures related to the lost information
+    """
+    __tablename__ = 'lost_pictures'
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(256), nullable=False)
+    lost_id = db.Column(db.Integer, db.ForeignKey('lost_items.id'))
+
+
+class FoundPic(db.Model):
+    """
+    a table for storing all the pictures related to the found information
+    """
+    __tablename__ = 'found_pictures'
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String(256), nullable=False)
+    found_id = db.Column(db.Integer, db.ForeignKey('found_items.id'))
 
 
 # -------------------------------------------------------------------------------------------------------------------------------

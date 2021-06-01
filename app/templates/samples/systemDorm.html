@@ -3,47 +3,11 @@
 <title>Manage Dorms</title>
 {% endblock %}
 
-{% block topleftContent %}
-<li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-<!--
-		<li class="nav-item">
-				 <p class="set-size">
-  <button class="btn btn-primary " type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Functions
-  </button>
-</p>
-			<div class="collapse set-size" id="collapseExample">
-  <nav class="nav flex-column set-size">
-  <a class="nav-link active" href="#">Active</a>
-  <a class="nav-link" href="#">Link</a>
-  <a class="nav-link" href="#">Link</a>
-  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-</nav>
-</div>
-		</li>
--->
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Username
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
-{% endblock %}
+
 
 {% block search %}
     <form class="form-inline my-2 my-lg-0">
+  <input type="text" class="hidden" hidden  aria-label="Text input with segmented dropdown button" name="building_id" value="{{ building_id }}">
       <div class="input-group icon-margin">
   <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" name="search_da">
   <div class="input-group-append">
@@ -52,7 +16,6 @@
     <option selected value="all">All</option>
     <option value="da_name">Name</option>
     <option value="da_number">Working ID</option>
-    <option value="building_id">Building</option>
     <option value="email">Email</option>
         <option value="phone">Phone</option>
 
@@ -64,85 +27,87 @@
     </form>
 {% endblock %}
 
-{#{% block add %}#}
-{#   <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>#}
-{##}
-{#<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">#}
-{#  <div class="modal-dialog">#}
-{#    <div class="modal-content">#}
-{#      <div class="modal-header">#}
-{#        <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>#}
-{#        <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-{#          <span aria-hidden="true">&times;</span>#}
-{#        </button>#}
-{#      </div>#}
-{#      <div class="modal-body">#}
-{#        <form id="myFormAdd" action="{{ url_for('dormAdmin.add_stu') }}" method="post">#}
-{#          <div class="form-group">#}
-{#            <label for="recipient-name" class="col-form-label">Student ID:</label>#}
-{#            <input type="text" class="form-control" name="stu_ID" id="stu_id"><span></span>#}
-{#          </div>#}
-{#          <div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Name:</label>#}
-{#             <input type="text" class="form-control" name="name" id="name"><span></span>#}
-{#          </div>#}
-{#			<div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Room:</label>#}
-{#             <input type="text" class="form-control" name="room" id="room"><span></span>#}
-{#          </div>#}
-{#            <div class="form-group">#}
-{#            <label for="recipient-name" class="col-form-label">College:</label>#}
-{#                <div>#}
-{#             <select class="form-control" name="college">#}
-{#            <option selected value="Beijing Dublin International College">Beijing Dublin International College</option>#}
-{#            <option value="Faculty of Humanities and Social Sciences">Faculty of Humanities and Social Sciences</option>#}
-{#            <option value="Faculty of Information Technology">Faculty of Information Technology</option>#}
-{#            <option value="Faculty of Materials and Manufacturing">Faculty of Materials and Manufacturing</option>#}
-{#            <option value="Faculty of Urban Construction">Faculty of Urban Construction</option>#}
-{#            <option value="Faculty of Science">Faculty of Science</option>#}
-{#            <option value="Faculty of Environment and Life Sciences">Faculty of Environment and Life Sciences</option>#}
-{#                <option value="College of Economic and Management">College of Economic and Management</option>#}
-{#                 <option value="College of Art and Design">College of Art and Design</option>#}
-{#                 <option value="FanGongXiu Honors College">FanGongXiu Honors College</option>#}
-{##}
-{#          </select>#}
-{##}
-{#                </div>#}
-{##}
-{#          </div>#}
-{#			<div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Phone:</label>#}
-{#             <input type="text" class="form-control" name="phone" id="phone"><span></span>#}
-{#          </div>#}
-{#			<div class="form-group">#}
-{#            <label for="message-text" class="col-form-label">Email:</label>#}
-{#             <input type="text" class="form-control" name="email" id="email"><span></span>#}
-{#          </div>#}
-{#        </form>#}
-{#      </div>#}
-{#      <div class="modal-footer">#}
-{#        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
-{#        <button type="button" class="btn btn-primary"   id="sendMessage"#}
-{#                {% if isSuccessful==True %}#}
-{#         data-toggle="modal" data-target="#alert"#}
-{#        {% endif %}#}
-{#        >Confirm</button>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
-{#{% endblock %}#}
+{% block add %}
+   <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
+
+<div class="modal fade" id="exampleModaladd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="myFormAdd" action="{{ url_for('sysAdmin.add_da') }}" method="post">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Working ID:</label>
+            <input type="text" class="form-control" name="da_number" id="da_number"><span></span>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Name:</label>
+             <input type="text" class="form-control" name="name" id="name"><span></span>
+          </div>
+
+            <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Building:</label>
+                <div>
+             <select class="form-control" name="building_id">
+            <option selected value="1">Building 1</option>
+            <option value="2">Building 2</option>
+            <option value="3">Building 3</option>
+            <option value="4">Building 4</option>
+            <option value="5">Building 5</option>
+            <option value="6">Building 6</option>
+            <option value="7">Building 7</option>
+                <option value="8">Building 8</option>
+                 <option value="9">Building 9</option>
+                 <option value="10">Building 10</option>
+
+                 <option value="11">Building 11</option>
+                 <option value="12">Building 12</option>
+
+          </select>
+
+                </div>
+
+          </div>
+			<div class="form-group">
+            <label for="message-text" class="col-form-label">Phone:</label>
+             <input type="text" class="form-control" name="phone" id="phone"><span></span>
+          </div>
+			<div class="form-group">
+            <label for="message-text" class="col-form-label">Email:</label>
+             <input type="text" class="form-control" name="email" id="email"><span></span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"   id="sendMessage"
+                {% if isSuccessful==True %}
+         data-toggle="modal" data-target="#alert"
+        {% endif %}
+        >Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
 
 {% block mainContent %}
     <div class="tab-content" id="v-pills-tabContent">
       <table class="table">
   <thead class="thead-light">
     <tr>
-      <th scope="col">Student ID</th>
+      <th scope="col">Working ID</th>
       <th scope="col">Name</th>
               <th scope="col">Building ID</th>
 		<th scope="col">Email</th>
 		<th scope="col">Phone</th>
+      <th scope="col">Execution</th>
+
 
     </tr>
   </thead>
@@ -154,6 +119,8 @@
             <td>{{ da.building_id}}</td>
             <td>{{ da.email }}</td>
             <td>{{ da.phone }}</td>
+            <td><button type="button" class="btn btn-secondary" onclick="location.href='{{ url_for('sysAdmin.delete_da') }}?id={{ da.id }}&enterType={{ enterType }}&content={{ content }}&tag={{ tag }}&page={{ pagination.page }}'"><em class="bi bi-x-square icon-margin"></em>delete</button></td>
+
 
         </tr>
   {% endfor %}
@@ -253,18 +220,18 @@
     class="page-item disabled"
     {% endif %}>
         {% if enterType=="home" %}
-       <a class="page-link" href="{{url_for('main.home_sys_dorm')}}?page={{ pagination.prev_num }}" tabindex="-1" aria-disabled="true">Previous</a>
+       <a class="page-link" href="{{url_for('main.home_sys_dorm')}}?page={{ pagination.prev_num }}&building_id={{ building_id }}" tabindex="-1" aria-disabled="true">Previous</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('syyAdmin.search_da')}}?page={{ pagination.prev_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
+       <a class="page-link" href="{{url_for('sysAdmin.search_da')}}?page={{ pagination.prev_num }}&building_id={{ building_id }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Previous</a>
         {% endif %}
 
     </li>
       {% for pagenum in range(1,pagination.pages + 1) %}
     <li {% if pagination.page==pagenum %} class="active page-item" {% endif %} aria-current="page">
     <a class="page-link" {% if enterType == "home" %}
-         href="{{url_for('main.home_sys_dorm')}}?page={{ pagenum }}"
+         href="{{url_for('main.home_sys_dorm')}}?page={{ pagenum }}&building_id={{ building_id }}"
     {% elif enterType == "search" %}
-           href="{{url_for('sysAdmin.search_da')}}?page={{ pagenum }}&content={{ content }}&tag={{ tag }}"
+           href="{{url_for('sysAdmin.search_da')}}?page={{ pagenum }}&building_id={{ building_id }}&content={{ content }}&tag={{ tag }}"
     {% endif %} >{{pagenum}}</a>
 
     </li>
@@ -275,9 +242,9 @@
     class="page-item disabled"
     {% endif %}>
         {% if enterType=="home" %}
-       <a class="page-link" href="{{url_for('main.home_sys_dorm')}}?page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
+       <a class="page-link" href="{{url_for('main.home_sys_dorm')}}?&building_id={{ building_id }}page={{ pagination.next_num }}" tabindex="-1" aria-disabled="true">Next</a>
         {% elif enterType=="search" %}
-       <a class="page-link" href="{{url_for('sysAdmin.search_da')}}?page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>
+       <a class="page-link" href="{{url_for('sysAdmin.search_da')}}?&building_id={{ building_id }}page={{ pagination.next_num }}&content={{ content }}&tag={{ tag }}" tabindex="-1" aria-disabled="true">Next</a>
         {% endif %}
 
     </li>
@@ -291,18 +258,18 @@
     <script src="../../static/js/dormExamine.js"></script>
 <script>
     $('#sendMessage').click(function(){
-let id = $('#stu_id').val();
-        let phone = $('#phone').val();
-        let email = $('#email').val();
-        console.log(id,phone,email);
-        $.get('dormAdmin/dormAdd', {id: id, phone:phone,email:email}, function (data) {
-            console.log(data);
-            if (data.code !== 200) {
-                alert("Failed to Add\n"+data.msg);
-            } else {
-                alert("Add Successfully");
-            }
-        });
+{#let id = $('#stu_id').val();#}
+{#        let phone = $('#phone').val();#}
+{#        let email = $('#email').val();#}
+{#        console.log(id,phone,email);#}
+{#        $.get('dormAdmin/dormAdd', {id: id, phone:phone,email:email}, function (data) {#}
+{#            console.log(data);#}
+{#            if (data.code !== 200) {#}
+{#                alert("Failed to Add\n"+data.msg);#}
+{#            } else {#}
+{#                alert("Add Successfully");#}
+{#            }#}
+{#        });#}
 
 	document.getElementById("myFormAdd").submit();
     {#$.post('{{ url_for('dormAdmin.add_stu') }}',{id:ID});#}
