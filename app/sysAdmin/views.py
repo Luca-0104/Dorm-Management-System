@@ -791,33 +791,6 @@ def validate_da_number(n):
     return False
 
 
-@sysAdmin.route('/add_da', methods=['GET', 'POST'])
-def add_da():
-    if request.method == 'POST':
-        da_name = request.form.get('name')
-        da_number = request.form.get('da_ID')
-        phone = request.form.get('phone')
-        email = request.form.get('email')
-
-        building_id = request.args.get('building_id', '0')
-
-        if da_name != '' and da_number != '' and phone != '' and email != '' and building_id is not None:
-            if validate_da_number(da_number) and validate_phone(phone) and validate_email(email):
-                new_da = DAdmin(da_name=da_name,
-                                da_number=da_number,
-                                phone=phone,
-                                email=email,
-                                building_id=building_id,
-                                )
-                db.session.add(new_da)
-                db.session.commit()
-                return redirect(url_for('main.home_sys_admin', isSuccessful=True))
-            else:
-                return redirect(url_for('main.home_sys_admin', isSuccessful=False))
-        else:
-            return redirect(url_for('main.home_sys_admin', isSuccessful=False))
-
-    return render_template('samples/sysDAdmin.html', function='dorm')
 
 @sysAdmin.route('/delete_da', endpoint='delete')
 def delete_da():
