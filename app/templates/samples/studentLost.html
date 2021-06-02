@@ -1,4 +1,7 @@
 {% extends "samples/studentBase.html" %}
+{% block topLeft %}
+<h1>Lost</h1>
+{% endblock %}
 {% block add %}
     <button type="button" class="btn btn-dark btn-margin" data-toggle="modal" data-target="#exampleModaladd" data-whatever="@mdo"><i class="bi bi-plus-circle"></i></button>
 
@@ -169,8 +172,8 @@
 
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if lost.icon %}
-                    {{ url_for('static',filename =lost.icon) }}
+              <img class=" align-content-lg-center"  height="225" width="100%"   src="{% if lost.pics %}
+                    {{ url_for('static',filename =lost.pics[0].address) }}
                     {% else %}
                     {{ url_for('static',filename ='upload/avatar/default__0__.jpg') }}
                     {% endif %}" alt="icon"/>
