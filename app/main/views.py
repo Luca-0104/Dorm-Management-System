@@ -48,12 +48,8 @@ def change_avatar():
             current_user.icon = pic
             db.session.commit()
 
-            if current_user.role_id == 1:
-                return redirect(url_for('main.home_stu'))
-            elif current_user.role_id == 2:
-                return redirect(url_for('main.home_dorm_admin_index'))
-            elif current_user.role_id == 3:
-                return redirect(url_for('main.home_sys_admin'))
+            return redirect(url_for('main.profile'))
+
 
         else:
             msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'

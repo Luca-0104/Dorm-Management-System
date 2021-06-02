@@ -528,9 +528,9 @@ def add_lost():
                 path = 'upload/lost'
 
                 # Ensure the distinct name of each picture by inserting a random int into the icon_name
-                num = random.randint(0, 99999)
+                num = random.randint(0, 9999999999999999999999999)
                 while num in num_list:
-                    num = random.randint(0, 99999)
+                    num = random.randint(0, 9999999999999999999999999)
                 num_list.append(num)
 
                 icon_name = secure_filename(icon_name)
@@ -596,9 +596,9 @@ def add_found():
                 db.session.commit()
 
                 # Ensure the distinct name of each picture by inserting a random int into the icon_name
-                num = random.randint(0, 99999)
+                num = random.randint(0, 9999999999999999999999999)
                 while num in num_list:
-                    num = random.randint(0, 99999)
+                    num = random.randint(0, 9999999999999999999999999)
                 num_list.append(num)
 
                 icon_name = secure_filename(icon_name)
@@ -638,9 +638,9 @@ def add_lost_pic():
                 path = 'upload/lost'
 
                 # Ensure the distinct name of each picture by inserting a random int into the icon_name
-                num = random.randint(0, 99999)
+                num = random.randint(0, 9999999999999999999999999)
                 while num in num_list:
-                    num = random.randint(0, 99999)
+                    num = random.randint(0, 9999999999999999999999999)
                 num_list.append(num)
 
                 icon_name = secure_filename(icon_name)
@@ -676,9 +676,9 @@ def add_found_pic():
                 path = 'upload/found'
 
                 # Ensure the distinct name of each picture by inserting a random int into the icon_name
-                num = random.randint(0, 99999)
+                num = random.randint(0, 9999999999999999999999999)
                 while num in num_list:
-                    num = random.randint(0, 99999)
+                    num = random.randint(0, 9999999999999999999999999)
                 num_list.append(num)
 
                 icon_name = secure_filename(icon_name)
