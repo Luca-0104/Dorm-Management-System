@@ -49,7 +49,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New Icon</h5>
+        <h5 class="modal-title" id="exampleModalLabel">New Pictures</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -78,7 +78,7 @@
       {% if lost.pics %}
       {% for i in lost.pics %}
               <div class="col-md-6">
-                <img class=" align-content-lg-center"  height="225" width="100%"   src="
+                <img class="align-content-lg-center margin-bottom"  height="225" width="100%"   src="
                     {{ url_for('static',filename = i.address ) }}
                     " alt="icon"/>
               </div>
