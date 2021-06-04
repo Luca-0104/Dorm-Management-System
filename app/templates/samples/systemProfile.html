@@ -1,8 +1,7 @@
-{% extends "samples/studentBase.html" %}
-{% block mainContent %}
+{% extends 'samples/systemBase.html' %}
+
+{% block mainContent%}
 <div class="container">
-<div class="album py-5 bg-light">
-    <div class="container">
 
       <div class="row">
         <div class="col-md-2">
@@ -57,45 +56,29 @@
                 <form>
 
   <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_name}}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Name</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{user.user_name}}">
     </div>
   </div>
   <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Student Number</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{stu.stu_number}}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Working Number</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{user.stu_wor_id}}">
     </div>
   </div>
-  <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">College</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.college }}">
-    </div>
-  </div>
-<div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Room</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.room_number }}">
-    </div>
-  </div>
+
+
                     <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Building</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.building_id }}">
-    </div>
-  </div>
-                    <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Phone</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.phone }}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Phone</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ user.phone }}">
     </div>
   </div>
    <div class="form-group row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-10">
-      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ stu.email }}">
+    <label for="staticEmail" class="col-sm-3 col-form-label">Email</label>
+    <div class="col-sm-9">
+      <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ user.email }}">
     </div>
   </div>
 </form>
@@ -106,20 +89,20 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modify</h5>
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+<div class="modal-body">
         <form action="{{ url_for('main.edit_profile') }}" id="modifyForm" method="post">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Phone:</label>
-            <input type="text" class="form-control" name="phone" placeholder="{{ stu.phone }}">
+            <input type="text" class="form-control" name="phone" placeholder="{{ user.phone }}">
           </div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Email:</label>
-            <input type="email" class="form-control" name="email" placeholder="{{ stu.email }}">
+            <input type="email" class="form-control" name="email" placeholder="{{ user.email }}">
           </div>
         </form>
       </div>
@@ -200,6 +183,11 @@
 </script>
 <script>
  $('#modify').click(function(){
+    let id = $('#email').val();
+    let phone = $('#phone').val();
+
+    console.log(id);
+    console.log(phone);
 
 	document.getElementById("modifyForm").submit();
 });

@@ -6,7 +6,8 @@ from sqlalchemy import or_, and_, desc
 from wtforms import ValidationError
 from . import dormAdmin
 from .. import db
-from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair, Notification
+from ..models import Student, Guest, DAdmin, Repair, Complain, ReplyComplain, ReplyRepair, Notification, ReplyLost, \
+    ReplyFound, Lost, Found, ReplyReplyLost, ReplyReplyFound
 
 
 # students CRUD ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -623,7 +624,6 @@ def check_Gue_Stu_ID_Add():
 
 # message system --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# 待写 宿管发布notification
 @dormAdmin.route('/release_notice', methods=['GET', 'POST'])
 def release_notice():
     """
@@ -666,17 +666,38 @@ def da_reply():
     """
     author_id = current_user.id
     reply_type = request.args.get('reply_type')
+
     if reply_type == 'complain':
         complain_id = request.args.get('complain_id')
     elif reply_type == 'repair':
         repair_id = request.args.get('repair_id')
+    elif reply_type == 'lost':
+        lost_id = request.args.get('lost_id')
+    elif reply_type == 'found':
+        found_id = request.args.get('found_id')
+    elif reply_type == 'nested_lost':
+        lost_reply_id = request.args.get('lost_reply_id')
+        lost_id = ReplyLost.query.get(lost_reply_id).lost.id
+    elif reply_type == 'nested_found':
+        found_reply_id = request.args.get('found_reply_id')
+        found_id = ReplyFound.query.get(found_reply_id).found.id
 
     if request.method == 'POST':
         content = request.form.get('content')
+
         if reply_type == 'complain':
             new_reply = ReplyComplain(content=content, complain_id=complain_id, auth_id=author_id)
         elif reply_type == 'repair':
             new_reply = ReplyRepair(content=content, repair_id=repair_id, auth_id=author_id)
+        elif reply_type == 'lost':
+            new_reply = ReplyLost(content=content, lost_id=lost_id, auth_id=author_id)
+        elif reply_type == 'found':
+            new_reply = ReplyFound(content=content, found_id=found_id, auth_id=author_id)
+        elif reply_type == 'nested_lost':
+            new_reply = ReplyReplyLost(content=content, lost_reply_id=lost_reply_id, auth_id=author_id)
+        elif reply_type == 'nested_found':
+            new_reply = ReplyReplyFound(content=content, found_reply_id=found_reply_id, auth_id=author_id)
+
         db.session.add(new_reply)
         db.session.commit()
 
@@ -684,6 +705,14 @@ def da_reply():
         return redirect(url_for('dormAdmin.message_details', message_type='complain', complain_id=complain_id))
     elif reply_type == 'repair':
         return redirect(url_for('dormAdmin.message_details', message_type='repair', repair_id=repair_id))
+    elif reply_type == 'lost':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+    elif reply_type == 'found':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=found_id))
+    elif reply_type == 'nested_lost':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
+    elif reply_type == 'nested_found':
+        return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=found_id))
 
 
 @dormAdmin.route("/home_dormAdmin_message/repair")    # 待核对
@@ -789,3 +818,83 @@ def message_details():
         return render_template("samples/dormMessageDetails.html", function="message", message_type=message_type, notification=notification)
 
     # return render_template("samples/dormMessageDetails.html", function="message")
+
+
+# lost and found system --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+@dormAdmin.route('/mark_done_lost')
+def mark_done_lost():
+    id = request.args.get('id')
+
+    lost = Lost.query.get(id)
+    lost.is_done = True
+    db.session.add(lost)
+    db.session.commit()
+
+    return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=id))
+
+
+@dormAdmin.route('/mark_done_found')
+def mark_done_found():
+    id = request.args.get('id')
+
+    found = Found.query.get(id)
+    found.is_done = True
+    db.session.add(found)
+    db.session.commit()
+
+    return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=id))
+
+
+@dormAdmin.route("/home_da_lost_and_found/lost")
+def lost_and_found_lost():
+    """
+    The function for showing the lost information in the lost and found system
+    """
+    pagenum = int(request.args.get('page', 1))
+    pagination = Lost.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/dormLost.html", function="lost and found", pagination=pagination, pagenum=pagenum)  # 待核对
+
+
+@dormAdmin.route("/home_da_lost_and_found/found")
+def lost_and_found_found():
+    """
+    The function for showing the found information in the lost and found system
+    """
+    pagenum = int(request.args.get('page', 1))
+    pagination = Found.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/dormFound.html", function="lost and found", pagination=pagination, pagenum=pagenum)     # 待核对
+
+
+@dormAdmin.route("/home_da_lost_and_found/details")
+def lost_and_found_details():
+    """
+    The function for showing the detail page of the information in the lost and found system
+    """
+    # get the type of lost and found
+    lnf_type = request.args.get('lnf_type')
+
+    # according to the type of lost and found, get the according id
+    if lnf_type == 'lost':
+        lost_id = request.args.get('lost_id')
+
+        # get the list of replies of this piece of information
+        lost = Lost.query.filter_by(id=lost_id).first()
+        reply_list = lost.replies
+
+        return render_template("samples/dormLostDetail.html", function="lost and found", lnf_type=lnf_type, lost=lost,
+                               reply_list=reply_list)       # 待核对
+
+    elif lnf_type == 'found':
+        found_id = request.args.get('found_id')
+
+        # get the list of replies of this piece of information
+        found = Found.query.filter_by(id=found_id).first()
+        reply_list = found.replies
+
+        return render_template("samples/dormFoundDetail.html", function="lost and found", lnf_type=lnf_type, found=found,
+                               reply_list=reply_list)       # 待核对
+
+    # return render_template(".html", function="lostAndFound")      # 待核对
+

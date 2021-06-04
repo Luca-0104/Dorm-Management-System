@@ -43,7 +43,7 @@
 		 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#"><i class="bi bi-gear-fill icon-margin"></i>Settings</a>
           <a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-door-open-fill icon-margin"></i>Logout</a>
-          <a class="dropdown-item" href="#"><i class="bi bi-file-earmark-person-fill icon-margin"></i>Profile</a>
+          <a class="dropdown-item" href="{{url_for('main.profile')}}"><i class="bi bi-file-earmark-person-fill icon-margin"></i>Profile</a>
         </div>
 	  </li>
     </div>
@@ -56,12 +56,7 @@
 		{% else %}
             class="nav-link"
 		{% endif %} onclick="location.href='{{ url_for('main.home_stu') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="bi bi-file-earmark-person icon-margin"></i><span>Index</span></a>
-		<a {% if function=="bills" %}
-            class="nav-link active"
-		{% else %}
-            class="nav-link"
-		{% endif %} onclick="location.href='{{ url_for('main.home_stu_bill') }}'" data-toggle="pill" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="bi bi-cash-stack icon-margin"></i><span>Bills</span></a>
-		<a {% if function=="complain" %}
+				<a {% if function=="complain" %}
             class="nav-link active"
 		{% else %}
             class="nav-link"
@@ -76,6 +71,12 @@
 		{% else %}
             class="nav-link"
 		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_message') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-chat-dots icon-margin"></i><span>Message</span></a>
+         <a {% if function=="lost and found" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_stu_LAF') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="bi bi-bag icon-margin"></i><span>Lost and Found</span></a>
+
 
 	  </div>
     </div>

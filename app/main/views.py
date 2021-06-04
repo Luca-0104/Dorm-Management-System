@@ -1,44 +1,376 @@
+import os
 import time
 from datetime import datetime, timedelta
 
 from flask import request, redirect, render_template, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import and_
+from werkzeug.utils import secure_filename
 
+from app import db
 from app.main import main
 from app.auth.views import get_role_true
 
-from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin
-
-# The index page ----------------------------------------------------------------------------------------------
+from app.models import User, Student, Guest, Repair, Complain, DormBuilding, DAdmin, Lost, Found
+from app.student.views import ALLOWED_EXTENSIONS
+from config import Config
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    The initial index page for choosing a role to login or signup
+    """
     get_role_true()  # if we are in the index page, we should get ready for getting the role_id
     return render_template("samples/myindex.html")
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/change_avatar', methods=['GET', 'POST'])
+def change_avatar():
+    """
+    The function for users to change their avatars
+    """
+    if request.method == 'POST':
+        icon = request.files.get('icon')  # able to be blank in the database, but we will not allow this happens
+        icon_name = icon.filename
+        suffix = icon_name.rsplit('.')[-1]
+
+        if suffix in ALLOWED_EXTENSIONS:
+            # save the photo into the dir: static/upload/avatar
+            icon_name = secure_filename(icon_name)
+            icon_name = icon_name[0:-4] + '__' + str(current_user.id) + '__' + icon_name[-4:]
+            file_path = os.path.join(Config.avatar_dir, icon_name).replace('\\', '/')
+            icon.save(file_path)
+
+            # update the attribute in database that refers to the directory of the photo
+            path = 'upload/avatar'
+            pic = os.path.join(path, icon_name).replace('\\', '/')
+            current_user.icon = pic
+            db.session.commit()
+
+            return redirect(url_for('main.profile'))
+
+
+        else:
+            msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'
+            if current_user.role_id == 1:
+                return redirect(url_for('main.home_stu', msg=msg))
+            elif current_user.role_id == 2:
+                return redirect(url_for('main.profile', msg=msg))
+            elif current_user.role_id == 3:
+                return redirect(url_for('main.profile', msg=msg))
+
+
+# ----------------------------------------------- profiles for the users with different role  -----------------------------------------------
+
+
+@main.route('/profile')
+def profile():
+    role_id = current_user.role_id
+    stu_wor_id = current_user.stu_wor_id
+
+    if role_id == 1:
+        stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+        return render_template('samples/studentIndex.html', user=current_user, stu=stu, function='index')
+
+    elif role_id == 2:
+        da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+        return render_template('samples/dormProfile.html', user=current_user, da=da)
+
+    elif role_id == 3:
+        return render_template('samples/systemProfile.html', user=current_user)
+
+
+@main.route('/check_profile')
+def check_profile():
+    """
+        When clicking on the avatar of a user, the profile of this user can be checked
+    """
+    uid = request.args.get('uid')
+    user = User.query.get(uid)
+    role_id = user.role_id
+    stu_wor_id = user.stu_wor_id
+
+    # the current user is a student
+    if current_user.role_id == 1:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/showProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/showProfile.html', user=user, da=da)  # 待核对
+
+    # the current user is a dorm admin
+    elif current_user.role_id == 2:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/dormShowProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/dormShowProfile.html', user=user, da=da)  # 待核对
+
+    # the current user is a system admin
+    elif current_user.role_id == 3:
+        # click on the avatar of a student
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            return render_template('samples/systemShowProfile.html', user=user, stu=stu)  # 待核对
+
+        # click on the avatar of a dorm admin
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            return render_template('samples/systemShowProfile.html', user=user, da=da)  # 待核对
+
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    """
+        A method for editing the profile
+    """
+    role_id = current_user.role_id
+    stu_wor_id = current_user.stu_wor_id
+    is_changed_p = False
+    is_changed_e = False
+    is_stopped_p = False
+    is_stopped_e = False
+    is_changed_up = False
+    is_stopped_ue = False
+
+    if request.method == 'POST':
+
+        phone = request.form.get('phone')
+        email = request.form.get('email')
+
+        # update the stu, da, sa tables
+        if role_id == 1:
+            stu = Student.query.filter_by(stu_number=stu_wor_id).first()
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_stu_phone(phone):
+                    stu.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_stu_email(email):
+                    stu.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+        elif role_id == 2:
+            da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_da_phone(phone):
+                    da.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_da_email(email):
+                    da.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+        elif role_id == 3:
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_user_phone(phone):
+                    current_user.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_user_email(email):
+                    current_user.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+        # update the user table of stu or da
+        if role_id == 1 or role_id == 2:
+            do_not_change_p = False
+            do_not_change_e = False
+
+            if phone is None or phone == '':
+                do_not_change_p = True
+            if email is None or email == '':
+                do_not_change_e = True
+
+            if not do_not_change_p:
+                if validate_user_phone(phone):
+                    current_user.phone = phone
+                    is_changed_p = True
+            else:
+                is_changed_p = True
+
+            if not do_not_change_e:
+                if validate_user_email(email):
+                    current_user.email = email
+                    is_changed_e = True
+            else:
+                is_changed_e = True
+
+            if is_changed_p and is_changed_e:
+                db.session.commit()
+
+    return redirect(url_for('main.profile'))
+
+
+def validate_stu_phone(p):
+    """
+    Verify if the phone number has not been used in student table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        stu = Student.query.filter_by(phone=p).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_da_phone(p):
+    """
+    Verify if the phone number has not been used in dorm admin table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        da = DAdmin.query.filter_by(phone=p).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_user_phone(p):
+    """
+    Verify if the phone number has not been used in user table.
+    :param p:   phone number
+    """
+    if len(p) == 11:
+        print('phone ok')
+        user = User.query.filter_by(phone=p).first()
+        if user:
+            return False
+        return True
+    return False
+
+
+def validate_stu_email(e):
+    """
+    Verify if the email has not been used in student table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        stu = Student.query.filter_by(email=e).first()
+        if stu:
+            if not stu.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_da_email(e):
+    """
+    Verify if the email has not been used in dorm admin table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        da = DAdmin.query.filter_by(email=e).first()
+        if da:
+            if not da.is_deleted:
+                return False
+            return True
+        return True
+    return False
+
+
+def validate_user_email(e):
+    """
+    Verify if the email has not been used in user table.
+    :param e:   email
+    """
+    if e.find('@', 1, len(e)) > 0:
+        print('email ok')
+        user = User.query.filter_by(email=e).first()
+        if user:
+            return False
+        return True
+    return False
+
+
+# ----------------------------------------------- main pages of students  -----------------------------------------------
+
+
 @main.route('/home_stu', methods=['GET', 'POST'])
 def home_stu():
     """
     The index page for student users, which is the first page shown after login
     (Some basic information)
     """
+    msg = request.args.get('msg')
     stu_number = current_user.stu_wor_id
     stu = Student.query.filter_by(stu_number=stu_number).first()
 
-    return render_template("samples/studentIndex.html", function="index", stu=stu)  # 待核对完善
+    return render_template("samples/studentIndex.html", function="index", stu=stu, msg=msg, user=current_user)  # 待核对完善
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_bill', methods=['GET', 'POST'])
 def home_stu_bill():
     return render_template("samples/studentBills.html", function="bills")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_complain', methods=['GET', 'POST'])
 def home_stu_complain():
     pagenum = int(request.args.get('page', 1))
@@ -50,7 +382,6 @@ def home_stu_complain():
                            function="complain")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
 @main.route('/home_stu_repair', methods=['GET', 'POST'])
 def home_stu_repair():
     pagenum = int(request.args.get('page', 1))
@@ -62,7 +393,11 @@ def home_stu_repair():
                            function="repair")  # 待核对
 
 
-# Three home pages for three kinds of users ----------------------------------------------------------------------------------------------
+@main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
+def home_stu_LAF():
+    return render_template("samples/studentLF.html", function="lost and found")
+
+
 @main.route('/home_stu_message', methods=['GET', 'POST'])
 def home_stu_message():
     stu_number = current_user.stu_wor_id
@@ -80,7 +415,46 @@ def home_stu_message():
     # a dict stores the number of each kind of message
     mes_num_dict = {'repair': repair_num, 'complain': complain_num, 'notification': notification_num}
 
-    return render_template("samples/studentMessage.html", function="message", mes_num_dict=mes_num_dict)  # 待核对
+    return render_template("samples/studentMessage.html", function="message", mes_num_dict=mes_num_dict)
+
+
+@main.route('/home_stu_lost', methods=['GET', 'POST'])
+def home_stu_lost():
+    """
+    Shows only the lost information of this student himself (about me)
+    """
+    pagenum = int(request.args.get('page', 1))
+    stu_num = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_num).first()
+    stu_id = stu.id
+    pagination = Lost.query.filter_by(stu_id=stu_id, is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/aboutMe.html", pagination=pagination, enterType='home',
+                           function="lost and found", lnf_type='lost')  # 待核对
+
+
+@main.route('/home_stu_found', methods=['GET', 'POST'])
+def home_stu_found():
+    """
+    Shows only the found information of this student himself (about me)
+    """
+    pagenum = int(request.args.get('page', 1))
+    stu_num = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_num).first()
+    stu_id = stu.id
+    pagination = Found.query.filter_by(stu_id=stu_id, is_deleted=False).paginate(page=pagenum, per_page=5)
+    return render_template("samples/aboutMe.html", pagination=pagination, enterType='home',
+                           function="lost and found", lnf_type='found')  # 待核对
+
+
+@main.route('/home_stu_lost_and_found', methods=['GET', 'POST'])
+def home_stu_lost_and_found():
+    stu_number = current_user.stu_wor_id
+    stu = Student.query.filter_by(stu_number=stu_number).first()
+
+    return render_template("samples/studentLF.html", function="lost and found")  # 待核对
+
+
+# ----------------------------------------------- main pages of dormitory administrator -----------------------------------------------
 
 
 @main.route('/home_dorm_admin', methods=['GET', 'POST'])
@@ -99,6 +473,11 @@ def home_dorm_admin_gue():
     pagination = Guest.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
     return render_template('samples/dormGuests.html', pagination=pagination, enterType='home',
                            isSuccessful=isSuccessful, function="guests")
+
+
+@main.route('/home_da_lost_and_found', methods=['GET', 'POST'])
+def home_da_lost_and_found():
+    return render_template('samples/dormLF.html', function="lost and found")  # 待核对
 
 
 @main.route('/home_dorm_admin_message', methods=['GET', 'POST'])
@@ -132,6 +511,7 @@ def home_dorm_admin_index():
     Only the data about the building that this dorm administrator takes charge of
     (The index function of dorm administrators)
     """
+    msg = request.args.get('msg')
     work_num = current_user.stu_wor_id
     da = DAdmin.query.filter_by(da_number=work_num).first()
     building = da.building
@@ -299,7 +679,6 @@ def home_dorm_admin_index():
         elif (datetime.utcnow() - gue.arrive_time).days == 6:
             gue7 += 1
 
-
     d1 = datetime.now()
     d2 = d1 + timedelta(days=-1)
     d3 = d2 + timedelta(days=-1)
@@ -319,14 +698,16 @@ def home_dorm_admin_index():
     # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
     gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
-    return render_template('samples/dormIndex.html', function="index",
-                           basic_number_dict=basic_number_dict,     # graph1
-                           floor_stu_num_list=floor_stu_num_list,   # graph2
-                           college_dict=college_dict,               # graph3
-                           stage_list=stage_list,                   # graph4
-                           gue_num_list=gue_num_list                # graph5
+    return render_template('samples/dormIndex.html', function="index", msg=msg,
+                           basic_number_dict=basic_number_dict,  # graph1
+                           floor_stu_num_list=floor_stu_num_list,  # graph2
+                           college_dict=college_dict,  # graph3
+                           stage_list=stage_list,  # graph4
+                           gue_num_list=gue_num_list  # graph5
                            )
 
+
+# ----------------------------------------------- main pages of system administrator -----------------------------------------------
 
 @main.route('/home_sys_admin', methods=['GET', 'POST'])
 def home_sys_admin():
@@ -334,6 +715,8 @@ def home_sys_admin():
     A function for showing the data graphs in the initial page of system administrator
     (The index function of system administrators)
     """
+    msg = request.args.get('msg')
+
     building_id = request.args.get('building_id', '0')
 
     # building_id == 0 means this is the initial login status (before selecting a specific dorm building),
@@ -352,7 +735,6 @@ def home_sys_admin():
             for gue in gues:
                 if gue not in gue_list:
                     gue_list.append(gue)
-
 
     # ******************** for graph 1 ********************
     # a dict stores the number of students, dorm administrators and guests
@@ -433,7 +815,7 @@ def home_sys_admin():
         stu_number = stu.stu_number
         year = int(stu_number[0:2])
 
-        if 9 <= month_now <= 12:    # the first semester of the year
+        if 9 <= month_now <= 12:  # the first semester of the year
             diff = year_now - year
             if diff == 0:
                 stage1 += 1
@@ -502,12 +884,12 @@ def home_sys_admin():
     # a 2D list stores the date (str) and numbers of guests (int) in this building in last 7 days, they are ordered from today to 7 days ago
     gue_num_list = [[day1, gue1], [day2, gue2], [day3, gue3], [day4, gue4], [day5, gue5], [day6, gue6], [day7, gue7]]
 
-    return render_template("samples/systemIndex.html", function="index", building_id=building_id,
-                           basic_number_dict=basic_number_dict,     # graph1
-                           floor_stu_num_list=floor_stu_num_list,   # graph2
-                           college_dict=college_dict,               # graph3
-                           stage_list=stage_list,                   # graph4
-                           gue_num_list=gue_num_list                # graph5
+    return render_template("samples/systemIndex.html", function="index", building_id=building_id, msg=msg,
+                           basic_number_dict=basic_number_dict,  # graph1
+                           floor_stu_num_list=floor_stu_num_list,  # graph2
+                           college_dict=college_dict,  # graph3
+                           stage_list=stage_list,  # graph4
+                           gue_num_list=gue_num_list  # graph5
                            )  # 待核对完善
 
 
@@ -539,85 +921,18 @@ def home_sys_stu():
 
 @main.route('/home_sys_dorm', methods=['GET', 'POST'])
 def home_sys_dorm():
+    building_id = request.args.get('building_id', '0')
     pagenum = int(request.args.get('page', 1))
-    pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
-    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination)  # 待核对完善
+    isSuccessful = request.args.get('isSuccessful', "True")
+
+    if building_id == '0':
+        pagination = DAdmin.query.filter_by(is_deleted=False).paginate(page=pagenum, per_page=5)
+    else:
+        pagination = DAdmin.query.filter_by(is_deleted=False, building_id=building_id).paginate(page=pagenum, per_page=5)
+
+    return render_template("samples/systemDorm.html", function="dormAdmin", pagination=pagination, enterType='home', isSuccessful=isSuccessful, building_id=building_id)  # 待核对完善
 
 
-# The profile page ----------------------------------------------------------------------------------------------
-@main.route('/user/<username>')
-def user_profile(username):
-    u = User.query.filter_by(user_name=username).first_or_404()
-    if u.role_id == 1:
-        stu = Student.query.filter_by(stu_number=u.stu_wor_id).first()
-        return render_template('student.html', user=u, student=stu)  # 待核对完善
-    elif u.role_id == 2:
-        return render_template('dormAdmin.html', user=u)  # 待核对完善
-    elif u.role_id == 3:
-        return render_template('sysAdmin.html', user=u)  # 待核对完善
-
-
-@main.route('/edit-profile', methods=['GET', 'POST'])
-@login_required
-def edit_profile():
-    user_name = current_user.user_name
-    stu_wor_id = current_user.stu_wor_id
-    phone = current_user.phone
-    email = current_user.email
-    member_since = current_user.member_since
-
-    role_id = current_user.role_id
-
-    if request.method == 'POST':
-        # 待核对完善
-
-        if role_id == 1:
-            pass
-        elif role_id == 2:
-            pass
-        elif role_id == 3:
-            pass
-
-        user_name = request.form.get('user_name')
-        stu_wor_id = request.form.get('stu_wor_id')
-        phone = request.form.get('phone')
-        email = request.form.get('email')
-        about_me = request.form.get('about_me')
-        college = request.form.get('college')
-        building_id = request.form.get('building_id')
-        room_number = request.form.get('room_number')
-
-        user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
-        according_stu = Student.query.filter_by(stu_number=stu_wor_id).first()
-
-        # 待补全
-        user.user_name = user_name
-
-    return render_template('.html', user_name=user_name, stu_wor_id=stu_wor_id, phone=phone, email=email,
-                           member_since=member_since)  # 待核对完善
-
-# -------------------以下部分应该后面写到student蓝本和dormAdmin蓝本中----------------------
-
-# @main.route("/home_stu_message/repair")
-# def message_repair():
-#     return render_template("samples/messageRepair.html", function="message")
-
-#
-# @main.route("/home_stu_message/complain")
-# def message_complain():
-#     return render_template("samples/messageComplain.html", function="message")
-#
-#
-# @main.route("/home_stu_message/notification")
-# def message_notification():
-#     return render_template("samples/messageNotification.html", function="message")
-#
-#
-# @main.route("/home_stu_message/others")
-# def message_others():
-#     return render_template("samples/messageOthers.html", function="message")
-#
-#
-# @main.route("/home_stu_message/details")
-# def message_details():
-#     return render_template("samples/Message.html", function="message")
+@main.route('/home_sys_lost_and_found')
+def home_sys_lost_and_found():
+    return render_template('samples/sysLF.html', function="lost and found")  # 待核对

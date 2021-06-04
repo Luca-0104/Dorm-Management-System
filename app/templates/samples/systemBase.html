@@ -80,6 +80,20 @@
                   <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=11">Building 11</a>
                   <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=12">Building 12</a>
                   <a class="dropdown-item" href="{{url_for('main.home_sys_gue')}}?building_id=13">Building 13</a>
+                {% elif function == "dormAdmin" %}
+                <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=1">Building 1</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=2">Building 2</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=3">Building 3</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=4">Building 4</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=5">Building 5</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=6">Building 6</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=7">Building 7</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=8">Building 8</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=9">Building 9</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=10">Building 10</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=11">Building 11</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=12">Building 12</a>
+                  <a class="dropdown-item" href="{{url_for('main.home_sys_dorm')}}?building_id=13">Building 13</a>
 
             {% endif %}
 
@@ -101,7 +115,7 @@
 		 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#"><i class="bi bi-gear-fill icon-margin"></i>Settings</a>
           <a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-door-open-fill icon-margin"></i>Logout</a>
-          <a class="dropdown-item" href="#"><i class="bi bi-file-earmark-person-fill icon-margin"></i>Profile</a>
+          <a class="dropdown-item" href="{{ url_for('main.profile') }}"><i class="bi bi-file-earmark-person-fill icon-margin"></i>Profile</a>
         </div>
 	  </li>
     </div>
@@ -129,6 +143,12 @@
 		{% else %}
             class="nav-link"
 		{% endif %}  onclick="location.href='{{ url_for('main.home_sys_dorm') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Dorm Administrators</span></a>
+        <a {% if function=="lost and found" %}
+            class="nav-link active"
+		{% else %}
+            class="nav-link"
+		{% endif %}  onclick="location.href='{{ url_for('main.home_sys_lost_and_found') }}'" data-toggle="pill"  role="tab" aria-controls="v-pills-profile" aria-selected="false"><em class="bi-person-check icon-margin"></em><span>Lost and Found</span></a>
+
 	  </div>
     </div>
     <div class="col-10">
