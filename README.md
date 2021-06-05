@@ -151,10 +151,11 @@ about repair applying and complaints in the section called 'Repair' and 'Complai
 Additionally, in the message system, dorm administrators can release some notifications
 that only the students in the building he is managing can see.
 
-![](demoPics/releaseAnnouncement.png) 换图！
+![](demoPics/releaseAnnouncement.png)
 *dorm administrator release an announcement*
 
-![]()
+![](demoPics/stuAnnounce1.png)
+![](demoPics/stuAnnounce2.png)
 *corresponding students receive the announcement*
 
 ### Feature 4: Information Management System
