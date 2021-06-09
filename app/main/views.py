@@ -176,6 +176,7 @@ def edit_profile():
 
             if is_changed_p and is_changed_e:
                 db.session.commit()
+                flash("Profile updated successfully")
 
         elif role_id == 2:
             da = DAdmin.query.filter_by(da_number=stu_wor_id).first()
@@ -203,6 +204,7 @@ def edit_profile():
 
             if is_changed_p and is_changed_e:
                 db.session.commit()
+                flash("Profile updated successfully")
 
         elif role_id == 3:
             do_not_change_p = False
@@ -217,6 +219,8 @@ def edit_profile():
                 if validate_user_phone(phone):
                     current_user.phone = phone
                     is_changed_p = True
+                else:
+                    flash("Phone number is invalid")
             else:
                 is_changed_p = True
 
@@ -224,11 +228,14 @@ def edit_profile():
                 if validate_user_email(email):
                     current_user.email = email
                     is_changed_e = True
+                else:
+                    flash("Email is invalid")
             else:
                 is_changed_e = True
 
             if is_changed_p and is_changed_e:
                 db.session.commit()
+                flash("Profile updated successfully")
 
         # update the user table of stu or da
         if role_id == 1 or role_id == 2:
@@ -270,9 +277,12 @@ def validate_stu_phone(p):
         stu = Student.query.filter_by(phone=p).first()
         if stu:
             if not stu.is_deleted:
+                flash("Phone number has already existed")
                 return False
             return True
         return True
+    else:
+        flash("Phone number should contain 11 digits")
     return False
 
 
@@ -286,9 +296,12 @@ def validate_da_phone(p):
         da = DAdmin.query.filter_by(phone=p).first()
         if da:
             if not da.is_deleted:
+                flash("Phone number has already existed")
                 return False
             return True
         return True
+    else:
+        flash("Phone number should contain 11 digits")
     return False
 
 
@@ -316,9 +329,12 @@ def validate_stu_email(e):
         stu = Student.query.filter_by(email=e).first()
         if stu:
             if not stu.is_deleted:
+                flash("Email has already existed")
                 return False
             return True
         return True
+    else:
+        flash("Email is not in the correct format")
     return False
 
 
@@ -332,9 +348,12 @@ def validate_da_email(e):
         da = DAdmin.query.filter_by(email=e).first()
         if da:
             if not da.is_deleted:
+                flash("Email has already existed")
                 return False
             return True
         return True
+    else:
+        flash("Email is not in the correct format")
     return False
 
 
@@ -366,11 +385,6 @@ def home_stu():
     stu = Student.query.filter_by(stu_number=stu_number).first()
 
     return render_template("samples/studentIndex.html", function="index", stu=stu, msg=msg, user=current_user)  # 待核对完善
-
-
-@main.route('/home_stu_bill', methods=['GET', 'POST'])
-def home_stu_bill():
-    return render_template("samples/studentBills.html", function="bills")  # 待核对
 
 
 @main.route('/home_stu_complain', methods=['GET', 'POST'])

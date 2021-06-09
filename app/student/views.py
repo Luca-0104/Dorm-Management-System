@@ -92,6 +92,8 @@ def add_complain():
             db.session.add(new_complain)
             db.session.commit()
             flash("Complaint submitted")
+        else:
+            flash("The content should not be empty")
 
     return redirect(url_for('main.home_stu_complain'))
 
@@ -113,6 +115,9 @@ def add_repair():
             new_repair = Repair(item=item, detail=detail, stu_id=stu_id)
             db.session.add(new_repair)
             db.session.commit()
+            flash("Repairing application submitted")
+        else:
+            flash("The content should not be empty")
 
     return redirect(url_for('main.home_stu_repair'))
     # return render_template("samples/studentRepair.html", function="repair")
@@ -226,6 +231,7 @@ def mark_done_lost():
     lost.is_done = True
     db.session.add(lost)
     db.session.commit()
+    flash("The status of the lost item is changed successfully")
 
     return redirect(url_for('student.lost_and_found_details', lnf_type='lost', lost_id=id))
 
@@ -238,6 +244,7 @@ def mark_done_found():
     found.is_done = True
     db.session.add(found)
     db.session.commit()
+    flash("The status of the found item is changed successfully")
 
     return redirect(url_for('student.lost_and_found_details', lnf_type='found', found_id=id))
 
@@ -479,7 +486,11 @@ def add_lost():
     if request.method == 'POST':
 
         item = request.form.get('item')
-        price = int(request.form.get('price'))
+        price_str = request.form.get('price')
+        if price_str is not None and price_str != '':
+            price = int(price_str)
+        else:
+            price = 0
         place = request.form.get('place')           # able to be blank
         # lost_time = request.form.get('lost_time')   # able to be blank
         detail = request.form.get('detail')         # able to be blank
@@ -515,10 +526,12 @@ def add_lost():
                 new_lost = Lost(item=item, price=price, detail=detail, stu_id=stu_id, place=place, lost_time=lost_time)
 
         else:
+            flash("You must tell what item you lost ")
             return redirect(url_for('student.lost_and_found_lost'))
 
         db.session.add(new_lost)
         db.session.commit()
+        flash("Lost report submitted successfully")
 
         # if there is a picture uploaded
         if icon:
@@ -547,6 +560,7 @@ def add_lost():
                 db.session.commit()
 
             else:
+                flash('Upload picture failed! The suffix of the picture should be jpg, png and bmp only')
                 return redirect(url_for('student.lost_and_found_lost'))
 
         # if there are no picture uploaded
@@ -580,42 +594,50 @@ def add_found():
         stu = Student.query.filter_by(stu_number=stu_num).first()
         stu_id = stu.id
 
-        icon_name = icon.filename
-        suffix = icon_name.rsplit('.')[-1]
-        if suffix in ALLOWED_EXTENSIONS:
-            if item != '' and stu_id is not None:
-                # Add the information of the found item into the Found table
-                path = 'upload/found'
+        if icon:
+            icon_name = icon.filename
+            suffix = icon_name.rsplit('.')[-1]
+            if suffix in ALLOWED_EXTENSIONS:
+                if item != '' and stu_id is not None:
+                    # Add the information of the found item into the Found table
+                    path = 'upload/found'
 
-                if detail == '':
-                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id)
+                    if detail == '':
+                        new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id)
+
+                    else:
+                        new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
+
+                    db.session.add(new_found)
+                    db.session.commit()
+
+                    # Ensure the distinct name of each picture by inserting a random int into the icon_name
+                    num = random.randint(0, 9999999999999999999999999)
+                    while num in num_list:
+                        num = random.randint(0, 9999999999999999999999999)
+                    num_list.append(num)
+
+                    icon_name = secure_filename(icon_name)
+                    icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
+                    file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
+                    icon.save(file_path)
+
+                    pic = os.path.join(path, icon_name).replace('\\', '/')
+                    # new_found.icon = pic
+                    new_pic = FoundPic(address=pic, found_id=new_found.id)
+
+                    db.session.add(new_pic)
+                    db.session.commit()
+                    flash("Found report submitted successfully")
 
                 else:
-                    new_found = Found(item=item, place=place, found_time=found_time, stu_id=stu_id, detail=detail)
+                    flash("You must tell what item you found")
 
-                db.session.add(new_found)
-                db.session.commit()
-
-                # Ensure the distinct name of each picture by inserting a random int into the icon_name
-                num = random.randint(0, 9999999999999999999999999)
-                while num in num_list:
-                    num = random.randint(0, 9999999999999999999999999)
-                num_list.append(num)
-
-                icon_name = secure_filename(icon_name)
-                icon_name = icon_name[0:-4] + '__' + str(num) + '__' + icon_name[-4:]
-                file_path = os.path.join(Config.found_dir, icon_name).replace('\\', '/')
-                icon.save(file_path)
-
-                pic = os.path.join(path, icon_name).replace('\\', '/')
-                # new_found.icon = pic
-                new_pic = FoundPic(address=pic, found_id=new_found.id)
-
-                db.session.add(new_pic)
-                db.session.commit()
-
+            else:
+                flash('Upload picture failed! The suffix of the picture should be jpg, png and bmp only')
+                return redirect(url_for('student.lost_and_found_found'))
         else:
-            return redirect(url_for('student.lost_and_found_found'))
+            flash("You should upload a picture of it")
 
     return redirect(url_for('student.lost_and_found_found'))
 
@@ -654,6 +676,11 @@ def add_lost_pic():
 
                 db.session.add(new_pic)
                 db.session.commit()
+                flash("The picture is uploaded successfully")
+            else:
+                flash("Upload picture failed! The suffix of the picture should be jpg, png and bmp only")
+        else:
+            flash("No picture selected!")
 
     return redirect(url_for('student.lost_and_found_details', lnf_type='lost', lost_id=lost_id))
 
@@ -692,6 +719,11 @@ def add_found_pic():
 
                 db.session.add(new_pic)
                 db.session.commit()
+                flash("The picture is uploaded successfully")
+            else:
+                flash("Upload picture failed! The suffix of the picture should be jpg, png and bmp only")
+        else:
+            flash("No picture selected!")
 
     return redirect(url_for('student.lost_and_found_details', lnf_type='found', found_id=found_id))
 
