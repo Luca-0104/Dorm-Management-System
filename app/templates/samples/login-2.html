@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Majestic Admin</title>
+  <title>Login</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../static/vendors/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../../static/vendors/base/vendor.bundle.base.css">
@@ -19,7 +19,7 @@
 </head>
 
 <body >
-  <div class="containerScoller">
+ <div class="containerScoller">
     <div class="containerFlucid pageBodWrapper fullPageWrapper">
       <div class="contentWrapper d-flex alignItemsStretch auth authImgBg">
         <div class="row flexGrow">
@@ -30,7 +30,12 @@
               </div>
               <h4>Welcome to BJUT Dormitory Management System!</h4>
               <h6 class="fontWeightLight">Happy to see you again!</h6>
-              <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post">
+              <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post" >
+                {% if isSuccessful == false %}
+                <div style="color: red" role="alert">
+  The account or password is wrong
+</div>
+                {% endif %}
                 <div class="formGroup">
                   <label for="exampleInputEmail">UserID</label>
                   <div class="inputGroup ">
@@ -54,16 +59,7 @@
                   <a href="#" class="authLink textBlack">Forgot password?</a>
                 </div>
                 <div class="my3">
-                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="Login"> 
-                </div>
-                <div class="mb-2 d-flex">
-					
-                  <button type="button" class="btn btnPhone authFormBtn flexGrow mr1" id = "PhoneLogin" onclick="skipPhone({{ role_id }})">
-                    <i class="mdi mdi-phone"></i>Phone
-                  </button>
-                  <button type="button" class="btn btnEmail authFormBtn flexGrow ml1" id ="EmailLogin" onclick="skipEmail({{ role_id }})">
-                    <i class="mdi mdi-email"></i>Email
-                  </button>
+                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="Login" id="submit">
                 </div>
                 <div class="textCennter mt4 fontWeightLight">
                   Don't have an account? <a href='{{url_for('auth.register')}}?identification={{ role_id }}' class="textPrimary">Create</a>
@@ -83,5 +79,9 @@
 	 <script src="../../static/js/skip.js"></script>
 
 </body>
+<script>
+    $('#submit').click(function() {
 
+</script>
 </html>
+

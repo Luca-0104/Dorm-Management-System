@@ -308,9 +308,14 @@ class DAdmin(db.Model):
     __tablename__ = 'dormAdmins'
     id = db.Column(db.Integer, primary_key=True)
     da_name = db.Column(db.String(64), nullable=False)
-    da_number = db.Column(db.String(64), unique=True, nullable=False)
-    phone = db.Column(db.String(64), unique=True, nullable=False)
-    email = db.Column(db.String(64), unique=True)
+
+    # da_number = db.Column(db.String(64), unique=True, nullable=False)
+    # phone = db.Column(db.String(64), unique=True, nullable=False)
+    # email = db.Column(db.String(64), unique=True)
+    da_number = db.Column(db.String(64), nullable=False)
+    phone = db.Column(db.String(64), nullable=False)
+    email = db.Column(db.String(64))
+
     building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
     enroll_date = db.Column(db.DateTime(), default=datetime.utcnow)
     is_deleted = db.Column(db.Boolean, default=False)
@@ -363,9 +368,14 @@ class Student(db.Model):
     __tablename__ = 'students'
     id = db.Column(db.Integer, primary_key=True)
     stu_name = db.Column(db.String(64), unique=False, nullable=False)
-    stu_number = db.Column(db.String(64), unique=True, nullable=False)
-    phone = db.Column(db.String(64), unique=True, nullable=False)
-    email = db.Column(db.String(64), unique=True)
+
+    # stu_number = db.Column(db.String(64), unique=True, nullable=False)
+    stu_number = db.Column(db.String(64), nullable=False)
+    # phone = db.Column(db.String(64), unique=True, nullable=False)
+    phone = db.Column(db.String(64), nullable=False)
+    # email = db.Column(db.String(64), unique=True)
+    email = db.Column(db.String(64))
+
     college = db.Column(db.String(64), unique=False, nullable=False)
     building_id = db.Column(db.Integer, db.ForeignKey('dorm_buildings.id'), unique=False, nullable=False)
     room_number = db.Column(db.Integer, unique=False, nullable=False)

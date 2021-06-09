@@ -24,15 +24,14 @@ role_id = None
 def login():
     global get_role_from_button
     global role_id
+    isSuccessful = True
 
     if request.method == 'POST':
         get_role_from_button = False
         stu_wor_id = request.form.get('stu_wor_id')
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
-        if user is None:
-            flash('Invalid id.')
-        else:
+        if user is not None:
 
             print(role_id)
             print(user.role_id)
@@ -43,6 +42,7 @@ def login():
             if role_id == user.role_id:
                 if user is not None and user.verify_password(password):
                     login_user(user)
+                    isSuccessful = True
                     if role_id == 1:
                         url = 'main.home_stu'
                     elif role_id == 2:
@@ -51,9 +51,13 @@ def login():
                         url = 'main.home_sys_admin'
                     return redirect(url_for(url))
                 else:
-                    flash('Invalid id or password.')
+                    # flash('Invalid id or password.')
+                    isSuccessful = False
             else:
                 return redirect(url_for('main.index'))
+
+        else:
+            isSuccessful = False
 
     # decide if we need to get the role_id again
     if request.method == 'GET' and get_role_from_button is True:
@@ -64,10 +68,10 @@ def login():
     if getf is not None:
         getf = int(getf)
     if getf == 1:
-        return render_template('samples/phoneLogin.html', role_id=role_id)
+        return render_template('samples/phoneLogin.html', role_id=role_id, isSuccessful=isSuccessful)
     if getf == 2:
-        return render_template('samples/emailLogin.html', role_id=role_id)
-    return render_template('samples/login-2.html', role_id=role_id)
+        return render_template('samples/emailLogin.html', role_id=role_id, isSuccessful=isSuccessful)
+    return render_template('samples/login-2.html', role_id=role_id, isSuccessful=isSuccessful)
 
 
 # Logout
@@ -75,7 +79,7 @@ def login():
 @login_required  # Make sure the user want to logout has logged in
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    # flash('You have been logged out.')
     return redirect(url_for('main.index'))
 
 
@@ -95,6 +99,7 @@ def home():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     global get_role_from_button
+    isSuccessful = True
 
     if request.method == 'POST':
         username = request.form.get('username')
@@ -105,12 +110,14 @@ def register():
         password2 = request.form.get('password2')
 
         if not all([username, stu_wor_id, email, phone, password, password2]):
-            flash('elements are incomplete')
+            # flash('elements are incomplete')
             print('elements are incomplete')
+            isSuccessful = False
 
         elif password != password2:
-            flash('Two passwords do not match')
+            # flash('Two passwords do not match')
             print('Two passwords do not match')
+            isSuccessful = False
 
         else:
             print(validate_email(email))
@@ -121,7 +128,8 @@ def register():
                 new_user = User(user_name=username, stu_wor_id=stu_wor_id, role_id=role_id, password=password,
                                 email=email, phone=phone)
 
-                flash('Registered successfully! You can login now.')
+                # flash('Registered successfully! You can login now.')
+                isSuccessful = True
                 db.session.add(new_user)
                 db.session.commit()
 
@@ -132,9 +140,8 @@ def register():
 
                 get_role_from_button = False  # we will go back to the login page and in this case we do not need to get the role_id again
                 return redirect(url_for("auth.login"))
-            else:
-                flash('Email, phone number or id already exists.')
-    return render_template('samples/register-2.html', role_id=role_id)
+
+    return render_template('samples/register-2.html', role_id=role_id, isSuccessful=isSuccessful)
 
 
 @auth.route('checkID', methods=['GET', 'POST'])

@@ -1,5 +1,7 @@
 {% extends 'samples/systemBase.html' %}
-
+{% block title %}
+<title>Profile</title>
+{% endblock %}
 {% block mainContent%}
 <div class="container">
 
@@ -31,7 +33,7 @@
         <form action="{{ url_for('main.change_avatar') }}" method="post" id="iconForm" enctype="multipart/form-data">
           <div class="custom-file">
   <input type="file" class="form-control" id="customFile" name="icon" >
-  <label class="custom-file-label" for="customFile"></label>
+  <label class="custom-file-label" for="customFile"></label><span class="alert alert-light">Note: .jpg, .png, .bmp only</span>
 
 </div>
 

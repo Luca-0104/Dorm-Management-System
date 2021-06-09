@@ -766,6 +766,7 @@ def add_da():
                                 building_id=building_id)
                 db.session.add(new_da)
                 db.session.commit()
+                flash("The Dorm Admin info is inserted successfully")
                 return redirect(url_for('main.home_sys_dorm', isSuccessful=True))
             else:
                 return redirect(url_for('main.home_sys_dorm', isSuccessful=False))
@@ -852,6 +853,7 @@ def delete_lost():
 
     db.session.add(lost)
     db.session.commit()
+    flash("The Lost information has been deleted successfully")
 
     return redirect(url_for('sysAdmin.lost_and_found_lost'))
 
@@ -865,6 +867,7 @@ def delete_found():
 
     db.session.add(found)
     db.session.commit()
+    flash("The Found information has been deleted successfully")
 
     return redirect(url_for('sysAdmin.lost_and_found_found'))
 

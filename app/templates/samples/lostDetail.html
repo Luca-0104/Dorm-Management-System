@@ -1,4 +1,7 @@
 {% extends 'samples/studentBase.html' %}
+{% block title %}
+<title>Lost Details</title>
+{% endblock %}
 {% block mainContent %}
 <div class="col-lg-8 mx-auto p-3 py-md-5 bg-light rounded shadow-sm">
   <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
@@ -58,7 +61,7 @@
         <form action="{{ url_for('student.add_lost_pic') }}?lost_id={{ lost.id }}" method="post" id="iconForm" enctype="multipart/form-data">
           <div class="custom-file">
   <input type="file" class="form-control" id="customFile" name="lost_icon" >
-  <label class="custom-file-label" for="customFile"></label>
+  <label class="custom-file-label" for="customFile"></label><span class="alert alert-light">Note: .jpg, .png, .bmp only</span>
 
 </div>
 
