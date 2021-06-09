@@ -19,9 +19,7 @@
 </head>
 
 <body >
-
-{% endfor %}
-  <div class="containerScoller">
+ <div class="containerScoller">
     <div class="containerFlucid pageBodWrapper fullPageWrapper">
       <div class="contentWrapper d-flex alignItemsStretch auth authImgBg">
         <div class="row flexGrow">
@@ -32,7 +30,12 @@
               </div>
               <h4>Welcome to BJUT Dormitory Management System!</h4>
               <h6 class="fontWeightLight">Happy to see you again!</h6>
-              <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post">
+              <form action='{{ url_for('auth.login') }}?identification={{ role_id }}' method="post" >
+                {% if isSuccessful == false %}
+                <div style="color: red" role="alert">
+  The account or password is wrong
+</div>
+                {% endif %}
                 <div class="formGroup">
                   <label for="exampleInputEmail">UserID</label>
                   <div class="inputGroup ">
@@ -77,13 +80,8 @@
 
 </body>
 <script>
-    $('#submit').onclick(function() {
-            if(isSuccessful){
-                alert("Login Successfully")
-            }else{
-                alert("Failed to Login")
-            }
-        });
+    $('#submit').click(function() {
+
 </script>
 </html>
 

@@ -24,6 +24,7 @@ role_id = None
 def login():
     global get_role_from_button
     global role_id
+    isSuccessful = True
 
     if request.method == 'POST':
         get_role_from_button = False
