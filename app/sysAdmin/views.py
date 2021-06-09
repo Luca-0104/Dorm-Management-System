@@ -853,6 +853,7 @@ def delete_lost():
 
     db.session.add(lost)
     db.session.commit()
+    flash("The Lost information has been deleted successfully")
 
     return redirect(url_for('sysAdmin.lost_and_found_lost'))
 
@@ -866,6 +867,7 @@ def delete_found():
 
     db.session.add(found)
     db.session.commit()
+    flash("The Found information has been deleted successfully")
 
     return redirect(url_for('sysAdmin.lost_and_found_found'))
 
