@@ -24,7 +24,7 @@ role_id = None
 def login():
     global get_role_from_button
     global role_id
-    isSuccessful = False
+    isSuccessful = True
 
     if request.method == 'POST':
         get_role_from_button = False
@@ -55,6 +55,9 @@ def login():
                     isSuccessful = False
             else:
                 return redirect(url_for('main.index'))
+
+        else:
+            isSuccessful = False
 
     # decide if we need to get the role_id again
     if request.method == 'GET' and get_role_from_button is True:
@@ -96,7 +99,7 @@ def home():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     global get_role_from_button
-    isSuccessful = False
+    isSuccessful = True
 
     if request.method == 'POST':
         username = request.form.get('username')
@@ -109,10 +112,12 @@ def register():
         if not all([username, stu_wor_id, email, phone, password, password2]):
             # flash('elements are incomplete')
             print('elements are incomplete')
+            isSuccessful = False
 
         elif password != password2:
             # flash('Two passwords do not match')
             print('Two passwords do not match')
+            isSuccessful = False
 
         else:
             print(validate_email(email))
