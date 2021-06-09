@@ -24,17 +24,14 @@ role_id = None
 def login():
     global get_role_from_button
     global role_id
-    isSuccessful = True
+    isSuccessful = False
 
     if request.method == 'POST':
         get_role_from_button = False
         stu_wor_id = request.form.get('stu_wor_id')
         password = request.form.get('password')
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
-        if user is None:
-            flash('Invalid id.')
-            isSuccessful = False
-        else:
+        if user is not None:
 
             print(role_id)
             print(user.role_id)
@@ -54,7 +51,7 @@ def login():
                         url = 'main.home_sys_admin'
                     return redirect(url_for(url))
                 else:
-                    flash('Invalid id or password.')
+                    # flash('Invalid id or password.')
                     isSuccessful = False
             else:
                 return redirect(url_for('main.index'))
@@ -79,7 +76,7 @@ def login():
 @login_required  # Make sure the user want to logout has logged in
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    # flash('You have been logged out.')
     return redirect(url_for('main.index'))
 
 
@@ -110,11 +107,11 @@ def register():
         password2 = request.form.get('password2')
 
         if not all([username, stu_wor_id, email, phone, password, password2]):
-            flash('elements are incomplete')
+            # flash('elements are incomplete')
             print('elements are incomplete')
 
         elif password != password2:
-            flash('Two passwords do not match')
+            # flash('Two passwords do not match')
             print('Two passwords do not match')
 
         else:
@@ -126,7 +123,7 @@ def register():
                 new_user = User(user_name=username, stu_wor_id=stu_wor_id, role_id=role_id, password=password,
                                 email=email, phone=phone)
 
-                flash('Registered successfully! You can login now.')
+                # flash('Registered successfully! You can login now.')
                 isSuccessful = True
                 db.session.add(new_user)
                 db.session.commit()
@@ -138,8 +135,7 @@ def register():
 
                 get_role_from_button = False  # we will go back to the login page and in this case we do not need to get the role_id again
                 return redirect(url_for("auth.login"))
-            else:
-                flash('Email, phone number or id already exists.')
+
     return render_template('samples/register-2.html', role_id=role_id, isSuccessful=isSuccessful)
 
 

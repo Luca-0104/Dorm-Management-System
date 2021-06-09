@@ -56,11 +56,11 @@ def change_avatar():
             msg = 'Avatar changing failed! The suffix of the picture should be jpg, png and bmp only.'
             flash(msg)
             if current_user.role_id == 1:
-                return redirect(url_for('main.home_stu', msg=msg))
+                return redirect(url_for('main.home_stu'))
             elif current_user.role_id == 2:
-                return redirect(url_for('main.profile', msg=msg))
+                return redirect(url_for('main.profile'))
             elif current_user.role_id == 3:
-                return redirect(url_for('main.profile', msg=msg))
+                return redirect(url_for('main.profile'))
 
 
 # ----------------------------------------------- profiles for the users with different role  -----------------------------------------------
