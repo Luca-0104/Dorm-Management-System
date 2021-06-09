@@ -58,7 +58,7 @@
         <form action="{{ url_for('student.add_lost_pic') }}?lost_id={{ lost.id }}" method="post" id="iconForm" enctype="multipart/form-data">
           <div class="custom-file">
   <input type="file" class="form-control" id="customFile" name="lost_icon" >
-  <label class="custom-file-label" for="customFile"></label>
+  <label class="custom-file-label" for="customFile"></label><span class="alert alert-light">Note: .jpg, .png, .bmp only</span>
 
 </div>
 
