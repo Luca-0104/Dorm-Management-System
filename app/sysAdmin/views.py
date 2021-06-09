@@ -766,6 +766,7 @@ def add_da():
                                 building_id=building_id)
                 db.session.add(new_da)
                 db.session.commit()
+                flash("The Dorm Admin info is inserted successfully")
                 return redirect(url_for('main.home_sys_dorm', isSuccessful=True))
             else:
                 return redirect(url_for('main.home_sys_dorm', isSuccessful=False))

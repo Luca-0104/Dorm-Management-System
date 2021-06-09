@@ -1912,8 +1912,8 @@ stu_list = [
      604],
     ['stu1197', '20050396', '185000000396', 'stu1197@emails.bjut.edu.cn', 'Faculty of Environment and Life Science', 6,
      605],
-    ['stu1198', '20160397', '185000000397', 'stu1198@emails.bjut.edu.cn', 'College of Art and Design', 6, 606],
-    ['stu1199', '20120398', '185000000398', 'stu1199@emails.bjut.edu.cn', 'Faculty of Urban Construction', 6, 601],
-    ['stu1200', '20060399', '185000000399', 'stu1200@emails.bjut.edu.cn', 'Faculty of Science', 6, 602]
+    ['stu1198', '20160397', '185000000397', 'stu1198@emails.bjut.edu.cn', 'College of Art and Design', 6, 606]
+    # ['stu1199', '20120398', '185000000398', 'stu1199@emails.bjut.edu.cn', 'Faculty of Urban Construction', 6, 601],
+    # ['stu1200', '20060399', '185000000399', 'stu1200@emails.bjut.edu.cn', 'Faculty of Science', 6, 602]
 
     ]

@@ -102,7 +102,11 @@ def add_stu():
         # building_id_str = request.form.get('building_id')
         room_number_str = request.form.get('room')
         # building_id = None
-        building_id = 1  # 暂时默认都给1，sprint3会将其改为宿管对应的楼号
+        # building_id = 1  # 暂时默认都给1，sprint3会将其改为宿管对应的楼号
+        da_number = current_user.stu_wor_id
+        da = DAdmin.query.filter_by(da_number=da_number).first()
+        building_id = da.building_id
+
         room_number = None
 
         # if building_id_str != '':
@@ -638,10 +642,15 @@ def release_notice():
     if request.method == 'POST':
         detail = request.form.get('detail')
 
-        # create a new notification object and add it into the database
-        new_notification = Notification(detail=detail, da_id=da_id)
-        db.session.add(new_notification)
-        db.session.commit()
+        if detail is not None and detail != '':
+            # create a new notification object and add it into the database
+            new_notification = Notification(detail=detail, da_id=da_id)
+            db.session.add(new_notification)
+            db.session.commit()
+            flash("Notification released successful")
+
+        else:
+            flash("The detail cannot be blank")
 
     return redirect(url_for('dormAdmin.message_notification'))
 
@@ -831,6 +840,7 @@ def mark_done_lost():
     lost.is_done = True
     db.session.add(lost)
     db.session.commit()
+    flash("The status of the lost item is changed successfully")
 
     return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='lost', lost_id=id))
 
@@ -843,6 +853,7 @@ def mark_done_found():
     found.is_done = True
     db.session.add(found)
     db.session.commit()
+    flash("The status of the found item is changed successfully")
 
     return redirect(url_for('dormAdmin.lost_and_found_details', lnf_type='found', found_id=id))
 
