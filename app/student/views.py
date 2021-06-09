@@ -2,7 +2,7 @@ import datetime
 import os
 import random
 
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, flash
 from flask_login import current_user
 from werkzeug.utils import secure_filename
 
@@ -91,6 +91,7 @@ def add_complain():
             new_complain = Complain(detail=detail, stu_id=stu_id)
             db.session.add(new_complain)
             db.session.commit()
+            flash("Complaint submitted")
 
     return redirect(url_for('main.home_stu_complain'))
 
