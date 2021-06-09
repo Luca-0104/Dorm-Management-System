@@ -19,6 +19,8 @@
 </head>
 
 <body >
+
+{% endfor %}
   <div class="containerScoller">
     <div class="containerFlucid pageBodWrapper fullPageWrapper">
       <div class="contentWrapper d-flex alignItemsStretch auth authImgBg">
@@ -54,7 +56,7 @@
                   <a href="#" class="authLink textBlack">Forgot password?</a>
                 </div>
                 <div class="my3">
-                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="Login"> 
+                  <input type="submit" class="btn btnBlock btnPrimary btnLg fontWeightMedium authFormBtn" value="Login" id="submit">
                 </div>
                 <div class="textCennter mt4 fontWeightLight">
                   Don't have an account? <a href='{{url_for('auth.register')}}?identification={{ role_id }}' class="textPrimary">Create</a>
@@ -74,5 +76,14 @@
 	 <script src="../../static/js/skip.js"></script>
 
 </body>
-
+<script>
+    $('#submit').onclick(function() {
+            if(isSuccessful){
+                alert("Login Successfully")
+            }else{
+                alert("Failed to Login")
+            }
+        });
+</script>
 </html>
+

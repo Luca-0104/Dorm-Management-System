@@ -19,7 +19,7 @@
 </head>
 <body>
 {% for message in get_flashed_messages()  %}
-<div class="alert alert-dark">
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
     <button type="button" class="close" data-dismiss = "alert">&times;</button>
     {{message}}
 </div>
