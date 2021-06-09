@@ -2,7 +2,7 @@ import os
 import time
 from datetime import datetime, timedelta
 
-from flask import request, redirect, render_template, url_for
+from flask import request, redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
 from sqlalchemy import and_
 from werkzeug.utils import secure_filename
@@ -47,12 +47,14 @@ def change_avatar():
             pic = os.path.join(path, icon_name).replace('\\', '/')
             current_user.icon = pic
             db.session.commit()
+            flash("Avatar changed successfully!")
 
             return redirect(url_for('main.profile'))
 
 
         else:
-            msg = 'The suffix of the picture should be jpg, gif, png and bmp only.'
+            msg = 'Avatar changing failed! The suffix of the picture should be jpg, png and bmp only.'
+            flash(msg)
             if current_user.role_id == 1:
                 return redirect(url_for('main.home_stu', msg=msg))
             elif current_user.role_id == 2:

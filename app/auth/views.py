@@ -32,6 +32,7 @@ def login():
         user = User.query.filter_by(stu_wor_id=stu_wor_id).first()
         if user is None:
             flash('Invalid id.')
+            isSuccessful = False
         else:
 
             print(role_id)
@@ -43,6 +44,7 @@ def login():
             if role_id == user.role_id:
                 if user is not None and user.verify_password(password):
                     login_user(user)
+                    isSuccessful = True
                     if role_id == 1:
                         url = 'main.home_stu'
                     elif role_id == 2:
@@ -52,6 +54,7 @@ def login():
                     return redirect(url_for(url))
                 else:
                     flash('Invalid id or password.')
+                    isSuccessful = False
             else:
                 return redirect(url_for('main.index'))
 
@@ -64,10 +67,10 @@ def login():
     if getf is not None:
         getf = int(getf)
     if getf == 1:
-        return render_template('samples/phoneLogin.html', role_id=role_id)
+        return render_template('samples/phoneLogin.html', role_id=role_id, isSuccessful=isSuccessful)
     if getf == 2:
-        return render_template('samples/emailLogin.html', role_id=role_id)
-    return render_template('samples/login-2.html', role_id=role_id)
+        return render_template('samples/emailLogin.html', role_id=role_id, isSuccessful=isSuccessful)
+    return render_template('samples/login-2.html', role_id=role_id, isSuccessful=isSuccessful)
 
 
 # Logout
@@ -95,6 +98,7 @@ def home():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     global get_role_from_button
+    isSuccessful = False
 
     if request.method == 'POST':
         username = request.form.get('username')
@@ -122,6 +126,7 @@ def register():
                                 email=email, phone=phone)
 
                 flash('Registered successfully! You can login now.')
+                isSuccessful = True
                 db.session.add(new_user)
                 db.session.commit()
 
@@ -134,7 +139,7 @@ def register():
                 return redirect(url_for("auth.login"))
             else:
                 flash('Email, phone number or id already exists.')
-    return render_template('samples/register-2.html', role_id=role_id)
+    return render_template('samples/register-2.html', role_id=role_id, isSuccessful=isSuccessful)
 
 
 @auth.route('checkID', methods=['GET', 'POST'])
